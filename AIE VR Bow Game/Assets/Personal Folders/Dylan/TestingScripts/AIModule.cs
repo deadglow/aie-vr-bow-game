@@ -166,6 +166,7 @@ public class AIModule : MonoBehaviour
         {
             if (m_OnMove != null)
             {
+                m_EnemyAgent.Resume();
                 m_OnMove.Invoke();
             }
 
@@ -177,7 +178,8 @@ public class AIModule : MonoBehaviour
     {
         if (m_EnemyStates != EnemyStates.RETREAT)
         {
-            //  TODO change state to flee
+            m_EnemyStates = EnemyStates.RETREAT;
+            Debug.Log("Flee!");
         }
     }
 
