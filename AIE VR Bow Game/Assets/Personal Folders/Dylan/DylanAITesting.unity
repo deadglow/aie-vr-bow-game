@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0.99999905, b: 0.99999905, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -708,9 +708,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PlayerAssignment: 1
   m_PlayerTarget: {fileID: 0}
-  m_StunnedTimer: 3.78
-  m_StunTimer: 0
-  m_Range: 20
+  m_OnEnterStun:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnExitStun:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnMove:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  m_StunTime: 5.6
+  m_StoppingDistance: 30
 --- !u!195 &1684230172
 NavMeshAgent:
   m_ObjectHideFlags: 0
