@@ -17,7 +17,7 @@ public class AIModule : MonoBehaviour
     {
         SHOOT = 0,
         MOVETOPLAYER,
-        RETREAT,
+        FLEE,
         STUN,
         DEATH,
     }
@@ -45,6 +45,7 @@ public class AIModule : MonoBehaviour
     [Space()]
     [SerializeField, Range(0, 10)] float m_StunTime = 5;
 
+    [SerializeField] Transform m_RetreatZone = null;
     float m_StunTimer = 0;
     bool m_IsStuned = false;
 
@@ -53,6 +54,7 @@ public class AIModule : MonoBehaviour
     NavMeshAgent m_EnemyAgent = null;
 
     bool m_IsAlive = true;
+    bool m_IsFleeing = false;
 
     //==============================================================
     void Start()
@@ -66,6 +68,14 @@ public class AIModule : MonoBehaviour
         {
             GameObject Temp = GameObject.FindGameObjectWithTag("Player");
             m_PlayerTarget = Temp;
+        }
+
+        GameObject Zone = GameObject.FindGameObjectWithTag("RetreatZone");
+        m_RetreatZone = Zone.transform;
+
+        if (m_RetreatZone == null)
+        {
+            Debug.LogError("No Retreat Zone Found!");
         }
 
         m_FleeDistance = m_StoppingDistance - 5;
@@ -100,9 +110,23 @@ public class AIModule : MonoBehaviour
                 //TODO fire weapons at player
                 break;
 
-            case EnemyStates.RETREAT:
+            case EnemyStates.FLEE:
 
-                //TODO flee to a position 
+                Transform startTransform = transform;
+
+                transform.rotation = Quaternion.LookRotation(transform.position - m_PlayerTarget.transform.position);
+
+                Vector3 FleePosition = transform.position + transform.forward * 20;
+
+                NavMeshHit hit; 
+
+                NavMesh.SamplePosition(FleePosition, out hit, 5, 1 << NavMesh.GetNavMeshLayerFromName("Default"));
+
+                transform.position = startTransform.position;
+                transform.rotation = startTransform.rotation;
+
+                m_EnemyAgent.SetDestination(hit.position);
+
                 break;
 
             case EnemyStates.DEATH:
@@ -125,13 +149,15 @@ public class AIModule : MonoBehaviour
         if (DistanceBetween > m_StoppingDistance)
         {
             Move();
+            if (m_IsFleeing)
+            {
+                m_IsFleeing = !m_IsFleeing;
+            }
         }
-        else if(DistanceBetween < m_StoppingDistance && DistanceBetween > m_FleeDistance)
+        else if (DistanceBetween < m_StoppingDistance && DistanceBetween > m_FleeDistance && !m_IsFleeing)
         {
             if (!m_EnemyAgent.isStopped)
             {
-                Debug.Log("Too Close!");
-
                 m_EnemyAgent.Stop();
                 m_EnemyAgent.transform.LookAt(m_PlayerTarget.transform.position, Vector3.up);
             }
@@ -176,10 +202,12 @@ public class AIModule : MonoBehaviour
 
     private void Flee()
     {
-        if (m_EnemyStates != EnemyStates.RETREAT)
+        if (m_EnemyStates != EnemyStates.FLEE && !m_IsStuned)
         {
-            m_EnemyStates = EnemyStates.RETREAT;
-            Debug.Log("Flee!");
+            m_EnemyStates = EnemyStates.FLEE;
+            m_EnemyAgent.Resume();
+
+            m_IsFleeing = true;
         }
     }
 
