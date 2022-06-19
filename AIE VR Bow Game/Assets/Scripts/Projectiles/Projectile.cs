@@ -7,7 +7,7 @@ public class Projectile
 {
 	public ProjectileData projectileData;
 	[Header("State")]
-	public bool moving = false;
+	public bool enabled = false;
 
 	public Vector3 position;
 	[HideInInspector]
@@ -28,32 +28,27 @@ public class Projectile
 	public event EventHandler OnFireEvent;
 	public event EventHandler OnDisableEvent;
 	public event EventHandler<ProjectileCollision> OnCollisionEvent;
-
-	public void Fire(Vector3 spawnPosition, Vector3 forward, float speedScale = 1.0f)
-	{
-		projectileData.Fire(this, spawnPosition, forward, speedScale);
-		OnFireEvent.Invoke(this, EventArgs.Empty);
-	}
-
-	public void Disable()
-	{
-		projectileData.Disable(this);
-		OnDisableEvent.Invoke(this, EventArgs.Empty);
-	}
+	public event EventHandler OnAttachEvent;
 
 	public virtual bool Move(ref List<ProjectileCollision> collisionList)
 	{
+		// Update the deltas
 		previousPosition = position;
 		previousForward = forward;
-		if (velocity.sqrMagnitude > 0)
+		// Set the new forward (don't if there is no velocity or velocity matching is off)
+		if (projectileData.forwardMatchVelocity && velocity.sqrMagnitude > 0)
 			forward = velocity.normalized;
 
-
+		// Calculate translation in this step
 		Vector3 translation = velocity * Time.fixedDeltaTime;
 		float translationDist = translation.magnitude;
+		// Figure out the direction of travel (accomodates for 0 div)
 		Vector3 translationDir = (translationDist > 0)? translation / translationDist : Vector3.zero;
+
+		// Accumulate distance travelled
 		travelledDistance += translationDist;
 
+		// Assume no collision took place
 		bool collided = false;
 		if (projectileData.useContinuousDetection)
 		{
@@ -70,6 +65,7 @@ public class Projectile
 				collision.speed = velocity.magnitude;
 				collisionList.Add(collision);
 				collided = true;
+				// Override translation by the amount to move before hitting something
 				translation = translationDir * rayHit.distance;
 			}
 			position += translation;
@@ -95,7 +91,9 @@ public class Projectile
 		}
 
 		velocity += Vector3.down * projectileData.gravity * Time.fixedDeltaTime;
+		
 		//Debug.DrawLine(previousPosition, position, Color.magenta, 1.0f);
+		
 		// Travelled too far, disable the projectile
 		if (travelledDistance > projectileData.maxDistance)
 		{
@@ -105,20 +103,24 @@ public class Projectile
 		return collided;
 	}
 
-	public bool CanMove()
+	public void Fire(Vector3 spawnPosition, Vector3 forward, float speedScale = 1.0f)
 	{
-		if (!moving) return false;
-
-		if (attachmentTransform != null) return false;
-
-		return true;
+		projectileData.Fire(this, spawnPosition, forward, speedScale);
+		OnFireEvent.Invoke(this, EventArgs.Empty);
 	}
-	public Projectile Clone()
-	{
-		Projectile clone = (Projectile)this.MemberwiseClone();
-		clone.ClearEvents();
 
-		return clone;
+	public void Disable()
+	{
+		projectileData.Disable(this);
+		OnDisableEvent.Invoke(this, EventArgs.Empty);
+	}
+
+	public void AttachToTransform(Transform t)
+	{
+		attachmentTransform = t;
+		attachedPosition = t.InverseTransformPoint(position);
+		attachedRotation = t.rotation * GetRotation();
+		OnAttachEvent.Invoke(this, EventArgs.Empty);
 	}
 
 	public void OnCollision(ProjectileCollision collision)
@@ -134,17 +136,28 @@ public class Projectile
 		OnCollisionEvent = null;
 	}
 
-	public Quaternion CreateRotation()
+	public Projectile Clone()
+	{
+		Projectile clone = (Projectile)this.MemberwiseClone();
+		clone.ClearEvents();
+
+		return clone;
+	}
+
+	public bool CanMove()
+	{
+		if (!enabled) return false;
+
+		if (attachmentTransform != null) return false;
+
+		return true;
+	}
+
+	public Quaternion GetRotation()
 	{
 		return Quaternion.LookRotation(forward, Vector3.up);
 	}
 
-	public void AttachToTransform(Transform t)
-	{
-		attachmentTransform = t;
-		attachedPosition = t.InverseTransformPoint(position);
-		attachedRotation = t.rotation * CreateRotation();
-	}
 }
 
 [System.Serializable]

@@ -32,8 +32,10 @@ public class ProjectilePool
 		projectile.OnFireEvent += visual.OnProjectileFire;
 		projectile.OnDisableEvent += visual.OnProjectileDisable;
 		projectile.OnCollisionEvent += visual.OnProjectileCollide;
+		projectile.OnAttachEvent += visual.OnProjectileAttach;
 		// This will ensure the projectile enqueues itself
-		projectile.OnDisableEvent += OnProjectileDisable;
+		projectile.OnDisableEvent += OnProjectileAvailable;
+		projectile.OnAttachEvent += OnProjectileAvailable;
 
 		projectiles.Add(projectile);
 		visuals.Add(visual);
@@ -49,15 +51,20 @@ public class ProjectilePool
 			AddToPool();
 		}
 		
-		return available.Dequeue();
+		Projectile requested = available.Dequeue();
+		// The projectile is probably stuck, so disable it and then use it
+		if (requested.enabled)
+			requested.Disable();
+		return requested;
 	}
 
 	public void QueueProjectile(Projectile proj)
 	{
-		available.Enqueue(proj);
+		if (!available.Contains(proj))
+			available.Enqueue(proj);
 	}
 
-	private void OnProjectileDisable(object sender, EventArgs args)
+	private void OnProjectileAvailable(object sender, EventArgs args)
 	{
 		QueueProjectile((Projectile)sender);
 	}

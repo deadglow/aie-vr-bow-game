@@ -8,6 +8,7 @@ public class ProjectileData : ScriptableObject
     public float gravity = 0.0f;
 	public float fireSpeed = 10.0f;
 	public float radius = 0.1f;
+	public bool forwardMatchVelocity = true;
 
 	[Header("Lifetime")]
 	public float maxDistance = 1000.0f;
@@ -18,7 +19,7 @@ public class ProjectileData : ScriptableObject
 
 	public virtual void Fire(Projectile instance, Vector3 spawnPosition, Vector3 forward, float speedScale = 1.0f)
 	{
-		instance.moving = true;
+		instance.enabled = true;
 		instance.attachmentTransform = null;
 		instance.position = spawnPosition;
 		instance.previousPosition = spawnPosition;
@@ -31,7 +32,7 @@ public class ProjectileData : ScriptableObject
 
 	public virtual void Disable(Projectile instance)
 	{
-		instance.moving = false;
+		instance.enabled = false;
 		instance.attachmentTransform = null;
 	}
 

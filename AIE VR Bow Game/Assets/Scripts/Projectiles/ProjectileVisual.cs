@@ -8,6 +8,7 @@ public class ProjectileVisual : MonoBehaviour
 	[HideInInspector]
     public Projectile attachedProjectile;
 	public UnityEvent onProjectileFireEvent;
+	public UnityEvent onProjectileAttachEvent;
 	public UnityEvent onProjectileDisableEvent;
 	public UnityEvent<ProjectileCollision> onProjectileCollideEvent;
 
@@ -26,7 +27,7 @@ public class ProjectileVisual : MonoBehaviour
 			Vector3 interpolatedDirection = Vector3.Slerp(attachedProjectile.previousForward, attachedProjectile.forward, t).normalized;
 			
 			if (interpolatedDirection.sqrMagnitude > 0)
-				transform.rotation = attachedProjectile.CreateRotation();
+				transform.rotation = attachedProjectile.GetRotation();
 			else
 				transform.rotation = Quaternion.LookRotation(Vector3.up, Vector3.forward);
 		}
@@ -47,5 +48,10 @@ public class ProjectileVisual : MonoBehaviour
 	public void OnProjectileCollide(object sender, ProjectileCollision collision)
 	{
 		onProjectileCollideEvent.Invoke(collision);
+	}
+
+	public void OnProjectileAttach(object sender, EventArgs args)
+	{
+		onProjectileAttachEvent.Invoke();
 	}
 }
