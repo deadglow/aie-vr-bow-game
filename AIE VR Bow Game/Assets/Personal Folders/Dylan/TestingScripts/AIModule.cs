@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 
-[System.Obsolete]
+[DisallowMultipleComponent]
+[RequireComponent(typeof(NavMeshAgent))]
 public class AIModule : MonoBehaviour
 {
     enum PlayerAssignSettings
@@ -15,8 +16,8 @@ public class AIModule : MonoBehaviour
 
     enum EnemyStates
     {
-        SHOOT = 0,
-        MOVETOPLAYER,
+        MOVETOPLAYER = 0,
+        SHOOT,
         FLEE,
         STUN,
         DEATH,
@@ -24,28 +25,24 @@ public class AIModule : MonoBehaviour
 
     //==============================================================
     [Header("General")]
-    [SerializeField, Tooltip("MANUALLY: Assign the player yourself. | TAG: Search for object with Player tag.")]
-    PlayerAssignSettings m_PlayerAssignment = PlayerAssignSettings.MANUALLY;
-
-    [SerializeField] GameObject m_PlayerTarget = null; // The player in the scene.
+    GameObject m_PlayerTarget = null; // The player in the scene.
 
     [Header("AI Events")]
-    [SerializeField] UnityEvent m_OnEnterStun;
-    [SerializeField] UnityEvent m_OnExitStun;
+    [SerializeField, Tooltip("Is called when the stun state starts.")] UnityEvent m_OnEnterStun;
+    [SerializeField, Tooltip("Is called when the stun state ends.")] UnityEvent m_OnExitStun;
 
     [Space()]
 
-    [SerializeField] UnityEvent m_OnMove;
-    [SerializeField] UnityEvent m_OnDeath;
+    [SerializeField, Tooltip("Is called when the move state starts.")] UnityEvent m_OnMove;
+    [SerializeField, Tooltip("Is called when the AI dies.")] UnityEvent m_OnDeath;
 
-    [SerializeField, Range(10, 50)] float m_StoppingDistance = 10;
-    [SerializeField] float m_FleeDistance = 5;
+    public float m_StoppingDistance = 10;
+    public float m_FleeDistance = 5;
 
     //=====================================================
-    [Space()]
-    [SerializeField, Range(0, 10)] float m_StunTime = 5;
+    float m_StunTime = 5;
 
-    [SerializeField] Transform m_RetreatZone = null;
+    Transform m_RetreatZone = null;
     float m_StunTimer = 0;
     bool m_IsStuned = false;
 
@@ -54,7 +51,7 @@ public class AIModule : MonoBehaviour
     NavMeshAgent m_EnemyAgent = null;
 
     bool m_IsAlive = true;
-    bool m_IsFleeing = false;
+    public bool m_IsFleeing = false;
 
     //==============================================================
     void Start()
@@ -63,12 +60,7 @@ public class AIModule : MonoBehaviour
         m_Rigidbody = GetComponent<Rigidbody>();
 
         m_StunTimer = m_StunTime;
-
-        if (m_PlayerAssignment == PlayerAssignSettings.TAG)
-        {
-            GameObject Temp = GameObject.FindGameObjectWithTag("Player");
-            m_PlayerTarget = Temp;
-        }
+        m_FleeDistance = m_StoppingDistance - 5;
 
         GameObject Zone = GameObject.FindGameObjectWithTag("RetreatZone");
         m_RetreatZone = Zone.transform;
@@ -78,7 +70,10 @@ public class AIModule : MonoBehaviour
             Debug.LogError("No Retreat Zone Found!");
         }
 
-        m_FleeDistance = m_StoppingDistance - 5;
+        if (gameObject.GetComponent<NavMeshAgent>())
+        {
+            gameObject.GetComponent<NavMeshAgent>().stoppingDistance = 0;
+        }
     }
 
     void Update()
@@ -118,9 +113,9 @@ public class AIModule : MonoBehaviour
 
                 Vector3 FleePosition = transform.position + transform.forward * 20;
 
-                NavMeshHit hit; 
+                NavMeshHit hit;
 
-                NavMesh.SamplePosition(FleePosition, out hit, 5, 1 << NavMesh.GetNavMeshLayerFromName("Default"));
+                NavMesh.SamplePosition(FleePosition, out hit, 5, 1 << NavMesh.GetAreaFromName("Walkable"));
 
                 transform.position = startTransform.position;
                 transform.rotation = startTransform.rotation;
@@ -131,7 +126,7 @@ public class AIModule : MonoBehaviour
 
             case EnemyStates.DEATH:
 
-                //TODO do stuff when agent dies
+                gameObject.GetComponent<AIModule>().enabled = false;
                 break;
         }
         CheckDistanceToPlayer();
@@ -151,15 +146,16 @@ public class AIModule : MonoBehaviour
             Move();
             if (m_IsFleeing)
             {
-                m_IsFleeing = !m_IsFleeing;
+                m_IsFleeing = false;
             }
         }
         else if (DistanceBetween < m_StoppingDistance && DistanceBetween > m_FleeDistance && !m_IsFleeing)
         {
+            m_EnemyAgent.transform.LookAt(m_PlayerTarget.transform.position, Vector3.up);
+
             if (!m_EnemyAgent.isStopped)
             {
-                m_EnemyAgent.Stop();
-                m_EnemyAgent.transform.LookAt(m_PlayerTarget.transform.position, Vector3.up);
+                m_EnemyAgent.isStopped = true;
             }
         }
         else if (DistanceBetween < m_FleeDistance)
@@ -180,7 +176,7 @@ public class AIModule : MonoBehaviour
                 m_OnEnterStun.Invoke();
             }
 
-            m_EnemyAgent.Stop();
+            m_EnemyAgent.isStopped = true;
             m_StunTimer = m_StunTime;
             m_EnemyStates = EnemyStates.STUN;
         }
@@ -188,11 +184,11 @@ public class AIModule : MonoBehaviour
 
     private void Move()
     {
-        if (!m_IsStuned && m_EnemyStates != EnemyStates.MOVETOPLAYER && m_IsAlive)
+        if (!m_IsStuned && m_IsAlive)
         {
             if (m_OnMove != null)
             {
-                m_EnemyAgent.Resume();
+                m_EnemyAgent.isStopped = false;
                 m_OnMove.Invoke();
             }
 
@@ -205,7 +201,7 @@ public class AIModule : MonoBehaviour
         if (m_EnemyStates != EnemyStates.FLEE && !m_IsStuned)
         {
             m_EnemyStates = EnemyStates.FLEE;
-            m_EnemyAgent.Resume();
+            m_EnemyAgent.isStopped = false;
 
             m_IsFleeing = true;
         }
@@ -223,8 +219,39 @@ public class AIModule : MonoBehaviour
         m_EnemyStates = EnemyStates.DEATH;
     }
 
-    public bool GetAliveState()
+    public bool IsDead()
     {
         return m_IsAlive;
+    }
+
+    public void SetStopDistance(float _amount)
+    {
+        m_StoppingDistance = _amount;
+        m_FleeDistance = m_StoppingDistance - 5;
+    }
+
+    public void SetPlayerTarget(GameObject _player)
+    {
+        m_PlayerTarget = _player;
+    }
+
+    public void SetStunTimer(float _amount)
+    {
+        m_StunTime = _amount;
+    }
+
+    public void SetPriority(int _index)
+    {
+        m_EnemyAgent.avoidancePriority = _index;
+    }
+
+    public void SetAvoidanceRadius(float _amount    )
+    {
+        m_EnemyAgent.radius = _amount;
+    }
+
+    public void SetSpeed(float _amount)
+    {
+        m_EnemyAgent.speed = _amount;
     }
 }
