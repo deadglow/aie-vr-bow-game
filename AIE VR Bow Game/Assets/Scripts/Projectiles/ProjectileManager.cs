@@ -6,6 +6,7 @@ public class ProjectileManager : MonoBehaviour
 {
 	public Transform visualParent;
 	public List<ProjectileTypePoolPair> poolSetup;
+	private Dictionary<ProjectileType, ProjectileVisualPair> pairLookup = new Dictionary<ProjectileType, ProjectileVisualPair>();
 	private Dictionary<ProjectileType, ProjectilePool> projectileLookup = new Dictionary<ProjectileType, ProjectilePool>();
 
 	void Awake()

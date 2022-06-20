@@ -6,6 +6,7 @@ public class ProjectileData : ScriptableObject
 {
 	[Header("Physics")]
     public float gravity = 0.0f;
+	public float minFireSpeed = 0.0f;
 	public float fireSpeed = 10.0f;
 	public float radius = 0.1f;
 	public bool forwardMatchVelocity = true;
@@ -27,7 +28,7 @@ public class ProjectileData : ScriptableObject
 		instance.forward = forward;
 		instance.previousForward = forward;
 		
-		instance.velocity = forward * fireSpeed * speedScale;
+		instance.velocity = forward * Mathf.LerpUnclamped(minFireSpeed, fireSpeed, speedScale);
 	}
 
 	public virtual void Disable(Projectile instance)

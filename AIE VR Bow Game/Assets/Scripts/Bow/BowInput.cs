@@ -6,16 +6,30 @@ using UnityEngine.InputSystem;
 public class BowInput : MonoBehaviour
 {
     public BowHandler bow;
+	public ArrowHandler arrow;
 	
 	public InputActionReference drawBowReference;
 
 	void Start()
 	{
-		drawBowReference.action.performed += TryDraw;
+		drawBowReference.action.performed += TryGrab;
 		drawBowReference.action.canceled += ReleaseDraw;
 	}
 
-	void TryDraw(InputAction.CallbackContext obj) => bow.TryDraw();
+	[ContextMenu("Try Grab")]
+	void DebugTryGrab() => TryGrab(new InputAction.CallbackContext());
+	void TryGrab(InputAction.CallbackContext obj)
+	{
+		// Try grab an arrow, but if it fails try to grab the bowstring :)
+		if (!arrow.TryGrabArrow())
+			bow.TryDraw(ProjectileType.None);
+	}
 
-	void ReleaseDraw(InputAction.CallbackContext obj) => bow.ReleaseDraw();
+	[ContextMenu("Release Draw")]
+	void DebugReleaseDraw() => ReleaseDraw(new InputAction.CallbackContext());
+	void ReleaseDraw(InputAction.CallbackContext obj)
+	{
+		bow.ReleaseDraw();
+		arrow.ReleaseArrow();
+	}
 }

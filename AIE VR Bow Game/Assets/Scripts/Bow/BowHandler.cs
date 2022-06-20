@@ -74,9 +74,20 @@ public class BowHandler : MonoBehaviour
 		return wieldWithLeftHand? rightHandTransform : leftHandTransform;
 	}
 
+	public Vector3 GetDrawPoint()
+	{
+		Vector3 interactionPoint = GetBowHand().position;
+		interactionPoint += BowForward * drawInteractionOffset.z;
+		interactionPoint += BowUp * drawInteractionOffset.y;
+		interactionPoint += -Vector3.Cross(BowForward, BowUp) * drawInteractionOffset.x;
+
+		Vector3 maxDrawPoint = GetBowHand().position - BowForward * drawLength;
+		return Vector3.Lerp(interactionPoint, maxDrawPoint, CurrentDrawPercent);
+	}
+
 	[ContextMenu("Try Draw")]
-	public void TryDraw() => TryDraw(defaultProjectileType);
-	public void TryDraw(ProjectileType arrowType)
+	public bool TryDraw() => TryDraw(defaultProjectileType);
+	public bool TryDraw(ProjectileType arrowType)
 	{
 		if (IsDrawing)
 			ReleaseDraw();
@@ -86,7 +97,10 @@ public class BowHandler : MonoBehaviour
 		{
 			IsDrawing = true;
 			currentArrowType = arrowType;
+			return true;
 		}
+
+		return false;
 	}
 
 	[ContextMenu("Release Draw")]

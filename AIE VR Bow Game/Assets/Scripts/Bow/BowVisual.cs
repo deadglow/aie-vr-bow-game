@@ -16,13 +16,7 @@ public class BowVisual : MonoBehaviour
 		}
 		if (bowPullPoint)
 		{
-			Vector3 interactionPoint = handler.GetBowHand().position;
-			interactionPoint += handler.BowForward * handler.drawInteractionOffset.z;
-			interactionPoint += handler.BowUp * handler.drawInteractionOffset.y;
-			interactionPoint += -Vector3.Cross(handler.BowForward, handler.BowUp) * handler.drawInteractionOffset.x;
-
-			Vector3 maxDrawPoint = handler.GetBowHand().position - handler.BowForward * handler.drawLength;
-			bowPullPoint.position = Vector3.Lerp(interactionPoint, maxDrawPoint, handler.CurrentDrawPercent);
+			bowPullPoint.position = handler.GetDrawPoint();
 		}
 	}
 }
