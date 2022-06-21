@@ -17,18 +17,24 @@ public class AIManager : MonoBehaviour
         ALL,
     }
 
+    enum CheckerEdition
+    {
+        OLD = 0,
+        NEW,
+    }
+
     [Header("Player Assignment")]
 
     [SerializeField, Tooltip("MANUALLY: Assign the player yourself. | TAG: Search for object with Player tag.")]
     AIsearchMode m_PlayerAssignment = AIsearchMode.MANUALLY;
     [SerializeField] GameObject m_Target = null;
 
-
+    //============================================================
     [Space()]
     [Header("AI Settings")] //==================================================  Main
 
-    [Tooltip("Apply the height to all Ai or none.")]
-    [SerializeField] ApplyHeight m_ApplyHeight = ApplyHeight.ALL;
+    [Tooltip("The checker is responsible for calulating the flee & stun distances from stopping distance.")]
+    [SerializeField] CheckerEdition m_CheckerVersion = CheckerEdition.NEW;
 
     [Tooltip("The speed the AI will move at.")]
     [SerializeField, Range(0.5f, 5)] float m_AiSpeed = 2f;
@@ -39,7 +45,14 @@ public class AIManager : MonoBehaviour
     [Tooltip("The max turning speed when following a path.")]
     [SerializeField, Range(10, 50)] float m_AngularSpeed = 60f;
 
-    [Header("Avoidance"),Space()] //==================================================  Avoidance
+    [Tooltip("The max acceleration the AI will follow with.")]
+    [SerializeField, Range(0.5f, 50)] float m_Acceleration = 8f; 
+
+    //============================================================
+    [Header("Avoidance"), Space()] //==================================================  Avoidance
+
+    [Tooltip("Apply the height to all Ai or none.")]
+    [SerializeField] ApplyHeight m_ApplyHeight = ApplyHeight.ALL;
 
     [Tooltip("Having a lower priority means more importance for avoidance.")]
     [SerializeField, Range(0, 50)] int m_PriorityAvoid = 5;
@@ -50,7 +63,8 @@ public class AIManager : MonoBehaviour
     [Tooltip("Choose the height of the NavMesh")]
     [SerializeField, Range(0, 4)] float m_AvoidanceHeight = 2f;
 
-    [Header("Stun Settings"),Space()] //==================================================  Stuns
+    //============================================================
+    [Header("Stun Settings"), Space()] //==================================================  Stuns
 
     [Tooltip("When enabled the Ai will be protected from getting stunned for a few seconds.")]
     [SerializeField] bool m_ProtectedAtStart = false;
@@ -61,7 +75,6 @@ public class AIManager : MonoBehaviour
     [Tooltip("How long the cooldown for a stun will be.")]
     [SerializeField, Range(3, 10)] float m_StunCooldown = 3;
 
-
     //============================================================
 
     AIModule[] m_AiList = null;
@@ -70,8 +83,10 @@ public class AIManager : MonoBehaviour
     private void Start()
     {
         m_AiList = FindObjectsOfType<AIModule>(); // find & assign the AIs.
+
         if (m_AiList == null)
         {
+            Debug.Break();
             Debug.LogError("No AiModules can be found!");
         }
         else // if we have some AI in the array we begin to parent them to the manager.
@@ -97,28 +112,58 @@ public class AIManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Player has not been assigned!");
+                Debug.Break();
+                Debug.LogError("No Target is assigned to Ai Manager!");
             }
         }
 
-        AssignValues(); // begin to assign all values from the manager to other Ais.
+        AssignCheckerVersion();// Assign the checker versions for the AIs to use.
+        AssignValues(); // begin to assign all values from the manager to other AIs.
+    }
+
+    void AssignCheckerVersion()
+    {
+        if (m_CheckerVersion == CheckerEdition.NEW)
+        {
+            for (int i = 0; i < m_AiList.Length; i++)
+            {
+                m_AiList[i].SetCheckerVersion(true);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < m_AiList.Length; i++)
+            {
+                m_AiList[i].SetCheckerVersion(false);
+            }
+        }
     }
 
     //===========================================
     // All Ai modules get their values assigned.
     void AssignValues()
     {
-        if (m_AiList == null) return;
+        if (m_AiList == null)
+        {
+            Debug.Break();
+            Debug.LogError("The AI list failed to be assigned.");
+        }
 
         for (int i = 0; i < m_AiList.Length; i++)
         {
             m_AiList[i].SetStopDistance(m_StoppingDistance);
             m_AiList[i].SetStunTimer(m_StunTime);
+            m_AiList[i].SetAcceleration(m_Acceleration);
             if (m_ProtectedAtStart)
             {
                 m_AiList[i].ProtectedAtStart(m_ProtectedAtStart);
             }
             m_AiList[i].SetStunCooldown(m_StunCooldown);
+        }
+
+        // Nav mesh agent settings get appiled
+        for (int i = 0; i < m_AiList.Length; i++)
+        {
 
             m_AiList[i].SetPriority(m_PriorityAvoid);
             m_AiList[i].SetAngularDistance(m_AngularSpeed);
@@ -181,10 +226,5 @@ public class AIManager : MonoBehaviour
                 m_AiList[i].enabled = true;
             }
         }
-    }
-
-    public float GetStunCooldown()
-    {
-        return m_StunCooldown;
     }
 }

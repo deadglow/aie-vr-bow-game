@@ -38,9 +38,9 @@ public class AIModule : MonoBehaviour
     [SerializeField, Tooltip("Is called when the AI dies.")] UnityEvent m_OnDeath;
 
     //===================================================== Dont touch
-    float m_StoppingDistance = 10;
-    float m_FleeDistance = 5;
-    float m_StunDistance = 2;
+    public float m_StoppingDistance = 0;
+    public float m_FleeDistance = 0;
+    public float m_StunDistance = 0;
     float m_StunTime = 5;
 
     //Transform m_RetreatZone = null;
@@ -53,11 +53,11 @@ public class AIModule : MonoBehaviour
 
     bool m_IsAlive = true;
     bool m_IsFleeing = false;
-    public bool m_StunCooldown = false;
+    bool m_StunCooldown = false;
 
-    public float m_StunCooldownAmount;
-    public float m_StunCooldownTimer;
-
+    float m_StunCooldownAmount;
+    float m_StunCooldownTimer;
+    bool m_CheckerVersion = true;
 
     //==============================================================
     void Start()
@@ -66,16 +66,8 @@ public class AIModule : MonoBehaviour
         m_Rigidbody = GetComponent<Rigidbody>();
 
         m_StunTimer = m_StunTime;
-        m_FleeDistance = m_StoppingDistance - 5;
-        m_StunDistance = m_FleeDistance - 4;
 
-        //GameObject Zone = GameObject.FindGameObjectWithTag("RetreatZone");
-        //m_RetreatZone = Zone.transform;
-
-        //if (m_RetreatZone == null)
-        //{
-        //    Debug.LogError("No Retreat Zone Found!");
-        //}
+        //SortChecker();
 
         if (gameObject.GetComponent<NavMeshAgent>())
         {
@@ -275,8 +267,7 @@ public class AIModule : MonoBehaviour
     public void SetStopDistance(float _amount) // the distance the Ai will stay from the target.
     {
         m_StoppingDistance = _amount;
-        m_FleeDistance = m_StoppingDistance - 5;
-        m_StunDistance = m_FleeDistance - 4;
+        SortChecker();
     }
     public void SetPlayerTarget(GameObject _player) // Set what the Ai should attack/ follow.
     {
@@ -328,5 +319,29 @@ public class AIModule : MonoBehaviour
     public void ProtectedAtStart(bool _state)
     {
         m_StunCooldown = _state;
+    }
+    public void SetCheckerVersion(bool _state)
+    {
+        m_CheckerVersion = _state;
+        SortChecker();
+    }
+
+    void SortChecker()
+    {
+        if (m_CheckerVersion)
+        {
+            m_FleeDistance = m_StoppingDistance / 2;
+            m_StunDistance = m_FleeDistance / 2;
+        }
+        else
+        {
+            m_FleeDistance = m_StoppingDistance - 5;
+            m_StunDistance = m_FleeDistance - 4;
+        }
+    }
+
+    public void SetAcceleration(float _amount)
+    {
+        m_EnemyAgent.acceleration = _amount;
     }
 }

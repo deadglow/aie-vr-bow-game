@@ -172,10 +172,10 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
+  m_StoppingDistance: 10
+  m_FleeDistance: 5
+  m_StunDistance: 2
   m_IsStuned: 0
-  m_StunCooldown: 0
-  m_StunCooldownAmount: 0
-  m_StunCooldownTimer: 0
 --- !u!195 &66503576
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -293,10 +293,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PlayerAssignment: 1
   m_Target: {fileID: 0}
-  m_ApplyHeight: 1
-  m_AiSpeed: 1
+  m_CheckerVersion: 1
+  m_AiSpeed: 2.18
   m_StoppingDistance: 19.7
   m_AngularSpeed: 12.3
+  m_Acceleration: 8
+  m_ApplyHeight: 1
   m_PriorityAvoid: 1
   m_AvoidanceRadius: 1.15
   m_AvoidanceHeight: 2
@@ -361,10 +363,10 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
+  m_StoppingDistance: 10
+  m_FleeDistance: 5
+  m_StunDistance: 2
   m_IsStuned: 0
-  m_StunCooldown: 0
-  m_StunCooldownAmount: 0
-  m_StunCooldownTimer: 0
 --- !u!195 &449006165
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -668,10 +670,10 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
+  m_StoppingDistance: 10
+  m_FleeDistance: 5
+  m_StunDistance: 2
   m_IsStuned: 0
-  m_StunCooldown: 0
-  m_StunCooldownAmount: 0
-  m_StunCooldownTimer: 0
 --- !u!195 &879937118
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -991,10 +993,10 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
+  m_StoppingDistance: 10
+  m_FleeDistance: 5
+  m_StunDistance: 2
   m_IsStuned: 0
-  m_StunCooldown: 0
-  m_StunCooldownAmount: 0
-  m_StunCooldownTimer: 0
 --- !u!195 &1117425571
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1446,10 +1448,10 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
+  m_StoppingDistance: 10
+  m_FleeDistance: 5
+  m_StunDistance: 2
   m_IsStuned: 0
-  m_StunCooldown: 0
-  m_StunCooldownAmount: 0
-  m_StunCooldownTimer: 0
 --- !u!195 &1684230172
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1777,10 +1779,10 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
+  m_StoppingDistance: 10
+  m_FleeDistance: 5
+  m_StunDistance: 2
   m_IsStuned: 0
-  m_StunCooldown: 0
-  m_StunCooldownAmount: 0
-  m_StunCooldownTimer: 0
 --- !u!195 &2097366974
 NavMeshAgent:
   m_ObjectHideFlags: 0
