@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class AIManager : MonoBehaviour
 {
@@ -39,23 +40,31 @@ public class AIManager : MonoBehaviour
     [Tooltip("How long the stun will last.")]
     [SerializeField, Range(0, 10)] float m_StunTime = 5;
 
+    [Tooltip("How long the cooldown for a stun will be.")]
+    [SerializeField, Range(3, 10)] float m_StunCooldown = 3;
+
+    //============================================================
     private void Start()
     {
-        m_AiList = FindObjectsOfType<AIModule>();
+        m_AiList = FindObjectsOfType<AIModule>(); // find & assign the AIs.
         if (m_AiList == null)
         {
             Debug.LogError("No AiModules can be found!");
         }
-        else
+        else // if we have some AI in the array we begin to parent them to the manager.
         {
             ParentAI();
         }
 
-        if (m_PlayerAssignment == AIsearchMode.TAG)
+        if (m_PlayerAssignment == AIsearchMode.TAG) // Player assignment can be done manually or it can be done by the system at start up time.
         {
             GameObject Temp = GameObject.FindGameObjectWithTag("Player");
             m_Target = Temp;
-            ApplyTargets(m_Target);
+
+            if (m_Target)
+            {
+                ApplyTargets(m_Target); // Once it has theplayer object it assignes it as the target to the other AIs.
+            }
         }
         else
         {
@@ -68,9 +77,12 @@ public class AIManager : MonoBehaviour
                 Debug.LogError("Player has not been assigned!");
             }
         }
-        AssignValues();
+
+        AssignValues(); // begin to assign all values from the manager to other Ais.
     }
 
+    //===========================================
+    // All Ai modules get their values assigned.
     void AssignValues()
     {
         if (m_AiList == null) return;
@@ -79,11 +91,16 @@ public class AIManager : MonoBehaviour
         {
             m_AiList[i].SetStopDistance(m_StoppingDistance);
             m_AiList[i].SetStunTimer(m_StunTime);
+            m_AiList[i].SetStunCooldown(m_StunCooldown);
+
             m_AiList[i].SetPriority(m_PriorityAvoid);
             m_AiList[i].SetAvoidanceRadius(m_AvoidanceRadius);
             m_AiList[i].SetSpeed(m_AiSpeed);
         }
     }
+
+    //===========================================
+    // Parent the AIs to the manager to clean up the hierarchy.
     void ParentAI()
     {
         if (m_AiList == null) return;
@@ -94,6 +111,8 @@ public class AIManager : MonoBehaviour
         }
     }
 
+    //===========================================
+    // Set the target to go after.
     void ApplyTargets(GameObject _target)
     {
         if (m_AiList == null) return;
@@ -104,6 +123,8 @@ public class AIManager : MonoBehaviour
         }
     }
 
+    //===========================================
+    // Kills every AI in the scene if they aren't dead already.
     public void KillAll()
     {
         for (int i = 0; i < m_AiList.Length; i++)
@@ -115,15 +136,22 @@ public class AIManager : MonoBehaviour
         }
     }
 
+    //===========================================
+    // Brings all of the AI in the scene back to life again, if not already alive.
     public void ReviveAll()
     {
         for (int i = 0; i < m_AiList.Length; i++)
         {
             if (!m_AiList[i].enabled)
             {
+                m_AiList[i].gameObject.GetComponent<NavMeshAgent>().enabled = true;
                 m_AiList[i].enabled = true;
             }
         }
     }
 
+    public float GetStunCooldown()
+    {
+        return m_StunCooldown;
+    }
 }

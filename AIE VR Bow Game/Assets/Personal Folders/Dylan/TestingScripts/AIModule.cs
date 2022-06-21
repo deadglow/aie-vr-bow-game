@@ -19,6 +19,7 @@ public class AIModule : MonoBehaviour
         MOVETOPLAYER = 0,
         SHOOT,
         FLEE,
+        RETREAT,
         STUN,
         DEATH,
     }
@@ -36,22 +37,27 @@ public class AIModule : MonoBehaviour
     [SerializeField, Tooltip("Is called when the move state starts.")] UnityEvent m_OnMove;
     [SerializeField, Tooltip("Is called when the AI dies.")] UnityEvent m_OnDeath;
 
-    public float m_StoppingDistance = 10;
-    public float m_FleeDistance = 5;
-
     //=====================================================
+    float m_StoppingDistance = 10;
+    float m_FleeDistance = 5;
+    float m_StunDistance = 2;
     float m_StunTime = 5;
 
     Transform m_RetreatZone = null;
     float m_StunTimer = 0;
-    bool m_IsStuned = false;
+    public bool m_IsStuned = false;
 
     EnemyStates m_EnemyStates;
     Rigidbody m_Rigidbody = null;
     NavMeshAgent m_EnemyAgent = null;
 
     bool m_IsAlive = true;
-    public bool m_IsFleeing = false;
+    bool m_IsFleeing = false;
+    public bool m_StunCooldown = false;
+
+    public float m_StunCooldownAmount;
+    public float m_StunCooldownTimer;
+
 
     //==============================================================
     void Start()
@@ -61,6 +67,7 @@ public class AIModule : MonoBehaviour
 
         m_StunTimer = m_StunTime;
         m_FleeDistance = m_StoppingDistance - 5;
+        m_StunDistance = m_FleeDistance - 4;
 
         GameObject Zone = GameObject.FindGameObjectWithTag("RetreatZone");
         m_RetreatZone = Zone.transform;
@@ -96,6 +103,8 @@ public class AIModule : MonoBehaviour
                     {
                         m_OnExitStun.Invoke();
                     }
+                    Flee();
+                    m_StunCooldown = true;
                 }
 
                 break;
@@ -127,9 +136,33 @@ public class AIModule : MonoBehaviour
             case EnemyStates.DEATH:
 
                 gameObject.GetComponent<AIModule>().enabled = false;
+                gameObject.GetComponent<NavMeshAgent>().enabled = false;
+                break;
+
+            case EnemyStates.RETREAT: // SUBJECT TO CHANGE
+                //retreat to certain zone.
+
                 break;
         }
         CheckDistanceToPlayer();
+        UpdateStunTimer();
+    }
+
+    void UpdateStunTimer()
+    {
+        if (m_StunCooldown)
+        {
+            m_StunCooldownTimer -= Time.deltaTime;
+            if (m_StunCooldownTimer <= 0)
+            {
+                m_StunCooldown = false;
+                m_StunCooldownTimer = m_StunCooldownAmount;
+            }
+        }
+        else
+        {
+            return;
+        }
     }
 
     void CheckDistanceToPlayer()
@@ -141,7 +174,7 @@ public class AIModule : MonoBehaviour
 
         float DistanceBetween = Vector3.Distance(m_PlayerTarget.transform.position, transform.position);
 
-        if (DistanceBetween > m_StoppingDistance)
+        if (DistanceBetween > m_StoppingDistance) // checks the distance between the target & AI.
         {
             Move();
             if (m_IsFleeing)
@@ -149,25 +182,32 @@ public class AIModule : MonoBehaviour
                 m_IsFleeing = false;
             }
         }
-        else if (DistanceBetween < m_StoppingDistance && DistanceBetween > m_FleeDistance && !m_IsFleeing)
+        else if (DistanceBetween < m_StoppingDistance && DistanceBetween > m_FleeDistance && !m_IsFleeing) // Stops the player & should change to the shoot state.
         {
-            m_EnemyAgent.transform.LookAt(m_PlayerTarget.transform.position, Vector3.up);
+            m_EnemyAgent.transform.rotation = Quaternion.LookRotation(m_PlayerTarget.transform.position);
 
             if (!m_EnemyAgent.isStopped)
             {
+                Shoot();
                 m_EnemyAgent.isStopped = true;
             }
         }
-        else if (DistanceBetween < m_FleeDistance)
+        else if (DistanceBetween < m_FleeDistance && DistanceBetween > m_StunDistance) // checks the flee distance.
         {
             Flee();
+        }
+        else if (DistanceBetween < m_StunDistance && !m_IsStuned && !m_StunCooldown)
+        {
+            Stun();
         }
     }
 
     //==================================================
     // Stun the Enemy for a short period 
-    public void Stun()
+    public void Stun() // puts the AI into the stun state.
     {
+        if (m_StunCooldown) return;
+
         if (!m_IsStuned && m_IsAlive)
         {
             m_IsStuned = true;
@@ -182,7 +222,7 @@ public class AIModule : MonoBehaviour
         }
     }
 
-    private void Move()
+    private void Move() // Set the Ai state to find the target.
     {
         if (!m_IsStuned && m_IsAlive)
         {
@@ -196,7 +236,7 @@ public class AIModule : MonoBehaviour
         }
     }
 
-    private void Flee()
+    private void Flee() //changes the Ai to the flee state & runs from the target.
     {
         if (m_EnemyStates != EnemyStates.FLEE && !m_IsStuned)
         {
@@ -207,51 +247,71 @@ public class AIModule : MonoBehaviour
         }
     }
 
-    private void Shoot()
+    private void Shoot() // TODO change to the shoot state.
     {
-        //TODO change state to shoot
+        if (!m_IsStuned && m_EnemyStates != EnemyStates.SHOOT)
+        {
+
+            m_EnemyStates = EnemyStates.SHOOT;
+        }
     }
 
-    public void Kill()
+    //========================================
+    public void Kill() // Kills the AI.
     {
         m_OnDeath.Invoke();
         m_IsAlive = false;
         m_EnemyStates = EnemyStates.DEATH;
+
+        gameObject.GetComponent<NavMeshAgent>().enabled = false;
     }
 
-    public bool IsDead()
+    //========================================
+    public bool IsDead() // return whether the Ai is dead or alive.
     {
         return m_IsAlive;
     }
 
-    public void SetStopDistance(float _amount)
+    public void SetStopDistance(float _amount) // the distance the Ai will stay from the target.
     {
         m_StoppingDistance = _amount;
         m_FleeDistance = m_StoppingDistance - 5;
+        m_StunDistance = m_FleeDistance - 4;
     }
-
-    public void SetPlayerTarget(GameObject _player)
+    public void SetPlayerTarget(GameObject _player) // Set what the Ai should attack/ follow.
     {
         m_PlayerTarget = _player;
     }
 
-    public void SetStunTimer(float _amount)
+    public void SetStunTimer(float _amount) // Sets how long the stun timer will last for.
     {
         m_StunTime = _amount;
     }
 
-    public void SetPriority(int _index)
+    public void SetPriority(int _index) // the priority importance in avoiding other AIs.
     {
         m_EnemyAgent.avoidancePriority = _index;
     }
 
-    public void SetAvoidanceRadius(float _amount    )
+    public void SetAvoidanceRadius(float _amount) // The distance for the Ai to avoid.
     {
         m_EnemyAgent.radius = _amount;
     }
 
-    public void SetSpeed(float _amount)
+    public void SetSpeed(float _amount) // set the speed of the Ai.
     {
         m_EnemyAgent.speed = _amount;
+    }
+
+    public void Revive(Transform _positon) //revive the AI.
+    {
+        m_IsAlive = true;
+        transform.position = _positon.position;
+    }
+
+    public void SetStunCooldown(float _amount)
+    {
+        m_StunCooldownAmount = _amount;
+        m_StunCooldownTimer = m_StunCooldownAmount;
     }
 }
