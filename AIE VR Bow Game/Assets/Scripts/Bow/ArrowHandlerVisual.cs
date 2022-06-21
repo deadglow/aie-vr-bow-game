@@ -17,7 +17,8 @@ public class ArrowHandlerVisual : MonoBehaviour
 	{
 		foreach (TypeVisualPair visualPair in typeVisualPairsList)
 		{
-			Transform instance = Instantiate<Transform>(visualPair.visualPrefab, Vector3.zero, Quaternion.identity, transform);
+			Transform instance = Instantiate<Transform>(visualPair.visualPrefab);
+			instance.SetParent(transform, false);
 			instance.gameObject.SetActive(false);
 			visualLookup.Add(visualPair.type, instance);
 		}
@@ -33,7 +34,7 @@ public class ArrowHandlerVisual : MonoBehaviour
 			if (handler.isKnocked)
 			{
 				Matrix4x4 mat = Matrix4x4.TRS(handler.bow.GetDrawPoint(), Quaternion.LookRotation(handler.bow.BowForward, handler.bow.BowUp), Vector3.one);
-				transform.position = mat * arrowKnockOffset;
+				transform.position = mat.MultiplyPoint(arrowKnockOffset);
 				transform.rotation = Quaternion.LookRotation(handler.bow.BowForward, handler.bow.BowUp);
 			}
 			else
