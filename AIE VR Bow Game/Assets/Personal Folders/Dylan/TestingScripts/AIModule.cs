@@ -37,13 +37,13 @@ public class AIModule : MonoBehaviour
     [SerializeField, Tooltip("Is called when the move state starts.")] UnityEvent m_OnMove;
     [SerializeField, Tooltip("Is called when the AI dies.")] UnityEvent m_OnDeath;
 
-    //=====================================================
+    //===================================================== Dont touch
     float m_StoppingDistance = 10;
     float m_FleeDistance = 5;
     float m_StunDistance = 2;
     float m_StunTime = 5;
 
-    Transform m_RetreatZone = null;
+    //Transform m_RetreatZone = null;
     float m_StunTimer = 0;
     public bool m_IsStuned = false;
 
@@ -69,13 +69,13 @@ public class AIModule : MonoBehaviour
         m_FleeDistance = m_StoppingDistance - 5;
         m_StunDistance = m_FleeDistance - 4;
 
-        GameObject Zone = GameObject.FindGameObjectWithTag("RetreatZone");
-        m_RetreatZone = Zone.transform;
+        //GameObject Zone = GameObject.FindGameObjectWithTag("RetreatZone");
+        //m_RetreatZone = Zone.transform;
 
-        if (m_RetreatZone == null)
-        {
-            Debug.LogError("No Retreat Zone Found!");
-        }
+        //if (m_RetreatZone == null)
+        //{
+        //    Debug.LogError("No Retreat Zone Found!");
+        //}
 
         if (gameObject.GetComponent<NavMeshAgent>())
         {
@@ -184,7 +184,7 @@ public class AIModule : MonoBehaviour
         }
         else if (DistanceBetween < m_StoppingDistance && DistanceBetween > m_FleeDistance && !m_IsFleeing) // Stops the player & should change to the shoot state.
         {
-            m_EnemyAgent.transform.rotation = Quaternion.LookRotation(m_PlayerTarget.transform.position);
+            m_EnemyAgent.transform.LookAt(m_PlayerTarget.transform.position);
 
             if (!m_EnemyAgent.isStopped)
             {
@@ -313,5 +313,20 @@ public class AIModule : MonoBehaviour
     {
         m_StunCooldownAmount = _amount;
         m_StunCooldownTimer = m_StunCooldownAmount;
+    }
+
+    public void SetAngularDistance(float _amount)
+    {
+        m_EnemyAgent.angularSpeed = _amount;
+    }
+
+    public void AvoidanceHeight(float _amount)
+    {
+        m_EnemyAgent.height = _amount;
+    }
+
+    public void ProtectedAtStart(bool _state)
+    {
+        m_StunCooldown = _state;
     }
 }

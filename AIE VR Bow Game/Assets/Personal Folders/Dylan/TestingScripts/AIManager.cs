@@ -11,15 +11,24 @@ public class AIManager : MonoBehaviour
         TAG,
     }
 
+    enum ApplyHeight
+    {
+        NONE = 0,
+        ALL,
+    }
+
     [Header("Player Assignment")]
 
     [SerializeField, Tooltip("MANUALLY: Assign the player yourself. | TAG: Search for object with Player tag.")]
-    AIsearchMode m_PlayerAssignment = AIsearchMode.TAG;
-
+    AIsearchMode m_PlayerAssignment = AIsearchMode.MANUALLY;
     [SerializeField] GameObject m_Target = null;
 
+
     [Space()]
-    [Header("AI Settings")]
+    [Header("AI Settings")] //==================================================  Main
+
+    [Tooltip("Apply the height to all Ai or none.")]
+    [SerializeField] ApplyHeight m_ApplyHeight = ApplyHeight.ALL;
 
     [Tooltip("The speed the AI will move at.")]
     [SerializeField, Range(0.5f, 5)] float m_AiSpeed = 2f;
@@ -27,7 +36,10 @@ public class AIManager : MonoBehaviour
     [Tooltip("How far the AI will stay away from the target.")]
     [SerializeField, Range(10, 50)] float m_StoppingDistance = 10;
 
-    [Space()]
+    [Tooltip("The max turning speed when following a path.")]
+    [SerializeField, Range(10, 50)] float m_AngularSpeed = 60f;
+
+    [Header("Avoidance"),Space()] //==================================================  Avoidance
 
     [Tooltip("Having a lower priority means more importance for avoidance.")]
     [SerializeField, Range(0, 50)] int m_PriorityAvoid = 5;
@@ -35,13 +47,24 @@ public class AIManager : MonoBehaviour
     [Tooltip("Choose the radius of the avoidance distance between AI & objects.")]
     [SerializeField, Range(0, 4)] float m_AvoidanceRadius = 1.5f;
 
-    AIModule[] m_AiList = null;
+    [Tooltip("Choose the height of the NavMesh")]
+    [SerializeField, Range(0, 4)] float m_AvoidanceHeight = 2f;
+
+    [Header("Stun Settings"),Space()] //==================================================  Stuns
+
+    [Tooltip("When enabled the Ai will be protected from getting stunned for a few seconds.")]
+    [SerializeField] bool m_ProtectedAtStart = false;
 
     [Tooltip("How long the stun will last.")]
     [SerializeField, Range(0, 10)] float m_StunTime = 5;
 
     [Tooltip("How long the cooldown for a stun will be.")]
     [SerializeField, Range(3, 10)] float m_StunCooldown = 3;
+
+
+    //============================================================
+
+    AIModule[] m_AiList = null;
 
     //============================================================
     private void Start()
@@ -91,11 +114,21 @@ public class AIManager : MonoBehaviour
         {
             m_AiList[i].SetStopDistance(m_StoppingDistance);
             m_AiList[i].SetStunTimer(m_StunTime);
+            if (m_ProtectedAtStart)
+            {
+                m_AiList[i].ProtectedAtStart(m_ProtectedAtStart);
+            }
             m_AiList[i].SetStunCooldown(m_StunCooldown);
 
             m_AiList[i].SetPriority(m_PriorityAvoid);
+            m_AiList[i].SetAngularDistance(m_AngularSpeed);
             m_AiList[i].SetAvoidanceRadius(m_AvoidanceRadius);
             m_AiList[i].SetSpeed(m_AiSpeed);
+
+            if (m_ApplyHeight == ApplyHeight.ALL)
+            {
+                m_AiList[i].AvoidanceHeight(m_AvoidanceHeight);
+            }
         }
     }
 
