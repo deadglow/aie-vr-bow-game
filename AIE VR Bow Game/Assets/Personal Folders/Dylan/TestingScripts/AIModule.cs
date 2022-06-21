@@ -53,10 +53,10 @@ public class AIModule : MonoBehaviour
 
     bool m_IsAlive = true;
     bool m_IsFleeing = false;
-    bool m_StunCooldown = false;
+    public bool m_StunCooldown = false;
 
-    float m_StunCooldownAmount;
-    float m_StunCooldownTimer;
+    public float m_StunCooldownAmount;
+    public float m_StunCooldownTimer;
     bool m_CheckerVersion = true;
 
     //==============================================================
@@ -95,8 +95,8 @@ public class AIModule : MonoBehaviour
                     {
                         m_OnExitStun.Invoke();
                     }
-                    Flee();
                     m_StunCooldown = true;
+                    Flee();
                 }
 
                 break;
@@ -302,8 +302,10 @@ public class AIModule : MonoBehaviour
 
     public void SetStunCooldown(float _amount)
     {
+        Debug.Log("Stun Cooldown passed");
         m_StunCooldownAmount = _amount;
         m_StunCooldownTimer = m_StunCooldownAmount;
+        Debug.Log(m_StunCooldownAmount);
     }
 
     public void SetAngularDistance(float _amount)

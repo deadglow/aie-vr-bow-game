@@ -33,20 +33,20 @@ public class AIManager : MonoBehaviour
     [Space()]
     [Header("AI Settings")] //==================================================  Main
 
-    [Tooltip("The checker is responsible for calulating the flee & stun distances from stopping distance.")]
+    [Tooltip("The checker is responsible for calculating the flee & stun distances from stopping distance.")]
     [SerializeField] CheckerEdition m_CheckerVersion = CheckerEdition.NEW;
 
     [Tooltip("The speed the AI will move at.")]
     [SerializeField, Range(0.5f, 5)] float m_AiSpeed = 2f;
 
     [Tooltip("How far the AI will stay away from the target.")]
-    [SerializeField, Range(10, 50)] float m_StoppingDistance = 10;
+    [SerializeField, Range(10, 50)] float m_StoppingDistance = 20;
 
     [Tooltip("The max turning speed when following a path.")]
     [SerializeField, Range(10, 50)] float m_AngularSpeed = 60f;
 
     [Tooltip("The max acceleration the AI will follow with.")]
-    [SerializeField, Range(0.5f, 50)] float m_Acceleration = 8f; 
+    [SerializeField, Range(0.5f, 50)] float m_Acceleration = 8f;
 
     //============================================================
     [Header("Avoidance"), Space()] //==================================================  Avoidance
@@ -101,7 +101,7 @@ public class AIManager : MonoBehaviour
 
             if (m_Target)
             {
-                ApplyTargets(m_Target); // Once it has theplayer object it assignes it as the target to the other AIs.
+                ApplyTargets(m_Target); // Once it has the player object it assigns it as the target to the other AIs.
             }
         }
         else
@@ -146,7 +146,7 @@ public class AIManager : MonoBehaviour
         if (m_AiList == null)
         {
             Debug.Break();
-            Debug.LogError("The AI list failed to be assigned.");
+            Debug.LogError("The AI failed to be assigned.");
         }
 
         for (int i = 0; i < m_AiList.Length; i++)
@@ -154,11 +154,12 @@ public class AIManager : MonoBehaviour
             m_AiList[i].SetStopDistance(m_StoppingDistance);
             m_AiList[i].SetStunTimer(m_StunTime);
             m_AiList[i].SetAcceleration(m_Acceleration);
+            m_AiList[i].SetStunCooldown(m_StunCooldown);
+
             if (m_ProtectedAtStart)
             {
                 m_AiList[i].ProtectedAtStart(m_ProtectedAtStart);
             }
-            m_AiList[i].SetStunCooldown(m_StunCooldown);
         }
 
         // Nav mesh agent settings get appiled
