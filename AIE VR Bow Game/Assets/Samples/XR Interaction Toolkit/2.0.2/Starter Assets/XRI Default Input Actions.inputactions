@@ -1073,6 +1073,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "XRI RightHand Bow",
+            "id": "00f9aa64-c68a-46fa-a6ef-75960d7e6d20",
+            "actions": [
+                {
+                    "name": "Draw",
+                    "type": "Button",
+                    "id": "07b50da7-59bf-4d27-b477-44a4cb51f9a2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3ca4c6e6-f788-46fa-b936-d386a52cdf0a",
+                    "path": "<XRController>{RightHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic XR Controller",
+                    "action": "Draw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
