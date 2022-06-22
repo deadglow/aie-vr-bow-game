@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class BowHandler : MonoBehaviour
 {
@@ -41,17 +42,25 @@ public class BowHandler : MonoBehaviour
 
 	void Update()
 	{
+
+		if (Keyboard.current.fKey.wasPressedThisFrame)
+		{
+			currentArrowType = ProjectileType.Arrow;
+			FireArrow();
+		}
+		
 		if (IsDrawing)
 		{
 			Vector3 aimVector = GetBowHand().position - GetArrowHand().position;
-			float distance = aimVector.magnitude;
+			// Offset the distance by the offset so that the measured distance is between the interaction point and the current arrow hand point
+			float distance = aimVector.magnitude + drawInteractionOffset.z;
 
 			if (distance == 0 || aimOnlyWithBowHand)
 				BowForward = GetBowHand().forward;
 			else
-				BowForward = aimVector / distance;
+				BowForward = aimVector.normalized;
 
-			CurrentDrawPercent = Mathf.Clamp01((distance - minDrawDistance) / (drawLength - minDrawDistance));
+			CurrentDrawPercent = Mathf.Clamp01(distance / drawLength);
 		}
 		else
 		{

@@ -80,7 +80,7 @@ MonoBehaviour:
   poolSetup:
   - <type>k__BackingField: 1
     <pool>k__BackingField:
-      poolSize: 30
+      poolSize: 50
       visualParent: {fileID: 4280731576816179620}
       projVisPair: {fileID: 11400000, guid: 13fb0a9c0c1524a4e934fe5d22a130f1, type: 2}
       projectiles: []

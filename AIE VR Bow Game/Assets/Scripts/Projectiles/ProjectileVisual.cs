@@ -18,7 +18,7 @@ public class ProjectileVisual : MonoBehaviour
 		if (attachedProjectile.attachmentTransform)
 		{
 			transform.position = attachedProjectile.attachmentTransform.TransformPoint(attachedProjectile.attachedPosition);
-			transform.rotation = attachedProjectile.attachmentTransform.rotation * attachedProjectile.attachedRotation;
+			transform.rotation = Quaternion.LookRotation(attachedProjectile.attachmentTransform.TransformDirection(attachedProjectile.attachedForward), Vector3.up);
 		}
 		// Interpolate the visual while the projectile moves
 		else

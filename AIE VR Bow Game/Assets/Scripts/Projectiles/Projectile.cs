@@ -17,12 +17,12 @@ public class Projectile
 	[HideInInspector]
 	public Vector3 previousForward;	
 	public Vector3 velocity;
-	private float travelledDistance = 0;
+	public float travelledDistance = 0;
 
 	[Header("Attachment")]
 	public Transform attachmentTransform;
 	public Vector3 attachedPosition;
-	public Quaternion attachedRotation;
+	public Vector3 attachedForward;
 	
 	// Events
 	public event EventHandler OnFireEvent;
@@ -119,7 +119,7 @@ public class Projectile
 	{
 		attachmentTransform = t;
 		attachedPosition = t.InverseTransformPoint(position);
-		attachedRotation = t.rotation * GetRotation();
+		attachedForward = t.InverseTransformDirection(forward);
 		OnAttachEvent.Invoke(this, EventArgs.Empty);
 	}
 
@@ -157,7 +157,6 @@ public class Projectile
 	{
 		return Quaternion.LookRotation(forward, Vector3.up);
 	}
-
 }
 
 [System.Serializable]

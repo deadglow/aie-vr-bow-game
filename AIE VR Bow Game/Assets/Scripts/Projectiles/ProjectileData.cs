@@ -27,6 +27,8 @@ public class ProjectileData : ScriptableObject
 
 		instance.forward = forward;
 		instance.previousForward = forward;
+
+		instance.travelledDistance = 0;
 		
 		instance.velocity = forward * Mathf.LerpUnclamped(minFireSpeed, fireSpeed, speedScale);
 	}
