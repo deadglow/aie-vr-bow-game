@@ -176,7 +176,11 @@ public class AIModule : MonoBehaviour
         }
         else if (DistanceBetween < m_StoppingDistance && DistanceBetween > m_FleeDistance && !m_IsFleeing) // Stops the player & should change to the shoot state.
         {
-            m_EnemyAgent.transform.LookAt(m_PlayerTarget.transform.position);
+            Vector3 Direction = m_PlayerTarget.transform.position - transform.position;
+            Direction.y = 0;
+            Direction = Direction.normalized;
+
+            m_EnemyAgent.transform.rotation = Quaternion.LookRotation(Direction, Vector2.up);
 
             if (!m_EnemyAgent.isStopped)
             {
