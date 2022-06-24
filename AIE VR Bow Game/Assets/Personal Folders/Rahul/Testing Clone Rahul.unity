@@ -57715,6 +57715,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 190218925679177297, guid: cfd0fea43fa62c4478067dbc2423ae50, type: 3}
+      propertyPath: headCollisionRadius
+      value: 0.12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cfd0fea43fa62c4478067dbc2423ae50, type: 3}
 --- !u!1001 &4280731576787302782
