@@ -54,7 +54,6 @@ public class ArrowHandler : MonoBehaviour
 				ArrowQuiver quiver = colliders[0].attachedRigidbody.GetComponent<ArrowQuiver>();
 				quiverType = quiver.TryGetArrow();
 			}
-
 		}
 
 		if (quiverType == ProjectileType.None)

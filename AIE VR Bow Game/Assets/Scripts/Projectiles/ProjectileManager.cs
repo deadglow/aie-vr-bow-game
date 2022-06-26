@@ -6,7 +6,8 @@ public class ProjectileManager : MonoBehaviour
 {
 	public Transform visualParent;
 	public List<ProjectileTypePoolPair> poolSetup;
-	private Dictionary<ProjectileType, ProjectileVisualPair> pairLookup = new Dictionary<ProjectileType, ProjectileVisualPair>();
+	[HideInInspector]
+	public ProjectileTypeLookup typeLookup;
 	private Dictionary<ProjectileType, ProjectilePool> projectileLookup = new Dictionary<ProjectileType, ProjectilePool>();
 
 	void Awake()
@@ -20,11 +21,17 @@ public class ProjectileManager : MonoBehaviour
 
 	void Start()
 	{
-		foreach (ProjectilePool pool in projectileLookup.Values)
+		typeLookup = FindObjectOfType<ProjectileTypeLookup>();
+		foreach (var entry in projectileLookup)
 		{
-			if (!pool.visualParent)
-				pool.visualParent = visualParent;
-			pool.Initialise();
+			if (!entry.Value.visualParent)
+				entry.Value.visualParent = visualParent;
+
+			// Set up type lookup and projectile type
+			entry.Value.typeLookup = typeLookup;
+			entry.Value.projectileType = entry.Key;
+
+			entry.Value.Initialise();
 		}
 	}
 
@@ -33,10 +40,10 @@ public class ProjectileManager : MonoBehaviour
 		List<ProjectileCollision> collisions = new List<ProjectileCollision>();
 		foreach(ProjectilePool pool in projectileLookup.Values)
 		{
-			foreach (Projectile projectile in pool.projectiles)
+			for (int i = 0; i < pool.projectiles.Count; ++i)
 			{
-				if (projectile.CanMove())
-					projectile.Move(ref collisions);
+				if (pool.projectiles[i].CanMove())
+					pool.projectiles[i].Move(ref collisions);
 			}
 		}
 
@@ -47,7 +54,7 @@ public class ProjectileManager : MonoBehaviour
 		}
 	}
 
-	void LateUpdate()
+	void Update()
 	{
 		UpdateVisuals();
 	}

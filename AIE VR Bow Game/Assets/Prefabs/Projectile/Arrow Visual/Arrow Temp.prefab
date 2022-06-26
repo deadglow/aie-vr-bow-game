@@ -55,9 +55,11 @@ MonoBehaviour:
     forward: {x: 0, y: 0, z: 0}
     previousForward: {x: 0, y: 0, z: 0}
     velocity: {x: 0, y: 0, z: 0}
+    travelledDistance: 0
+    miscCount: 0
     attachmentTransform: {fileID: 0}
     attachedPosition: {x: 0, y: 0, z: 0}
-    attachedRotation: {x: 0, y: 0, z: 0, w: 0}
+    attachedForward: {x: 0, y: 0, z: 0}
   onProjectileFireEvent:
     m_PersistentCalls:
       m_Calls:
@@ -73,51 +75,15 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1364317315739369699}
-        m_TargetAssemblyTypeName: UnityEngine.TrailRenderer, UnityEngine
-        m_MethodName: set_emitting
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
   onProjectileAttachEvent:
     m_PersistentCalls:
       m_Calls: []
   onProjectileDisableEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1364317315739369699}
-        m_TargetAssemblyTypeName: UnityEngine.TrailRenderer, UnityEngine
-        m_MethodName: set_emitting
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   onProjectileCollideEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1364317315739369699}
-        m_TargetAssemblyTypeName: UnityEngine.TrailRenderer, UnityEngine
-        m_MethodName: set_emitting
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!135 &3780153004548666638
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -376,8 +342,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8028586987148809681}
   m_LocalRotation: {x: 0.70710576, y: -0, z: -0, w: 0.70710784}
-  m_LocalPosition: {x: 0, y: 0, z: -0.17700088}
-  m_LocalScale: {x: 0.013429451, y: 0.24083287, z: 0.013429451}
+  m_LocalPosition: {x: 0, y: -0.00000047683716, z: -0.38209045}
+  m_LocalScale: {x: 0.013429451, y: 0.44592616, z: 0.013429451}
   m_Children: []
   m_Father: {fileID: 1220814778185463022}
   m_RootOrder: 1

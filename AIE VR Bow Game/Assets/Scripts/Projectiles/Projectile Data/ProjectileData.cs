@@ -18,6 +18,11 @@ public class ProjectileData : ScriptableObject
 	public LayerMask collisionLayers;
 	public bool useContinuousDetection = false;
 
+	public float GetFireSpeed(float percentage)
+	{
+		return Mathf.LerpUnclamped(minFireSpeed, fireSpeed, percentage);
+	}
+
 	public virtual void Fire(Projectile instance, Vector3 spawnPosition, Vector3 forward, float speedScale = 1.0f)
 	{
 		instance.enabled = true;
@@ -29,8 +34,9 @@ public class ProjectileData : ScriptableObject
 		instance.previousForward = forward;
 
 		instance.travelledDistance = 0;
+		instance.miscCount = 0;
 		
-		instance.velocity = forward * Mathf.LerpUnclamped(minFireSpeed, fireSpeed, speedScale);
+		instance.velocity = forward * GetFireSpeed(speedScale);
 	}
 
 	public virtual void Disable(Projectile instance)

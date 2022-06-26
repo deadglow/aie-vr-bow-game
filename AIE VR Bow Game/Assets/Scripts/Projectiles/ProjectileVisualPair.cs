@@ -6,7 +6,7 @@ using UnityEngine;
 public class ProjectileVisualPair : ScriptableObject
 {
 	[field: SerializeField]
-	public ProjectileData projectile { get; private set; }
+	public ProjectileData projectileData { get; private set; }
 	[field: SerializeField]
 	public ProjectileVisual visual { get; private set; }
 }

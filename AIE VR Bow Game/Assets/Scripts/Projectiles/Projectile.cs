@@ -19,6 +19,9 @@ public class Projectile
 	public Vector3 velocity;
 	public float travelledDistance = 0;
 
+	// Use this for anything
+	public int miscCount = 0;
+
 	[Header("Attachment")]
 	public Transform attachmentTransform;
 	public Vector3 attachedPosition;
@@ -52,22 +55,17 @@ public class Projectile
 		bool collided = false;
 		if (projectileData.useContinuousDetection)
 		{
-			// We check for collisions along the path before moving
-			RaycastHit rayHit;
-			if (Physics.SphereCast(position, projectileData.radius, translationDir, out rayHit, translationDist, projectileData.collisionLayers))
+			// Fill in collision data
+			ProjectileCollision collision = new ProjectileCollision();
+			collision.projectile = this;
+			collision.speed = velocity.magnitude;
+
+			if (ContinuousCollisionCheck(projectileData, position, ref translation, ref collision))
 			{
-				ProjectileCollision collision;
-				collision.projectile = this;
-				collision.collider = rayHit.collider;
-				collision.collisionPoint = rayHit.point;
-				collision.collisionNormal = rayHit.normal;
-				collision.direction = translationDir;
-				collision.speed = velocity.magnitude;
 				collisionList.Add(collision);
 				collided = true;
-				// Override translation by the amount to move before hitting something
-				translation = translationDir * rayHit.distance;
 			}
+			
 			position += translation;
 		}
 		else
@@ -101,6 +99,28 @@ public class Projectile
 			return false;
 		}
 		return collided;
+	}
+
+	public static bool ContinuousCollisionCheck(ProjectileData data, Vector3 pos, ref Vector3 translation, ref ProjectileCollision collision)
+	{
+		// We check for collisions along the path before moving
+		float distance = translation.magnitude;
+		if (distance == 0) return false;
+
+		Vector3 translationDir = translation / distance;
+		RaycastHit rayHit;
+		if (Physics.SphereCast(pos, data.radius, translationDir, out rayHit, distance, data.collisionLayers))
+		{
+			collision.collider = rayHit.collider;
+			collision.collisionPoint = rayHit.point;
+			collision.collisionNormal = rayHit.normal;
+			collision.direction = translationDir;
+			// Override translation by the amount to move before hitting something
+			translation = translationDir * rayHit.distance;
+
+			return true;
+		}
+		return false;
 	}
 
 	public void Fire(Vector3 spawnPosition, Vector3 forward, float speedScale = 1.0f)
@@ -175,5 +195,6 @@ public enum ProjectileType : int
 	None,
 	Arrow,
 	TeleportArrow,
-	EnemyProjectile
+	EnemyProjectile,
+	Count
 }

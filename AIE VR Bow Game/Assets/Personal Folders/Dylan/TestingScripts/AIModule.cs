@@ -60,10 +60,15 @@ public class AIModule : MonoBehaviour
 
 
     //==============================================================
-    void Start()
-    {
+
+	void Awake()
+	{
         m_EnemyAgent = GetComponent<NavMeshAgent>();
         m_Rigidbody = GetComponent<Rigidbody>();
+
+	}
+    void Start()
+    {
 
         m_StunTimer = m_StunTime;
         m_FleeDistance = m_StoppingDistance - 5;
@@ -77,9 +82,9 @@ public class AIModule : MonoBehaviour
         //    Debug.LogError("No Retreat Zone Found!");
         //}
 
-        if (gameObject.GetComponent<NavMeshAgent>())
+        if (m_EnemyAgent)
         {
-            gameObject.GetComponent<NavMeshAgent>().stoppingDistance = 0;
+            m_EnemyAgent.stoppingDistance = 0;
         }
     }
 

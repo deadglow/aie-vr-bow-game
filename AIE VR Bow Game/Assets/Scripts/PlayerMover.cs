@@ -67,7 +67,9 @@ public class PlayerMover : MonoBehaviour
 			distanceToGround = hit.distance - distanceToFloor;
 		}
 		else
+		{
 			distanceToGround = groundCheckDistance;
+		}
 	}
 	
 	private void DoGravity()
@@ -168,6 +170,7 @@ public class PlayerMover : MonoBehaviour
 		Vector3 delta = position - currentFloorPos;
 		// Apply the difference to the origin
 		xrOrigin.transform.position += delta;
+		ResetValidCameraPosition();
 
 		OnTeleportEvent.Invoke(position);
 		

@@ -9,17 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64714b1cd46ccc144b53ca5c736afebb, type: 3}
-  m_Name: Default Arrow
+  m_Script: {fileID: 11500000, guid: 025728d73899c1744ad7a8892e71a50b, type: 3}
+  m_Name: Teleport Arrow
   m_EditorClassIdentifier: 
   gravity: 5
-  minFireSpeed: 0
-  fireSpeed: 50
-  radius: 0.03
+  minFireSpeed: 0.5
+  fireSpeed: 30
+  radius: 0.05
   forwardMatchVelocity: 1
   maxDistance: 1000
   collisionLayers:
     serializedVersion: 2
     m_Bits: 1
   useContinuousDetection: 1
-  impactForce: 100
+  maxFloorAngle: 20
+  reboundEnergyConservation: 1
+  maxBounces: 12
