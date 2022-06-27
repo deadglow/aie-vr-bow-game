@@ -12,7 +12,8 @@ public class ArrowHandler : MonoBehaviour
 	public float grabRadius = 0.05f;
 	public LayerMask arrowGrabLayer;
 
-	public UnityEvent<ProjectileType> OnEquipArrowEvent;
+	public UnityEvent<ProjectileType> onEquipArrowEvent;
+	public UnityEvent onFailEquipEvent;
 
 	void Update()
 	{
@@ -37,7 +38,7 @@ public class ArrowHandler : MonoBehaviour
 	void EquipArrow(ProjectileType type)
 	{
 		currentArrowType = type;
-		OnEquipArrowEvent.Invoke(type);
+		onEquipArrowEvent.Invoke(type);
 	}
 
 	public bool TryGrabArrow()
@@ -57,7 +58,10 @@ public class ArrowHandler : MonoBehaviour
 		}
 
 		if (quiverType == ProjectileType.None)
+		{
+			onFailEquipEvent.Invoke();
 			return false;
+		}
 
 		EquipArrow(quiverType);
 		return true;

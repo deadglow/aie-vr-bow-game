@@ -571,7 +571,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bow: {fileID: 190218924170704858}
   arrow: {fileID: 190218924170704855}
-  drawBowReference: {fileID: 2940149253467988773, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  leftHandDrawReference: {fileID: -4214427163030493142, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  rightHandDrawReference: {fileID: -3660211181587187429, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!114 &190218924170704858
 MonoBehaviour:
   m_ObjectHideFlags: 0

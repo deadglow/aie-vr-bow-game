@@ -24,7 +24,7 @@ public class BowVisual : MonoBehaviour
 	{
 		if (handler)
 		{
-			transform.position = handler.leftHandTransform.position;
+			transform.position = handler.GetBowHand().position;
 			transform.rotation = Quaternion.LookRotation(handler.BowForward, handler.BowUp);
 
 			// Use a spring damper system to move between the visual bow draw and the actual bow draw
