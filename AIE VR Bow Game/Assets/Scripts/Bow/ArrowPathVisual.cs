@@ -20,9 +20,8 @@ public class ArrowPathVisual : MonoBehaviour
 
 	void LateUpdate()
 	{
-		if (bow.currentArrowType == ProjectileType.None) return;
-
 		List<Vector3> positions = new List<Vector3>();
+
 		if (bow.currentArrowType == ProjectileType.Arrow)
 		{
 			// simulate
@@ -62,9 +61,11 @@ public class ArrowPathVisual : MonoBehaviour
 			}
 
 		}
-
+		
 		lineRenderer.positionCount = positions.Count;
 		lineRenderer.SetPositions(positions.ToArray());
 		lineRenderer.Simplify(simplifyTolerance);
 	}
+
+
 }
