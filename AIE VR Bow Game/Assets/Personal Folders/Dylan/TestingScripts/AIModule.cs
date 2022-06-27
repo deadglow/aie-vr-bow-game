@@ -37,14 +37,13 @@ public class AIModule : MonoBehaviour
     [SerializeField, Tooltip("Is called when the AI dies.")] UnityEvent m_OnDeath;
 
     //===================================================== Dont touch
-    public float m_StoppingDistance = 0;
-    public float m_FleeDistance = 0;
-    public float m_StunDistance = 0;
+    float m_StoppingDistance = 0;
+    float m_FleeDistance = 0;
+    float m_StunDistance = 0;
     float m_StunTime = 5;
 
-    //Transform m_RetreatZone = null;
     float m_StunTimer = 0;
-    public bool m_IsStuned = false;
+    bool m_IsStuned = false;
 
     EnemyStates m_EnemyStates;
     Rigidbody m_Rigidbody = null;
@@ -62,6 +61,10 @@ public class AIModule : MonoBehaviour
     float m_ShootCooldown = 0f;
     bool m_IsShooting = false;
 
+    ProjectileManager m_Projectile;
+    public Transform m_ProjectileSpawn = null;
+    ProjectileType m_ProjectType;
+    float m_ProjectSpeed = 0.5f;
 
 
     //==============================================================
@@ -141,14 +144,13 @@ public class AIModule : MonoBehaviour
                 gameObject.GetComponent<NavMeshAgent>().enabled = false;
                 break;
         }
-
         CheckDistanceToPlayer();
         UpdateStunTimer();
     }
 
     void FireAtPlayer()
     {
-        Debug.Log(gameObject.name + " Fired at player");
+        m_Projectile.FireProjectile(ProjectileType.Arrow, m_ProjectileSpawn.position, CalculatePlayerLocation(), 0.5f);
     }
 
     void UpdateStunTimer()
@@ -207,6 +209,10 @@ public class AIModule : MonoBehaviour
         {
             Stun();
         }
+        else if (DistanceBetween < m_StoppingDistance && DistanceBetween >= 0)
+        {
+            Flee();
+        }
     }
 
     //==================================================
@@ -258,9 +264,15 @@ public class AIModule : MonoBehaviour
     {
         if (!m_IsStuned && m_EnemyStates != EnemyStates.SHOOT)
         {
-
+            // set speed scale to 1
             m_EnemyStates = EnemyStates.SHOOT;
         }
+    }
+
+    Vector3 CalculatePlayerLocation()
+    {
+        Vector3 Direction = m_PlayerTarget.transform.position - transform.position;
+        return Direction.normalized;
     }
 
     //========================================
@@ -317,10 +329,8 @@ public class AIModule : MonoBehaviour
 
     public void SetStunCooldown(float _amount)
     {
-        Debug.Log("Stun Cooldown passed");
         m_StunCooldownAmount = _amount;
         m_StunCooldownTimer = m_StunCooldownAmount;
-        Debug.Log(m_StunCooldownAmount);
     }
 
     public void SetAngularDistance(float _amount)
@@ -365,5 +375,20 @@ public class AIModule : MonoBehaviour
     public void SetShootCooldown(float _amount)
     {
         m_ShootCooldownAmount = _amount;
+    }
+
+    public void SetProjectileManager(ProjectileManager _object)
+    {
+        m_Projectile = _object;
+    }
+
+    public void SetProjectileSpeed(float _amount)
+    {
+        m_ProjectSpeed = _amount;
+    }
+
+    public void SetProjectileType(ProjectileType _type)
+    {
+        m_ProjectType = _type;
     }
 }

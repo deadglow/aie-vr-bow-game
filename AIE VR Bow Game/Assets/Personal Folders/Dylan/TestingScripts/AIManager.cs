@@ -46,7 +46,7 @@ public class AIManager : MonoBehaviour
     [SerializeField, Range(0.5f, 5)] float m_AiSpeed = 2f;
 
     [Tooltip("How far the AI will stay away from the target.")]
-    [SerializeField, Range(10, 50)] float m_StoppingDistance = 20;
+    [SerializeField, Range(10, 25)] float m_StoppingDistance = 20;
 
     [Tooltip("The max turning speed when following a path.")]
     [SerializeField, Range(10, 50)] float m_AngularSpeed = 60f;
@@ -82,9 +82,19 @@ public class AIManager : MonoBehaviour
     [SerializeField, Range(3, 10)] float m_StunCooldown = 3;
    
     [Header("Shoot Settings"), Space()] //==================================================  Shooting
+
+    [Tooltip("The type of projectile the enemy will use.")]
+    [SerializeField] ProjectileType m_ProType = ProjectileType.EnemyProjectile;
+    
     [Tooltip("The duration of how long it will take for AI to shoot each shot.")]
     [SerializeField, Range(3, 10)] float m_ShootCooldown = 5;
 
+    [Tooltip("The speed scale of the projectile shot.")]
+    [SerializeField, Range(0,1)] float m_BulletSpeedScale = 0.5f;
+
+    [Header("External")]
+    [Tooltip("Reference to the projectile manager.")]
+    [SerializeField] ProjectileManager m_Projectile = null;
     //============================================================
 
     AIModule[] m_AiList = null;
@@ -168,6 +178,9 @@ public class AIManager : MonoBehaviour
             m_AiList[i].SetStunCooldown(m_StunCooldown);
             m_AiList[i].SetShootCooldown(m_ShootCooldown);
 
+            m_AiList[i].SetProjectileSpeed(m_BulletSpeedScale);
+            m_AiList[i].SetProjectileType(m_ProType);
+
             if (m_ProtectedAtStart == ProtectStart.ON)
             {
                 m_AiList[i].ProtectedAtStart(true);
@@ -176,6 +189,10 @@ public class AIManager : MonoBehaviour
             {
                 m_AiList[i].ProtectedAtStart(false);
             }
+        }
+        for (int i = 0; i < m_AiList.Length; i++)
+        {
+            m_AiList[i].SetProjectileManager(m_Projectile);
         }
 
         // Nav mesh agent settings get appiled
