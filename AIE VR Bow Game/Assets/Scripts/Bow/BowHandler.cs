@@ -85,13 +85,22 @@ public class BowHandler : MonoBehaviour
 
 	public Vector3 GetDrawPoint()
 	{
-		Vector3 interactionPoint = GetBowHand().position;
-		interactionPoint += BowForward * drawInteractionOffset.z;
-		interactionPoint += BowUp * drawInteractionOffset.y;
-		interactionPoint += -Vector3.Cross(BowForward, BowUp) * drawInteractionOffset.x;
+		Vector3 interactionPoint = GetBowMatrix().MultiplyPoint(drawInteractionOffset);
 
-		Vector3 maxDrawPoint = GetBowHand().position - BowForward * drawLength;
+		Vector3 maxDrawPoint = interactionPoint - BowForward * drawLength;
 		return Vector3.Lerp(interactionPoint, maxDrawPoint, CurrentDrawPercent);
+	}
+
+	public Matrix4x4 GetBowMatrix()
+	{
+		Quaternion rotation = Quaternion.LookRotation(BowForward, BowUp);
+		return Matrix4x4.TRS(GetBowHand().position, rotation, Vector3.one);
+	}
+
+	public Vector3 GetFirePoint()
+	{
+		Matrix4x4 matrix = GetBowMatrix();
+		return matrix.MultiplyPoint(arrowFireOffset);
 	}
 
 	[ContextMenu("Try Draw")]

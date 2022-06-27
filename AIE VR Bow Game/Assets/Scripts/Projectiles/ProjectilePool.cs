@@ -1,17 +1,25 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [System.Serializable]
 public class ProjectilePool
 {
+	[HideInInspector]
+	public ProjectileTypeLookup typeLookup;
+	[HideInInspector]
+	public ProjectileType projectileType = ProjectileType.None;
 	public int poolSize;
 	public Transform visualParent;
-	public ProjectileVisualPair projVisPair;
 	[HideInInspector]
 	public List<Projectile> projectiles = new List<Projectile>();
 	[HideInInspector]
 	public List<ProjectileVisual> visuals = new List<ProjectileVisual>();
+
+	[Header("Events")]
+	public UnityEvent<Projectile> OnRequestProjectileEvent;
+	public UnityEvent<Projectile> OnProjectileAvailableEvent;
 
 	private Queue<Projectile> available = new Queue<Projectile>();
 
@@ -24,8 +32,8 @@ public class ProjectilePool
 	public void AddToPool()
 	{
 		Projectile projectile = new Projectile();
-		projectile.projectileData = projVisPair.projectile;
-		ProjectileVisual visual = MonoBehaviour.Instantiate(projVisPair.visual);
+		projectile.projectileData = typeLookup.GetData(projectileType);
+		ProjectileVisual visual = MonoBehaviour.Instantiate(typeLookup.GetPair(projectileType).visual);
 		visual.transform.SetParent(visualParent);
 		visual.attachedProjectile = projectile;
 
@@ -33,6 +41,7 @@ public class ProjectilePool
 		projectile.OnDisableEvent += visual.OnProjectileDisable;
 		projectile.OnCollisionEvent += visual.OnProjectileCollide;
 		projectile.OnAttachEvent += visual.OnProjectileAttach;
+
 		// This will ensure the projectile enqueues itself
 		projectile.OnDisableEvent += OnProjectileAvailable;
 		projectile.OnAttachEvent += OnProjectileAvailable;
@@ -55,13 +64,19 @@ public class ProjectilePool
 		// The projectile is probably stuck, so disable it and then use it
 		if (requested.enabled)
 			requested.Disable();
+
+		OnRequestProjectileEvent.Invoke(requested);
+		
 		return requested;
 	}
 
 	public void QueueProjectile(Projectile proj)
 	{
 		if (!available.Contains(proj))
+		{
 			available.Enqueue(proj);
+			OnProjectileAvailableEvent.Invoke(proj);
+		}
 	}
 
 	private void OnProjectileAvailable(object sender, EventArgs args)

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1b7cae935006c349844eff20491e604, type: 3}
   m_Name: Default Arrow Pair
   m_EditorClassIdentifier: 
-  <projectile>k__BackingField: {fileID: 11400000, guid: decc5a6ab94cc044587b18247199142b, type: 2}
+  <projectileData>k__BackingField: {fileID: 11400000, guid: decc5a6ab94cc044587b18247199142b, type: 2}
   <visual>k__BackingField: {fileID: 1220814778185463023, guid: 01e1ec59e2c91914ea7f2a7f4fb229c2, type: 3}
