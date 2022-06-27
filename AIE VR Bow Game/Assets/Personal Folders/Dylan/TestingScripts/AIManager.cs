@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class AIManager : MonoBehaviour
 {
-    public enum AIsearchMode
+    enum AIsearchMode
     {
         MANUALLY = 0,
         TAG,
@@ -23,7 +23,13 @@ public class AIManager : MonoBehaviour
         NEW,
     }
 
-    [Header("Player Assignment")]
+    enum ProtectStart
+    {
+        ON = 0,
+        OFF,
+    }
+
+    [Header("Player Settings")]
 
     [SerializeField, Tooltip("MANUALLY: Assign the player yourself. | TAG: Search for object with Player tag.")]
     AIsearchMode m_PlayerAssignment = AIsearchMode.MANUALLY;
@@ -67,13 +73,17 @@ public class AIManager : MonoBehaviour
     [Header("Stun Settings"), Space()] //==================================================  Stuns
 
     [Tooltip("When enabled the Ai will be protected from getting stunned for a few seconds.")]
-    [SerializeField] bool m_ProtectedAtStart = false;
+    [SerializeField] ProtectStart m_ProtectedAtStart = ProtectStart.ON;
 
     [Tooltip("How long the stun will last.")]
     [SerializeField, Range(0, 10)] float m_StunTime = 5;
 
     [Tooltip("How long the cooldown for a stun will be.")]
     [SerializeField, Range(3, 10)] float m_StunCooldown = 3;
+   
+    [Header("Shoot Settings"), Space()] //==================================================  Shooting
+    [Tooltip("The duration of how long it will take for AI to shoot each shot.")]
+    [SerializeField, Range(3, 10)] float m_ShootCooldown = 5;
 
     //============================================================
 
@@ -154,11 +164,17 @@ public class AIManager : MonoBehaviour
             m_AiList[i].SetStopDistance(m_StoppingDistance);
             m_AiList[i].SetStunTimer(m_StunTime);
             m_AiList[i].SetAcceleration(m_Acceleration);
-            m_AiList[i].SetStunCooldown(m_StunCooldown);
 
-            if (m_ProtectedAtStart)
+            m_AiList[i].SetStunCooldown(m_StunCooldown);
+            m_AiList[i].SetShootCooldown(m_ShootCooldown);
+
+            if (m_ProtectedAtStart == ProtectStart.ON)
             {
-                m_AiList[i].ProtectedAtStart(m_ProtectedAtStart);
+                m_AiList[i].ProtectedAtStart(true);
+            }
+            else
+            {
+                m_AiList[i].ProtectedAtStart(false);
             }
         }
 

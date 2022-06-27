@@ -19,7 +19,6 @@ public class AIModule : MonoBehaviour
         MOVETOPLAYER = 0,
         SHOOT,
         FLEE,
-        RETREAT,
         STUN,
         DEATH,
     }
@@ -53,21 +52,25 @@ public class AIModule : MonoBehaviour
 
     bool m_IsAlive = true;
     bool m_IsFleeing = false;
-    public bool m_StunCooldown = false;
+    bool m_StunCooldown = false;
 
-    public float m_StunCooldownAmount;
-    public float m_StunCooldownTimer;
+    float m_StunCooldownAmount;
+    float m_StunCooldownTimer;
     bool m_CheckerVersion = true;
 
+    float m_ShootCooldownAmount = 5f;
+    float m_ShootCooldown = 0f;
+    bool m_IsShooting = false;
+
+
+
     //==============================================================
-    void Start()
+    void Awake()
     {
         m_EnemyAgent = GetComponent<NavMeshAgent>();
         m_Rigidbody = GetComponent<Rigidbody>();
 
         m_StunTimer = m_StunTime;
-
-        //SortChecker();
 
         if (gameObject.GetComponent<NavMeshAgent>())
         {
@@ -103,7 +106,14 @@ public class AIModule : MonoBehaviour
 
             case EnemyStates.SHOOT:
 
-                //TODO fire weapons at player
+                m_ShootCooldown -= Time.deltaTime;
+
+                if (m_ShootCooldown <= 0)
+                {
+                    FireAtPlayer();
+                    m_ShootCooldown = m_ShootCooldownAmount;
+                }
+
                 break;
 
             case EnemyStates.FLEE:
@@ -130,14 +140,15 @@ public class AIModule : MonoBehaviour
                 gameObject.GetComponent<AIModule>().enabled = false;
                 gameObject.GetComponent<NavMeshAgent>().enabled = false;
                 break;
-
-            case EnemyStates.RETREAT: // SUBJECT TO CHANGE
-                //retreat to certain zone.
-
-                break;
         }
+
         CheckDistanceToPlayer();
         UpdateStunTimer();
+    }
+
+    void FireAtPlayer()
+    {
+        Debug.Log(gameObject.name + " Fired at player");
     }
 
     void UpdateStunTimer()
@@ -349,5 +360,10 @@ public class AIModule : MonoBehaviour
     public void SetAcceleration(float _amount)
     {
         m_EnemyAgent.acceleration = _amount;
+    }
+
+    public void SetShootCooldown(float _amount)
+    {
+        m_ShootCooldownAmount = _amount;
     }
 }
