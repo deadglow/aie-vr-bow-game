@@ -20,8 +20,8 @@ MonoBehaviour:
   maxDistance: 1000
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 129
+    m_Bits: 1
   useContinuousDetection: 1
-  maxFloorAngle: 40
+  maxFloorAngle: 45
   reboundEnergyConservation: 0.7
   maxBounces: 12

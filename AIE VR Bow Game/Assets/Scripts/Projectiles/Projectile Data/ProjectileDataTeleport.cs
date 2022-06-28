@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Projectile/Data/Teleport")]
 public class ProjectileDataTeleport : ProjectileData
 {
+	[Header("Teleport Data")]
     public float maxFloorAngle = 15.0f;
 	public float reboundEnergyConservation = 1.0f;
 	public int maxBounces = 12;
