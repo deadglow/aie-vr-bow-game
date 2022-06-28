@@ -32,6 +32,7 @@ public class PlayerMover : MonoBehaviour
 
 	[Header("Events")]
 	public UnityEvent<Vector3> OnTeleportEvent;
+	public UnityEvent OnTeleportFailEvent;
 	public UnityEvent<Vector3> OnRespawnEvent;
 	public UnityEvent OnHeadConfined;
 	public UnityEvent OnHeadUnconfined;
@@ -43,11 +44,11 @@ public class PlayerMover : MonoBehaviour
 
 	void Update()
 	{
-		DoCollision();
-
 		DoGroundCheck();
 
-		DoGravity();
+		DoCollision();
+
+		//DoGravity();
 
 		VerifyPlayerNotUnderFloor();
 
@@ -111,7 +112,7 @@ public class PlayerMover : MonoBehaviour
 	{
 		Vector3 camPos = xrOrigin.Camera.transform.position;
 		Collider[] colliders = Physics.OverlapSphere(camPos, headCollisionRadius, headCollisionLayers, QueryTriggerInteraction.Ignore);
-		if (colliders.Length > 0)
+		if (colliders.Length > 0 || distanceToGround > maxGroundDistance)
 		{
 			if (!isHeadColliding)
 			{
@@ -125,7 +126,7 @@ public class PlayerMover : MonoBehaviour
 			{
 				// Verify if the head move was valid. should allow people to not walk through a wall
 				// Also make sure they're close enough to the last safe point
-				if (Vector3.Distance(lastValidCameraPosition, camPos) < maxReturnDistanceFromSafePoint && !Physics.Linecast(camPos, lastValidCameraPosition, headCollisionLayers))
+				if (Vector3.Distance(lastValidCameraPosition, camPos) < maxReturnDistanceFromSafePoint && !Physics.Linecast(lastValidCameraPosition, camPos, headCollisionLayers))
 				{
 					isHeadColliding = false;
 					lastValidCameraPosition = camPos;
@@ -145,7 +146,7 @@ public class PlayerMover : MonoBehaviour
 	public Vector3 GetPlayerFloorPoint()
 	{
 		Vector3 playerOnFloor = xrOrigin.Camera.transform.position;
-		playerOnFloor.y = xrOrigin.CameraFloorOffsetObject.transform.position.y;
+		playerOnFloor.y = xrOrigin.transform.position.y;
 
 		return playerOnFloor;
 	}
@@ -166,8 +167,18 @@ public class PlayerMover : MonoBehaviour
 		if (!CanTeleport()) return false;
 
 		// Get the delta between the current foot pos and the desired foot pos
-		Vector3 currentFloorPos = GetPlayerFloorPoint();
-		Vector3 delta = position - currentFloorPos;
+		Vector3 floorPoint = GetPlayerFloorPoint();
+		Vector3 delta = position - floorPoint;
+		float distanceToHead = Vector3.Distance(floorPoint, xrOrigin.Camera.transform.position);
+
+		// Don't teleport if your head will be in something when you teleport
+		Ray ray = new Ray(position, Vector3.up);
+		if (Physics.Raycast(ray, distanceToHead + groundCheckRadius, headCollisionLayers) || Physics.SphereCast(ray, groundCheckRadius, distanceToHead, headCollisionLayers))
+		{
+			OnTeleportFailEvent.Invoke();
+			return false;
+		}
+
 		// Apply the difference to the origin
 		xrOrigin.transform.position += delta;
 		ResetValidCameraPosition();

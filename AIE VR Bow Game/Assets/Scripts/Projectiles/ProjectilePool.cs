@@ -79,6 +79,14 @@ public class ProjectilePool
 		}
 	}
 
+	public void DisableAllProjectiles()
+	{
+		for(int i = 0; i < projectiles.Count; ++i)
+		{
+			projectiles[i].Disable();
+		}
+	}
+
 	private void OnProjectileAvailable(object sender, EventArgs args)
 	{
 		QueueProjectile((Projectile)sender);

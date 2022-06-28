@@ -11,6 +11,9 @@ public class BowInput : MonoBehaviour
 	public InputActionReference leftHandDrawReference;
 	public InputActionReference rightHandDrawReference;
 
+	public InputActionReference leftHandSwapReference;
+	public InputActionReference rightHandSwapReference;
+
 	public GameObject leftHandInteractionSphere;
 	public GameObject rightHandInteractionSphere;
 
@@ -21,12 +24,19 @@ public class BowInput : MonoBehaviour
 
 		leftHandDrawReference.action.canceled += ReleaseDrawLeftHand;
 		rightHandDrawReference.action.canceled += ReleaseDrawRightHand;
+
+		leftHandSwapReference.action.performed += SwapBowHand;
+		rightHandSwapReference.action.performed += SwapBowHand;
+
+		SetBowWieldHand(WieldHand.Left);
 	}
 
 	[ContextMenu("Try Grab")]
 	void DebugTryGrab() => TryGrab();
 	void TryGrab()
 	{
+		if (!enabled) return;
+
 		// Try grab an arrow, but if it fails try to grab the bowstring :)
 		if (!arrow.TryGrabArrow())
 			bow.TryDraw(ProjectileType.None);
@@ -36,6 +46,7 @@ public class BowInput : MonoBehaviour
 	void DebugReleaseDraw() => ReleaseDraw();
 	void ReleaseDraw()
 	{
+		if (!enabled) return;
 		bow.ReleaseDraw();
 		arrow.ReleaseArrow();
 	}
@@ -43,8 +54,12 @@ public class BowInput : MonoBehaviour
 	[ContextMenu("Swap Bow Hand")]
 	public void SwapBowHand()
 	{
+		if (!enabled) return;
+
 		SetBowWieldHand(GetBowWieldHand() == WieldHand.Left? WieldHand.Right : WieldHand.Left);
+		bow.ReleaseDraw();
 	}
+	public void SwapBowHand(InputAction.CallbackContext obj) => SwapBowHand();
 
 	public void SetBowWieldHand(WieldHand wieldHand)
 	{

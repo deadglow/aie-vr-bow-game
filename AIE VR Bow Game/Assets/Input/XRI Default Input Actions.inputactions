@@ -489,6 +489,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "SwapBowHand",
+                    "type": "Button",
+                    "id": "0fd7cd98-76ff-4291-b95d-80d70284d869",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -522,6 +531,17 @@
                     "processors": "",
                     "groups": "Generic XR Controller",
                     "action": "InteractionActivate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b106d110-cd6b-46e5-899b-fe01f9d0a05f",
+                    "path": "<XRController>{LeftHand}/secondaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic XR Controller",
+                    "action": "SwapBowHand",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -967,6 +987,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "SwapBowHand",
+                    "type": "Button",
+                    "id": "27635f6a-09b5-4762-a336-0df11a9a2fab",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1000,6 +1029,17 @@
                     "processors": "",
                     "groups": "Generic XR Controller",
                     "action": "InteractionActivate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c175b1a4-4a75-44cf-aac6-68ccd8b71e49",
+                    "path": "<XRController>{RightHand}/secondaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic XR Controller",
+                    "action": "SwapBowHand",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

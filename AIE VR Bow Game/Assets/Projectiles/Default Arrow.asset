@@ -20,6 +20,6 @@ MonoBehaviour:
   maxDistance: 1000
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 129
   useContinuousDetection: 1
   impactForce: 100

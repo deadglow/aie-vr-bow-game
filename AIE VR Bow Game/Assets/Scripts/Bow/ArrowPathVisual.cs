@@ -56,8 +56,13 @@ public class ArrowPathVisual : MonoBehaviour
 						{
 							bounces++;
 							// Bounce
-							if (Vector3.Dot(velocity, collision.collisionNormal) < 0)
-							velocity = Vector3.Reflect(velocity, collision.collisionNormal) * teleData.reboundEnergyConservation;
+							if (Vector3.Angle(collision.collisionNormal, Vector3.up) < teleData.maxFloorAngle)
+							{
+								simulate = false;
+								translation = collision.direction * collision.travelDistance;
+							}
+							else if (Vector3.Dot(velocity, collision.collisionNormal) < 0)
+								velocity = Vector3.Reflect(velocity, collision.collisionNormal) * teleData.reboundEnergyConservation;
 						}
 					}
 					// Apply translation
@@ -67,7 +72,10 @@ public class ArrowPathVisual : MonoBehaviour
 					iterations++;
 
 					if (iterations > maxIterations) simulate = false;
-				}	
+				}
+
+				// Add final pos
+				positions.Add(position);
 			}
 			else
 			{
@@ -92,6 +100,9 @@ public class ArrowPathVisual : MonoBehaviour
 
 					if (iterations > maxIterations) simulate = false;
 				}
+
+				// Add final pos
+				positions.Add(position);
 			}
 		}
 		

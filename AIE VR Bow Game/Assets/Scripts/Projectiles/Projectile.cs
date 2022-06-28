@@ -83,6 +83,7 @@ public class Projectile
 				collision.collisionNormal = Vector3.zero;
 				collision.direction = translationDir;
 				collision.speed = speed;
+				collision.travelDistance = translationDist;
 				collisionList.Add(collision);
 				collided = true;
 			}
@@ -113,10 +114,18 @@ public class Projectile
 		{
 			collision.collider = rayHit.collider;
 			collision.collisionPoint = rayHit.point;
-			collision.collisionNormal = rayHit.normal;
 			collision.direction = translationDir;
+			collision.travelDistance = rayHit.distance;
 			// Override translation by the amount to move before hitting something
 			translation = translationDir * rayHit.distance;
+			
+			// Calculate collision normal
+			RaycastHit normalHit;
+			Vector3 normalHitStartPoinnt = pos + translation;
+			Vector3 deltaVec = rayHit.point - normalHitStartPoinnt;
+			float normalHitDistance = deltaVec.magnitude;
+			Physics.Raycast(normalHitStartPoinnt, deltaVec / normalHitDistance, out normalHit, normalHitDistance + 0.0001f, data.collisionLayers);
+			collision.collisionNormal = normalHit.normal;
 
 			return true;
 		}
@@ -188,6 +197,8 @@ public struct ProjectileCollision
 	public Vector3 direction;
 	public float speed;
 	public Collider collider;
+
+	public float travelDistance;
 }
 
 public enum ProjectileType : int
