@@ -80,17 +80,23 @@ public class AIManager : MonoBehaviour
 
     [Tooltip("How long the cooldown for a stun will be.")]
     [SerializeField, Range(3, 10)] float m_StunCooldown = 3;
-   
+
     [Header("Shoot Settings"), Space()] //==================================================  Shooting
 
     [Tooltip("The type of projectile the enemy will use.")]
     [SerializeField] ProjectileType m_ProType = ProjectileType.EnemyProjectile;
-    
+
     [Tooltip("The duration of how long it will take for AI to shoot each shot.")]
     [SerializeField, Range(3, 10)] float m_ShootCooldown = 5;
 
     [Tooltip("The speed scale of the projectile shot.")]
-    [SerializeField, Range(0,1)] float m_BulletSpeedScale = 0.5f;
+    [SerializeField, Range(0, 1)] float m_BulletSpeedScale = 0.5f;
+
+    [Header("Spawns")]
+
+    [SerializeField] Transform[] m_SpawnList = null;
+    public int m_CurrentSpawn = 0;
+    public int m_AmountPerSpawn = 0;
 
     [Header("External")]
     [Tooltip("Reference to the projectile manager.")]
@@ -103,7 +109,6 @@ public class AIManager : MonoBehaviour
     private void Start()
     {
         m_AiList = FindObjectsOfType<AIModule>(); // find & assign the AIs.
-
         if (m_AiList == null)
         {
             Debug.Break();
@@ -139,6 +144,7 @@ public class AIManager : MonoBehaviour
 
         AssignCheckerVersion();// Assign the checker versions for the AIs to use.
         AssignValues(); // begin to assign all values from the manager to other AIs.
+        SetSpawns();
     }
 
     void AssignCheckerVersion()
@@ -252,13 +258,53 @@ public class AIManager : MonoBehaviour
     // Brings all of the AI in the scene back to life again, if not already alive.
     public void ReviveAll()
     {
+        m_CurrentSpawn = 0;
+
+        m_AmountPerSpawn = m_AiList.Length / m_SpawnList.Length;
+
         for (int i = 0; i < m_AiList.Length; i++)
         {
-            if (!m_AiList[i].enabled)
+            m_AiList[i].enabled = true;
+            m_AiList[i].gameObject.GetComponent<NavMeshAgent>().enabled = true;
+            m_AiList[i].Revive(m_SpawnList[m_CurrentSpawn]);
+
+            if (i % m_AmountPerSpawn == 0)
             {
-                m_AiList[i].gameObject.GetComponent<NavMeshAgent>().enabled = true;
-                m_AiList[i].enabled = true;
+                m_CurrentSpawn++;
             }
         }
+
+    }
+    void SetSpawns()
+    {
+        m_AmountPerSpawn = m_AiList.Length / m_SpawnList.Length;
+
+        for (int i = 0; i < m_AiList.Length; i++)
+        {
+            m_AiList[i].SetPosition(m_SpawnList[m_CurrentSpawn]);
+
+            if (i % m_AmountPerSpawn == 0)
+            {
+                m_CurrentSpawn++;
+            }
+        }
+    }
+
+
+    public bool AreAllDead()
+    {
+        for (int i = 0; i < m_AiList.Length; i++)
+        {
+            if (!m_AiList[i].IsDead())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int EnemyCount()
+    {
+        return m_AiList.Length;
     }
 }

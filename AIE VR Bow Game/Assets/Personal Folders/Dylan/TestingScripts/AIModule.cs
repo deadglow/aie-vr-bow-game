@@ -282,7 +282,6 @@ public class AIModule : MonoBehaviour
         m_IsAlive = false;
         m_EnemyStates = EnemyStates.DEATH;
 
-        gameObject.GetComponent<NavMeshAgent>().enabled = false;
     }
 
     //========================================
@@ -390,5 +389,10 @@ public class AIModule : MonoBehaviour
     public void SetProjectileType(ProjectileType _type)
     {
         m_ProjectType = _type;
+    }
+
+    public void SetPosition(Transform _NewPos)
+    {
+        gameObject.transform.position = _NewPos.position;
     }
 }
