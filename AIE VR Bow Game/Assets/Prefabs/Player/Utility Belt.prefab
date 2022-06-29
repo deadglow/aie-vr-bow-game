@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 323279755276348353}
   - component: {fileID: 323279755276348352}
   - component: {fileID: 323279755276348356}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tele Quiver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 323279755276348366}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.14, y: -0.587, z: 0.273}
+  m_LocalPosition: {x: -0.387, y: -0.587, z: 0.175}
   m_LocalScale: {x: 0.35219824, y: 0.27059528, z: 0.2567025}
   m_Children: []
   m_Father: {fileID: 323279755884585463}
@@ -139,7 +139,7 @@ GameObject:
   m_Component:
   - component: {fileID: 323279755884585463}
   - component: {fileID: 323279755884585416}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Utility Belt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,7 +188,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 323279757062181486}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 323279757288333279}
   - component: {fileID: 323279757288333278}
   - component: {fileID: 323279757288333266}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Main Quiver
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -17,12 +17,15 @@ public class Projectile
 	[HideInInspector]
 	public Vector3 previousForward;	
 	public Vector3 velocity;
-	private float travelledDistance = 0;
+	public float travelledDistance = 0;
+
+	// Use this for anything
+	public int miscCount = 0;
 
 	[Header("Attachment")]
 	public Transform attachmentTransform;
 	public Vector3 attachedPosition;
-	public Quaternion attachedRotation;
+	public Vector3 attachedForward;
 	
 	// Events
 	public event EventHandler OnFireEvent;
@@ -52,22 +55,17 @@ public class Projectile
 		bool collided = false;
 		if (projectileData.useContinuousDetection)
 		{
-			// We check for collisions along the path before moving
-			RaycastHit rayHit;
-			if (Physics.SphereCast(position, projectileData.radius, translationDir, out rayHit, translationDist, projectileData.collisionLayers))
+			// Fill in collision data
+			ProjectileCollision collision = new ProjectileCollision();
+			collision.projectile = this;
+			collision.speed = velocity.magnitude;
+
+			if (ContinuousCollisionCheck(projectileData, position, ref translation, ref collision))
 			{
-				ProjectileCollision collision;
-				collision.projectile = this;
-				collision.collider = rayHit.collider;
-				collision.collisionPoint = rayHit.point;
-				collision.collisionNormal = rayHit.normal;
-				collision.direction = translationDir;
-				collision.speed = velocity.magnitude;
 				collisionList.Add(collision);
 				collided = true;
-				// Override translation by the amount to move before hitting something
-				translation = translationDir * rayHit.distance;
 			}
+			
 			position += translation;
 		}
 		else
@@ -85,6 +83,7 @@ public class Projectile
 				collision.collisionNormal = Vector3.zero;
 				collision.direction = translationDir;
 				collision.speed = speed;
+				collision.travelDistance = translationDist;
 				collisionList.Add(collision);
 				collided = true;
 			}
@@ -103,6 +102,36 @@ public class Projectile
 		return collided;
 	}
 
+	public static bool ContinuousCollisionCheck(ProjectileData data, Vector3 pos, ref Vector3 translation, ref ProjectileCollision collision)
+	{
+		// We check for collisions along the path before moving
+		float distance = translation.magnitude;
+		if (distance == 0) return false;
+
+		Vector3 translationDir = translation / distance;
+		RaycastHit rayHit;
+		if (Physics.SphereCast(pos, data.radius, translationDir, out rayHit, distance, data.collisionLayers))
+		{
+			collision.collider = rayHit.collider;
+			collision.collisionPoint = rayHit.point;
+			collision.direction = translationDir;
+			collision.travelDistance = rayHit.distance;
+			// Override translation by the amount to move before hitting something
+			translation = translationDir * rayHit.distance;
+			
+			// Calculate collision normal
+			RaycastHit normalHit;
+			Vector3 normalHitStartPoinnt = pos + translation;
+			Vector3 deltaVec = rayHit.point - normalHitStartPoinnt;
+			float normalHitDistance = deltaVec.magnitude;
+			Physics.Raycast(normalHitStartPoinnt, deltaVec / normalHitDistance, out normalHit, normalHitDistance + 0.0001f, data.collisionLayers);
+			collision.collisionNormal = normalHit.normal;
+
+			return true;
+		}
+		return false;
+	}
+
 	public void Fire(Vector3 spawnPosition, Vector3 forward, float speedScale = 1.0f)
 	{
 		projectileData.Fire(this, spawnPosition, forward, speedScale);
@@ -119,7 +148,7 @@ public class Projectile
 	{
 		attachmentTransform = t;
 		attachedPosition = t.InverseTransformPoint(position);
-		attachedRotation = t.rotation * GetRotation();
+		attachedForward = t.InverseTransformDirection(forward);
 		OnAttachEvent.Invoke(this, EventArgs.Empty);
 	}
 
@@ -157,7 +186,6 @@ public class Projectile
 	{
 		return Quaternion.LookRotation(forward, Vector3.up);
 	}
-
 }
 
 [System.Serializable]
@@ -169,6 +197,8 @@ public struct ProjectileCollision
 	public Vector3 direction;
 	public float speed;
 	public Collider collider;
+
+	public float travelDistance;
 }
 
 public enum ProjectileType : int
@@ -176,5 +206,6 @@ public enum ProjectileType : int
 	None,
 	Arrow,
 	TeleportArrow,
-	EnemyProjectile
+	EnemyProjectile,
+	Count
 }
