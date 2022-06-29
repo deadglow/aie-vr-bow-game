@@ -22,6 +22,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   useContinuousDetection: 1
-  maxFloorAngle: 20
-  reboundEnergyConservation: 1
+  maxFloorAngle: 45
+  reboundEnergyConservation: 0.7
   maxBounces: 12

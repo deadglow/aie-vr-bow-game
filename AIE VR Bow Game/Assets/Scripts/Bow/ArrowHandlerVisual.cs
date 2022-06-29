@@ -23,7 +23,7 @@ public class ArrowHandlerVisual : MonoBehaviour
 			visualLookup.Add(visualPair.type, instance);
 		}
 
-		handler.OnEquipArrowEvent.AddListener(EquipArrow);
+		handler.onEquipArrowEvent.AddListener(EquipArrow);
 	}
 
     // Update is called once per frame

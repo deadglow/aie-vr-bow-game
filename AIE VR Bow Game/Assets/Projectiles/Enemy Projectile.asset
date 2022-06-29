@@ -9,18 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64714b1cd46ccc144b53ca5c736afebb, type: 3}
-  m_Name: Default Arrow
+  m_Script: {fileID: 11500000, guid: d75737e82fcffcd4baa094b0dcde0442, type: 3}
+  m_Name: Enemy Projectile
   m_EditorClassIdentifier: 
-  gravity: 5
-  minFireSpeed: 0
-  fireSpeed: 50
-  radius: 0.03
+  gravity: 0
+  minFireSpeed: 1
+  fireSpeed: 20
+  radius: 0.1
   forwardMatchVelocity: 1
-  maxDistance: 1000
+  maxDistance: 500
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 129
+    m_Bits: 257
   useContinuousDetection: 1
-  impactForce: 30
   damage: 1

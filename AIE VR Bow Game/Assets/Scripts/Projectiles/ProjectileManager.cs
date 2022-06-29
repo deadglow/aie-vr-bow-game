@@ -81,6 +81,14 @@ public class ProjectileManager : MonoBehaviour
 		return projectile;
 	}
 
+	public void TeleportArrowDisableCheck(ProjectileType type)
+	{
+		if (type == ProjectileType.TeleportArrow)
+		{
+			projectileLookup[type].DisableAllProjectiles();
+		}
+	}
+
 
 	[System.Serializable]
 	public struct ProjectileTypePoolPair
