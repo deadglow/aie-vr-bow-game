@@ -6,16 +6,20 @@ using UnityEngine.InputSystem;
 public class BowHandler : MonoBehaviour
 {
 	public bool drawDebug = false;
-	public ProjectileType defaultProjectileType = ProjectileType.None;
+	public ProjectileManager projectileManager;
+	private ProjectileType defaultProjectileType = ProjectileType.None;
 
 	[Header("Hand Setup")]
     public Transform leftHandTransform;
 	public Transform rightHandTransform;
+	[HideInInspector]
 	public bool wieldWithLeftHand = true;
 	public bool aimOnlyWithBowHand = false;
 
 	[Header("Draw Properties")]
+	[Tooltip("Offset from the left hand where the draw point will be.")]
 	public Vector3 drawInteractionOffset = Vector3.zero;
+	[Tooltip("How close to the draw point the player's hand must be to interact with it.")]
 	public float drawInteractionRadius = 0.2f;
 
 	[field: SerializeField, Range(0.0f, 1.0f)]
@@ -25,13 +29,14 @@ public class BowHandler : MonoBehaviour
 	public Vector3 BowForward { get; private set; }
 	public Vector3 BowUp {get; private set; }
 	[Space]
+	[Tooltip("Distance from the draw point that the bowstring can be pulled to.")]
 	public float drawLength = 1.0f;
-	public float minDrawDistance = 0.1f;
 
 	[Header("Arrow State")]
-	public ProjectileManager projectileManager;
 	public Vector3 arrowFireOffset;
+	[HideInInspector]
 	public ProjectileType currentArrowType = ProjectileType.None;
+	[Tooltip("Any lower than this and the bow will simply cancel the arrow.")]
 	public float arrowMinDrawPercent = 0.05f;
 
 	void Start()

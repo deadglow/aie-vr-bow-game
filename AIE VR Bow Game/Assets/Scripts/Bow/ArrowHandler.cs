@@ -6,7 +6,6 @@ public class ArrowHandler : MonoBehaviour
 {
 	public BowHandler bow;
     public ProjectileType currentArrowType { get; private set; } = ProjectileType.None;
-	[field: SerializeField]
 	public bool isKnocked { get; private set; } = false;
 
 	public float grabRadius = 0.05f;

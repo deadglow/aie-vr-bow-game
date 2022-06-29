@@ -622,7 +622,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawDebug: 0
-  defaultProjectileType: 0
+  projectileManager: {fileID: 0}
   leftHandTransform: {fileID: 190218924685486809}
   rightHandTransform: {fileID: 190218924862456613}
   wieldWithLeftHand: 1
@@ -632,8 +632,6 @@ MonoBehaviour:
   <CurrentDrawPercent>k__BackingField: 0
   <IsDrawing>k__BackingField: 0
   drawLength: 0.5
-  minDrawDistance: 0.1
-  projectileManager: {fileID: 0}
   arrowFireOffset: {x: 0, y: 0, z: 0.07}
   currentArrowType: 0
   arrowMinDrawPercent: 0.05
@@ -650,7 +648,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bow: {fileID: 190218924170704858}
-  <isKnocked>k__BackingField: 0
   grabRadius: 0.05
   arrowGrabLayer:
     serializedVersion: 2
@@ -750,11 +747,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   groundCheckRadius: 0.1
-  groundCheckDistance: 2
-  maxGroundDistance: 0.3
-  respawnYValue: -20
-  respawnPoints:
-  - {x: 2.6251793, y: 1.62, z: -11.329377}
+  groundCheckDistance: 60
+  groundedDistance: 0.2
+  invalidGroundDistance: 40
+  respawnPointParent: {fileID: 0}
   OnTeleportEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -3327,7 +3323,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 323279757288333277, guid: 9b0c308a2a4920b43af3ccf9a2821a35, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.0451516
+      value: 1.7949433
       objectReference: {fileID: 0}
     - target: {fileID: 323279757288333277, guid: 9b0c308a2a4920b43af3ccf9a2821a35, type: 3}
       propertyPath: m_LocalScale.y
