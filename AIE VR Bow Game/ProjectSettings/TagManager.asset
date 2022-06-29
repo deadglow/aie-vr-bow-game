@@ -4,17 +4,19 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - EnemySpawn
+  - AI
   - Projectile Manager
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - PlayerConfined
   - Water
   - UI
-  - 
-  - 
-  - 
+  - UtilityBelt
+  - Enemy
+  - Player
   - 
   - 
   - 

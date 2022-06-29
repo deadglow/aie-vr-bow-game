@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: Default Arrow
   m_EditorClassIdentifier: 
   gravity: 5
-  fireSpeed: 69
+  minFireSpeed: 0
+  fireSpeed: 50
   radius: 0.03
   forwardMatchVelocity: 1
   maxDistance: 1000
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 129
   useContinuousDetection: 1
-  impactForce: 100
+  impactForce: 30
+  damage: 1

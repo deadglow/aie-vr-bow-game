@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 public class ProjectileVisual : MonoBehaviour
 {
+	private bool wasFired = false;
 	[HideInInspector]
     public Projectile attachedProjectile;
 	public UnityEvent onProjectileFireEvent;
@@ -18,7 +19,7 @@ public class ProjectileVisual : MonoBehaviour
 		if (attachedProjectile.attachmentTransform)
 		{
 			transform.position = attachedProjectile.attachmentTransform.TransformPoint(attachedProjectile.attachedPosition);
-			transform.rotation = attachedProjectile.attachmentTransform.rotation * attachedProjectile.attachedRotation;
+			transform.rotation = Quaternion.LookRotation(attachedProjectile.attachmentTransform.TransformDirection(attachedProjectile.attachedForward), Vector3.up);
 		}
 		// Interpolate the visual while the projectile moves
 		else
@@ -31,12 +32,18 @@ public class ProjectileVisual : MonoBehaviour
 			else
 				transform.rotation = Quaternion.LookRotation(Vector3.up, Vector3.forward);
 		}
+
+		if (wasFired)
+		{
+			onProjectileFireEvent.Invoke();
+			wasFired = false;
+		}
 	}
 
 	public void OnProjectileFire(object sender, EventArgs args)
 	{
 		gameObject.SetActive(true);
-		onProjectileFireEvent.Invoke();
+		wasFired = true;
 	}
 
 	public void OnProjectileDisable(object sender, EventArgs args)
