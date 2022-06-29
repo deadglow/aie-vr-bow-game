@@ -2042,7 +2042,7 @@ Transform:
   m_Children:
   - {fileID: 1241709229}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &93569995
 Mesh:
@@ -17070,10 +17070,7 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
-  m_IsStuned: 0
-  m_StunCooldown: 0
-  m_StunCooldownAmount: 0
-  m_StunCooldownTimer: 0
+  m_ProjectileSpawn: {fileID: 0}
 --- !u!195 &713599859
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -23292,7 +23289,7 @@ Transform:
   m_LocalScale: {x: 28.285, y: 28.285, z: 28.285}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &903969661
 Mesh:
@@ -26486,10 +26483,7 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
-  m_IsStuned: 0
-  m_StunCooldown: 0
-  m_StunCooldownAmount: 0
-  m_StunCooldownTimer: 0
+  m_ProjectileSpawn: {fileID: 0}
 --- !u!195 &981550720
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -32900,7 +32894,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1239465410
 Transform:
   m_ObjectHideFlags: 0
@@ -32916,7 +32910,7 @@ Transform:
   - {fileID: 1324880617}
   - {fileID: 713599856}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1239465411
 MonoBehaviour:
@@ -32932,16 +32926,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PlayerAssignment: 0
   m_Target: {fileID: 1742043016}
-  m_ApplyHeight: 1
+  m_CheckerVersion: 1
   m_AiSpeed: 2
   m_StoppingDistance: 10
   m_AngularSpeed: 60
+  m_Acceleration: 8
+  m_ApplyHeight: 1
   m_PriorityAvoid: 5
   m_AvoidanceRadius: 1.5
   m_AvoidanceHeight: 2
   m_ProtectedAtStart: 0
   m_StunTime: 5
   m_StunCooldown: 3
+  m_ProType: 3
+  m_ShootCooldown: 5
+  m_BulletSpeedScale: 0.5
+  m_SpawnList: []
+  m_CurrentSpawn: 0
+  m_AmountPerSpawn: 0
+  m_Projectile: {fileID: 0}
 --- !u!1 &1241709228
 GameObject:
   m_ObjectHideFlags: 0
@@ -35344,10 +35347,7 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
-  m_IsStuned: 0
-  m_StunCooldown: 0
-  m_StunCooldownAmount: 0
-  m_StunCooldownTimer: 0
+  m_ProjectileSpawn: {fileID: 0}
 --- !u!195 &1324880620
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -44651,7 +44651,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4280731575550868390, guid: e361caf31aee7f84fbb8b56c97a1c081, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4280731575550868390, guid: e361caf31aee7f84fbb8b56c97a1c081, type: 3}
       propertyPath: m_LocalPosition.x
@@ -45700,7 +45700,7 @@ PrefabInstance:
       objectReference: {fileID: 1626872353}
     - target: {fileID: 190218925196708322, guid: cfd0fea43fa62c4478067dbc2423ae50, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 190218925196708322, guid: cfd0fea43fa62c4478067dbc2423ae50, type: 3}
       propertyPath: m_LocalPosition.x
@@ -61496,6 +61496,52 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &2080346117
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2080346118}
+  - component: {fileID: 2080346119}
+  m_Layer: 0
+  m_Name: Game Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2080346118
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080346117}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2080346119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080346117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 932621ccac6abdc48bc6aede834af16c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aiManager: {fileID: 0}
+  automaticallySwitchWave: 0
+  timeBetweenWaves: 120
 --- !u!43 &2080843651
 Mesh:
   m_ObjectHideFlags: 0
