@@ -12,9 +12,9 @@ public class PlayerMover : MonoBehaviour
 	public bool allowTeleportation = true;
 
 	[Header("Head Collision")]
-	[Header("The radius of the sphere that represents the players head.")]
+	[Tooltip("The radius of the sphere that represents the players head.")]
 	public float headCollisionRadius = 0.2f;
-	[Header("How close to the safe point you have to be for the player to return to reality.")]
+	[Tooltip("How close to the safe point you have to be for the player to return to reality.")]
 	public float maxReturnDistanceFromSafePoint = 2.0f;
 	public LayerMask headCollisionLayers;
 	public bool isHeadColliding { get; private set; }
@@ -71,7 +71,8 @@ public class PlayerMover : MonoBehaviour
 	private void DoGroundCheck()
 	{
 		// The head pos but the y value is replaced with the floor's y value
-		Vector3 playerOnFloor = GetPlayerFloorPoint();
+		Vector3 playerOnFloor = xrOrigin.Camera.transform.position;
+		playerOnFloor.y = xrOrigin.transform.position.y;
 		Vector3 camPos = xrOrigin.Camera.transform.position;
 		float distanceToFloor = Vector3.Distance(playerOnFloor, camPos);
 
@@ -175,14 +176,6 @@ public class PlayerMover : MonoBehaviour
 		return lastValidCameraPosition;
 	}
 
-	public Vector3 GetPlayerFloorPoint()
-	{
-		Vector3 playerOnFloor = xrOrigin.Camera.transform.position;
-		playerOnFloor.y = xrOrigin.transform.position.y;
-
-		return playerOnFloor;
-	}
-
 	public bool CanTeleport()
 	{
 		return allowTeleportation && !isHeadColliding;
@@ -198,10 +191,8 @@ public class PlayerMover : MonoBehaviour
 	{
 		if (!force && !CanTeleport()) return false;
 
-		// Get the delta between the current foot pos and the desired foot pos
-		Vector3 floorPoint = GetPlayerFloorPoint();
-		Vector3 delta = position - floorPoint;
-		float distanceToHead = Vector3.Distance(floorPoint, xrOrigin.Camera.transform.position);
+		Vector3 headpos = position + Vector3.up * distanceToGround;
+		float distanceToHead = -distanceToGround;
 
 		// Don't teleport if your head will be in something when you teleport
 		Ray ray = new Ray(position, Vector3.up);
@@ -212,7 +203,7 @@ public class PlayerMover : MonoBehaviour
 		}
 
 		// Apply the difference to the origin
-		xrOrigin.transform.position += delta;
+		xrOrigin.MoveCameraToWorldLocation(headpos);
 		ResetValidCameraPosition();
 
 		OnTeleportEvent.Invoke(position);

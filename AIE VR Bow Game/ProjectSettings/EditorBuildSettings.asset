@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/VR Setup Testing.unity
     guid: 8e16c8b417a9c374b9b97ca26562794e
+  - enabled: 1
+    path: Assets/Personal Folders/Rahul/VR Setup Testing Rahul.unity
+    guid: 6816485fd4e99d24499302565f910d2a
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 0ff7c6748924dbd46a46b08ff0023d31, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 6e400e1e713ca8d409b68d3a5ebae888, type: 2}
