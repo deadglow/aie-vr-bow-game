@@ -11,19 +11,30 @@ public class EntityStatus : MonoBehaviour
 	public int maxHealth { get; private set; }
 	public bool isDead {get; private set; } = false;
 
+	public float damageMultiplier = 1.0f;
+
 	public UnityEvent OnDeathEvent;
 	public UnityEvent OnReviveEvent;
 	public UnityEvent<int> OnHealEvent;
 	public UnityEvent<int> OnDamageEvent;
+	public UnityEvent<Vector3> OnDamagePointEvent;
 
 	public void Damage(int amount)
 	{
-		health -= amount;
+		health -= Mathf.FloorToInt(amount * damageMultiplier);
 		if (health <= 0)
 			Kill();
 
 		OnDamageEvent.Invoke(amount);		
 	}
+
+	public void DamageAtPoint(int amount, Vector3 point)
+	{
+		Damage(amount);
+
+		OnDamagePointEvent.Invoke(point);
+	}
+
 
 	public void Heal(int amount)
 	{
