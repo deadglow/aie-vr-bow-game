@@ -47,7 +47,6 @@ public class ShieldHandler : MonoBehaviour
 
 		currentColliderProperties = ColliderProperties.Lerp(ref minCollider, ref maxCollider, deployState);
 		transform.position = bow.GetBowHand().TransformPoint(currentColliderProperties.offset);
-		transform.rotation = bow.GetBowHand().rotation * Quaternion.Euler(currentColliderProperties.rotation);
 		collider.size = currentColliderProperties.size;
 
 		collider.enabled = (deployState >= activeThreshold);
@@ -72,20 +71,30 @@ public class ShieldHandler : MonoBehaviour
 		charge.AddCharge();
 		OnBulletImpactEvent.Invoke(point);
 	}
+
+	void OnDrawGizmosSelected()
+	{
+		if (!bow) return;
+
+		Gizmos.matrix = bow.GetBowHand().localToWorldMatrix;
+
+		Gizmos.color = Color.red * 0.8f;
+		Gizmos.DrawCube(minCollider.offset, minCollider.size);
+		Gizmos.color = Color.green * 0.8f;
+		Gizmos.DrawCube(maxCollider.offset, maxCollider.size);
+	}
 	
 
 	[System.Serializable]
 	public struct ColliderProperties
 	{
 		public Vector3 offset;
-		public Vector3 rotation;
 		public Vector3 size;
 
 		public static ColliderProperties Lerp(ref ColliderProperties a, ref ColliderProperties b, float t)
 		{
 			ColliderProperties newProperties;
 			newProperties.offset = Vector3.Lerp(a.offset, b.offset, t);
-			newProperties.rotation = Vector3.Slerp(a.rotation, b.rotation, t);
 			newProperties.size = Vector3.Lerp(a.size, b.size, t);
 			
 			return newProperties;

@@ -63,7 +63,43 @@ MonoBehaviour:
   onProjectileFireEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 849754482514511817}
+        m_TargetAssemblyTypeName: UnityEngine.TrailRenderer, UnityEngine
+        m_MethodName: set_emitting
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 849754483250352407}
+        m_TargetAssemblyTypeName: UnityEngine.TrailRenderer, UnityEngine
+        m_MethodName: set_emitting
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 849754483143376729}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 849754483250352407}
         m_TargetAssemblyTypeName: UnityEngine.TrailRenderer, UnityEngine
         m_MethodName: Clear
         m_Mode: 1
@@ -73,17 +109,89 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 849754482514511817}
+        m_TargetAssemblyTypeName: UnityEngine.TrailRenderer, UnityEngine
+        m_MethodName: Clear
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
   onProjectileAttachEvent:
     m_PersistentCalls:
       m_Calls: []
   onProjectileDisableEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onProjectileCollideEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 849754482514511817}
+        m_TargetAssemblyTypeName: UnityEngine.TrailRenderer, UnityEngine
+        m_MethodName: set_emitting
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 849754483250352407}
+        m_TargetAssemblyTypeName: UnityEngine.TrailRenderer, UnityEngine
+        m_MethodName: set_emitting
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 849754483143376729}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!135 &3780153004548666638
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -339,5 +447,20 @@ PrefabInstance:
 --- !u!4 &849754482514511814 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4007419312009661888, guid: dbb37311868bfdb4385f452d69dcecd7, type: 3}
+  m_PrefabInstance: {fileID: 4348183189877066246}
+  m_PrefabAsset: {fileID: 0}
+--- !u!96 &849754482514511817 stripped
+TrailRenderer:
+  m_CorrespondingSourceObject: {fileID: 4007419312009661903, guid: dbb37311868bfdb4385f452d69dcecd7, type: 3}
+  m_PrefabInstance: {fileID: 4348183189877066246}
+  m_PrefabAsset: {fileID: 0}
+--- !u!96 &849754483250352407 stripped
+TrailRenderer:
+  m_CorrespondingSourceObject: {fileID: 4007419311141182225, guid: dbb37311868bfdb4385f452d69dcecd7, type: 3}
+  m_PrefabInstance: {fileID: 4348183189877066246}
+  m_PrefabAsset: {fileID: 0}
+--- !u!73398921 &849754483143376729 stripped
+VFXRenderer:
+  m_CorrespondingSourceObject: {fileID: 4007419310979741023, guid: dbb37311868bfdb4385f452d69dcecd7, type: 3}
   m_PrefabInstance: {fileID: 4348183189877066246}
   m_PrefabAsset: {fileID: 0}

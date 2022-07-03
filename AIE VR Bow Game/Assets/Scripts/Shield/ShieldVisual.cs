@@ -21,7 +21,8 @@ public class ShieldVisual : MonoBehaviour
 	void LateUpdate()
 	{
 		transform.position = shield.bow.GetBowHand().TransformPoint(shield.currentColliderProperties.offset);
-		transform.rotation = shield.bow.GetBowHand().rotation * Quaternion.Euler(shield.currentColliderProperties.rotation);
+		transform.rotation = shield.bow.GetBowHand().rotation;
+		transform.localScale = shield.currentColliderProperties.size;
 
 		// do shield animation transition here based on shield.deploystate
 	}

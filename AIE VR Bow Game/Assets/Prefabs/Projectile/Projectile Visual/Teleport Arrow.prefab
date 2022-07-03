@@ -62,7 +62,19 @@ MonoBehaviour:
   onProjectileFireEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1127633418415199310}
+        m_TargetAssemblyTypeName: UnityEngine.TrailRenderer, UnityEngine
+        m_MethodName: Clear
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1127633419590610502}
         m_TargetAssemblyTypeName: UnityEngine.TrailRenderer, UnityEngine
         m_MethodName: Clear
         m_Mode: 1
@@ -79,7 +91,31 @@ MonoBehaviour:
       m_Calls: []
   onProjectileDisableEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1127633419590610502}
+        m_TargetAssemblyTypeName: UnityEngine.TrailRenderer, UnityEngine
+        m_MethodName: Clear
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1127633418415199310}
+        m_TargetAssemblyTypeName: UnityEngine.TrailRenderer, UnityEngine
+        m_MethodName: Clear
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onProjectileCollideEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -103,6 +139,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1220814778185463022}
     m_Modifications:
+    - target: {fileID: 3867682971007656930, guid: 13f59baeb14a1ef498675c8826cbbab6, type: 3}
+      propertyPath: m_Time
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3867682971096834837, guid: 13f59baeb14a1ef498675c8826cbbab6, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -111,6 +151,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3867682972376029674, guid: 13f59baeb14a1ef498675c8826cbbab6, type: 3}
+      propertyPath: m_Time
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3867682972376029675, guid: 13f59baeb14a1ef498675c8826cbbab6, type: 3}
       propertyPath: m_Name
       value: Bow Trail
@@ -118,6 +162,18 @@ PrefabInstance:
     - target: {fileID: 3867682972376029677, guid: 13f59baeb14a1ef498675c8826cbbab6, type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3867682972376029677, guid: 13f59baeb14a1ef498675c8826cbbab6, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3867682972376029677, guid: 13f59baeb14a1ef498675c8826cbbab6, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3867682972376029677, guid: 13f59baeb14a1ef498675c8826cbbab6, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3867682972376029677, guid: 13f59baeb14a1ef498675c8826cbbab6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -166,6 +222,16 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3867682972376029677, guid: 13f59baeb14a1ef498675c8826cbbab6, type: 3}
   m_PrefabInstance: {fileID: 4182416567578103204}
   m_PrefabAsset: {fileID: 0}
+--- !u!96 &1127633418415199310 stripped
+TrailRenderer:
+  m_CorrespondingSourceObject: {fileID: 3867682972376029674, guid: 13f59baeb14a1ef498675c8826cbbab6, type: 3}
+  m_PrefabInstance: {fileID: 4182416567578103204}
+  m_PrefabAsset: {fileID: 0}
+--- !u!96 &1127633419590610502 stripped
+TrailRenderer:
+  m_CorrespondingSourceObject: {fileID: 3867682971007656930, guid: 13f59baeb14a1ef498675c8826cbbab6, type: 3}
+  m_PrefabInstance: {fileID: 4182416567578103204}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7161633799607421562
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -179,15 +245,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 545309458395112067, guid: 9f53fbcaba4748b478f51cd213a6ca92, type: 3}
       propertyPath: m_LocalScale.x
-      value: 180
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 545309458395112067, guid: 9f53fbcaba4748b478f51cd213a6ca92, type: 3}
       propertyPath: m_LocalScale.y
-      value: 180
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 545309458395112067, guid: 9f53fbcaba4748b478f51cd213a6ca92, type: 3}
       propertyPath: m_LocalScale.z
-      value: 180
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 545309458395112067, guid: 9f53fbcaba4748b478f51cd213a6ca92, type: 3}
       propertyPath: m_LocalPosition.x
