@@ -7,6 +7,7 @@ public class ArrowPathVisual : MonoBehaviour
     public bool showPath = true;
 	public BowHandler bow;
 	public LineRenderer lineRenderer;
+	public Transform teleportDestination;
 	public float simplifyTolerance = 0.1f;
 	public float iterationTimestep = 1.0f / 30.0f;
 	public int maxIterations = 100;
@@ -21,6 +22,7 @@ public class ArrowPathVisual : MonoBehaviour
 	void LateUpdate()
 	{
 		List<Vector3> positions = new List<Vector3>();
+		teleportDestination.gameObject.SetActive(false);
 
 		if (bow.currentArrowType != ProjectileType.None)
 		{
@@ -30,6 +32,7 @@ public class ArrowPathVisual : MonoBehaviour
 			Vector3 velocity = bow.BowForward * data.GetFireSpeed(bow.CurrentDrawPercent); 
 			
 			bool simulate = true;
+			bool foundFloor = false;
 			int iterations = 0;			
 			Vector3 translation;
 			ProjectileCollision collision = new ProjectileCollision();
@@ -56,10 +59,11 @@ public class ArrowPathVisual : MonoBehaviour
 						{
 							bounces++;
 							// Bounce
+							translation = collision.direction * collision.travelDistance;
 							if (Vector3.Angle(collision.collisionNormal, Vector3.up) < teleData.maxFloorAngle)
 							{
 								simulate = false;
-								translation = collision.direction * collision.travelDistance;
+								foundFloor = true;
 							}
 							else if (Vector3.Dot(velocity, collision.collisionNormal) < 0)
 								velocity = Vector3.Reflect(velocity, collision.collisionNormal) * teleData.reboundEnergyConservation;
@@ -76,6 +80,12 @@ public class ArrowPathVisual : MonoBehaviour
 
 				// Add final pos
 				positions.Add(position);
+
+				if (foundFloor)
+				{
+					teleportDestination.gameObject.SetActive(true);
+					teleportDestination.position = position;
+				}
 			}
 			else
 			{
@@ -89,9 +99,8 @@ public class ArrowPathVisual : MonoBehaviour
 
 					// Check for collisions along that translation
 					if (Projectile.ContinuousCollisionCheck(data, position, ref translation, ref collision))
-					{
 						simulate = false;
-					}
+
 					// Apply translation
 					position += translation;
 
@@ -110,6 +119,4 @@ public class ArrowPathVisual : MonoBehaviour
 		lineRenderer.SetPositions(positions.ToArray());
 		lineRenderer.Simplify(simplifyTolerance);
 	}
-
-
 }

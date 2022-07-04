@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Enemy Projectile Pair
   m_EditorClassIdentifier: 
   <projectileData>k__BackingField: {fileID: 11400000, guid: 1defaa891b6dd134a8a5417acee107fe, type: 2}
-  <visual>k__BackingField: {fileID: 1220814778185463023, guid: 01e1ec59e2c91914ea7f2a7f4fb229c2, type: 3}
+  <visual>k__BackingField: {fileID: 1220814778185463023, guid: e14ab7bca4600634f8e65357d054d80d, type: 3}

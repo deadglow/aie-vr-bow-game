@@ -7,6 +7,7 @@ public class BowInput : MonoBehaviour
 {
     public BowHandler bow;
 	public ArrowHandler arrow;
+	public ShieldHandler shield;
 	
 	public InputActionReference leftHandDrawReference;
 	public InputActionReference rightHandDrawReference;
@@ -58,6 +59,7 @@ public class BowInput : MonoBehaviour
 
 		SetBowWieldHand(GetBowWieldHand() == WieldHand.Left? WieldHand.Right : WieldHand.Left);
 		bow.ReleaseDraw();
+		shield.UnDeploy();
 	}
 	public void SwapBowHand(InputAction.CallbackContext obj) => SwapBowHand();
 
@@ -76,30 +78,34 @@ public class BowInput : MonoBehaviour
 
 	void TryGrabLeftHand(InputAction.CallbackContext obj)
 	{
-		if (bow.wieldWithLeftHand) return;
-
-		TryGrab();
+		if (bow.wieldWithLeftHand)
+			shield.Deploy();
+		else
+			TryGrab();
 	}
 
 	void TryGrabRightHand(InputAction.CallbackContext obj)
 	{
-		if (!bow.wieldWithLeftHand) return;
-
-		TryGrab();
+		if (!bow.wieldWithLeftHand)
+			shield.Deploy();
+		else
+			TryGrab();
 	}
 
 	void ReleaseDrawLeftHand(InputAction.CallbackContext obj)
 	{
-		if (bow.wieldWithLeftHand) return;
-
-		ReleaseDraw();
+		if (bow.wieldWithLeftHand)
+			shield.UnDeploy();
+		else
+			ReleaseDraw();
 	}
 	
 	void ReleaseDrawRightHand(InputAction.CallbackContext obj)
 	{
-		if (!bow.wieldWithLeftHand) return;
-
-		ReleaseDraw();
+		if (!bow.wieldWithLeftHand)
+			shield.UnDeploy();
+		else
+			ReleaseDraw();
 	}
 
 	public enum WieldHand

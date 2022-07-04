@@ -19,7 +19,6 @@ public class AIModule : MonoBehaviour
         MOVETOPLAYER = 0,
         SHOOT,
         FLEE,
-        RETREAT,
         STUN,
         DEATH,
     }
@@ -38,14 +37,13 @@ public class AIModule : MonoBehaviour
     [SerializeField, Tooltip("Is called when the AI dies.")] UnityEvent m_OnDeath;
 
     //===================================================== Dont touch
-    float m_StoppingDistance = 10;
-    float m_FleeDistance = 5;
-    float m_StunDistance = 2;
+    float m_StoppingDistance = 0;
+    float m_FleeDistance = 0;
+    float m_StunDistance = 0;
     float m_StunTime = 5;
 
-    //Transform m_RetreatZone = null;
     float m_StunTimer = 0;
-    public bool m_IsStuned = false;
+    bool m_IsStuned = false;
 
     EnemyStates m_EnemyStates;
     Rigidbody m_Rigidbody = null;
@@ -53,38 +51,33 @@ public class AIModule : MonoBehaviour
 
     bool m_IsAlive = true;
     bool m_IsFleeing = false;
-    public bool m_StunCooldown = false;
+    bool m_StunCooldown = false;
 
-    public float m_StunCooldownAmount;
-    public float m_StunCooldownTimer;
+    float m_StunCooldownAmount;
+    float m_StunCooldownTimer;
+    bool m_CheckerVersion = true;
+
+    float m_ShootCooldownAmount = 5f;
+    float m_ShootCooldown = 0f;
+    bool m_IsShooting = false;
+
+    ProjectileManager m_Projectile;
+    public Transform m_ProjectileSpawn = null;
+    ProjectileType m_ProjectType;
+    float m_ProjectSpeed = 0.5f;
 
 
     //==============================================================
-
-	void Awake()
-	{
+    void Awake()
+    {
         m_EnemyAgent = GetComponent<NavMeshAgent>();
         m_Rigidbody = GetComponent<Rigidbody>();
 
-	}
-    void Start()
-    {
-
         m_StunTimer = m_StunTime;
-        m_FleeDistance = m_StoppingDistance - 5;
-        m_StunDistance = m_FleeDistance - 4;
 
-        //GameObject Zone = GameObject.FindGameObjectWithTag("RetreatZone");
-        //m_RetreatZone = Zone.transform;
-
-        //if (m_RetreatZone == null)
-        //{
-        //    Debug.LogError("No Retreat Zone Found!");
-        //}
-
-        if (m_EnemyAgent)
+        if (gameObject.GetComponent<NavMeshAgent>())
         {
-            m_EnemyAgent.stoppingDistance = 0;
+            gameObject.GetComponent<NavMeshAgent>().stoppingDistance = 0;
         }
     }
 
@@ -108,15 +101,22 @@ public class AIModule : MonoBehaviour
                     {
                         m_OnExitStun.Invoke();
                     }
-                    Flee();
                     m_StunCooldown = true;
+                    Flee();
                 }
 
                 break;
 
             case EnemyStates.SHOOT:
 
-                //TODO fire weapons at player
+                m_ShootCooldown -= Time.deltaTime;
+
+                if (m_ShootCooldown <= 0)
+                {
+                    FireAtPlayer();
+                    m_ShootCooldown = m_ShootCooldownAmount;
+                }
+
                 break;
 
             case EnemyStates.FLEE:
@@ -143,14 +143,14 @@ public class AIModule : MonoBehaviour
                 gameObject.GetComponent<AIModule>().enabled = false;
                 gameObject.GetComponent<NavMeshAgent>().enabled = false;
                 break;
-
-            case EnemyStates.RETREAT: // SUBJECT TO CHANGE
-                //retreat to certain zone.
-
-                break;
         }
         CheckDistanceToPlayer();
         UpdateStunTimer();
+    }
+
+    void FireAtPlayer()
+    {
+        m_Projectile.FireProjectile(ProjectileType.Arrow, m_ProjectileSpawn.position, CalculatePlayerLocation(), 0.5f);
     }
 
     void UpdateStunTimer()
@@ -189,7 +189,11 @@ public class AIModule : MonoBehaviour
         }
         else if (DistanceBetween < m_StoppingDistance && DistanceBetween > m_FleeDistance && !m_IsFleeing) // Stops the player & should change to the shoot state.
         {
-            m_EnemyAgent.transform.LookAt(m_PlayerTarget.transform.position);
+            Vector3 Direction = m_PlayerTarget.transform.position - transform.position;
+            Direction.y = 0;
+            Direction = Direction.normalized;
+
+            m_EnemyAgent.transform.rotation = Quaternion.LookRotation(Direction, Vector2.up);
 
             if (!m_EnemyAgent.isStopped)
             {
@@ -204,6 +208,10 @@ public class AIModule : MonoBehaviour
         else if (DistanceBetween < m_StunDistance && !m_IsStuned && !m_StunCooldown)
         {
             Stun();
+        }
+        else if (DistanceBetween < m_StoppingDistance && DistanceBetween >= 0)
+        {
+            Flee();
         }
     }
 
@@ -256,9 +264,15 @@ public class AIModule : MonoBehaviour
     {
         if (!m_IsStuned && m_EnemyStates != EnemyStates.SHOOT)
         {
-
+            // set speed scale to 1
             m_EnemyStates = EnemyStates.SHOOT;
         }
+    }
+
+    Vector3 CalculatePlayerLocation()
+    {
+        Vector3 Direction = m_PlayerTarget.transform.position - transform.position;
+        return Direction.normalized;
     }
 
     //========================================
@@ -268,7 +282,6 @@ public class AIModule : MonoBehaviour
         m_IsAlive = false;
         m_EnemyStates = EnemyStates.DEATH;
 
-        gameObject.GetComponent<NavMeshAgent>().enabled = false;
     }
 
     //========================================
@@ -280,8 +293,7 @@ public class AIModule : MonoBehaviour
     public void SetStopDistance(float _amount) // the distance the Ai will stay from the target.
     {
         m_StoppingDistance = _amount;
-        m_FleeDistance = m_StoppingDistance - 5;
-        m_StunDistance = m_FleeDistance - 4;
+        SortChecker();
     }
     public void SetPlayerTarget(GameObject _player) // Set what the Ai should attack/ follow.
     {
@@ -333,5 +345,54 @@ public class AIModule : MonoBehaviour
     public void ProtectedAtStart(bool _state)
     {
         m_StunCooldown = _state;
+    }
+    public void SetCheckerVersion(bool _state)
+    {
+        m_CheckerVersion = _state;
+        SortChecker();
+    }
+
+    void SortChecker()
+    {
+        if (m_CheckerVersion)
+        {
+            m_FleeDistance = m_StoppingDistance / 2;
+            m_StunDistance = m_FleeDistance / 2;
+        }
+        else
+        {
+            m_FleeDistance = m_StoppingDistance - 5;
+            m_StunDistance = m_FleeDistance - 4;
+        }
+    }
+
+    public void SetAcceleration(float _amount)
+    {
+        m_EnemyAgent.acceleration = _amount;
+    }
+
+    public void SetShootCooldown(float _amount)
+    {
+        m_ShootCooldownAmount = _amount;
+    }
+
+    public void SetProjectileManager(ProjectileManager _object)
+    {
+        m_Projectile = _object;
+    }
+
+    public void SetProjectileSpeed(float _amount)
+    {
+        m_ProjectSpeed = _amount;
+    }
+
+    public void SetProjectileType(ProjectileType _type)
+    {
+        m_ProjectType = _type;
+    }
+
+    public void SetPosition(Transform _NewPos)
+    {
+        gameObject.transform.position = _NewPos.position;
     }
 }
