@@ -80,9 +80,9 @@ public class ShieldHandler : MonoBehaviour
 
 		Gizmos.matrix = bow.GetBowHand().localToWorldMatrix;
 
-		Gizmos.color = Color.red * 0.8f;
+		Gizmos.color = Color.red * 0.5f;
 		Gizmos.DrawCube(minCollider.offset, minCollider.size);
-		Gizmos.color = Color.green * 0.8f;
+		Gizmos.color = Color.green * 0.5f;
 		Gizmos.DrawCube(maxCollider.offset, maxCollider.size);
 	}
 	
