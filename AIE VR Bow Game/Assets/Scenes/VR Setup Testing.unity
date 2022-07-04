@@ -45706,10 +45706,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1104594846, guid: cfd0fea43fa62c4478067dbc2423ae50, type: 3}
-      propertyPath: deployTime
-      value: 0.8
-      objectReference: {fileID: 0}
     - target: {fileID: 190218924170704855, guid: cfd0fea43fa62c4478067dbc2423ae50, type: 3}
       propertyPath: onEquipArrowEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
