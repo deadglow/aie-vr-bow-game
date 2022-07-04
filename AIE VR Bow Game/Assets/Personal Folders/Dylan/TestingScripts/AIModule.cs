@@ -30,8 +30,7 @@ public class AIModule : MonoBehaviour
     [SerializeField] Transform m_ProjectorBox = null;
 
     [Header("AI Events")]
-    [SerializeField, Tooltip("Is called when the stun state starts.")] UnityEvent m_OnEnterStun;
-    [SerializeField, Tooltip("Is called when the stun state ends.")] UnityEvent m_OnExitStun;
+    [SerializeField, Tooltip("Is called when the stun state starts.")] UnityEvent m_OnShoot;
 
     [Space()]
 
@@ -98,56 +97,26 @@ public class AIModule : MonoBehaviour
                 m_EnemyAgent.SetDestination(m_PlayerTarget.transform.position);
                 break;
 
-            case EnemyStates.STUN:
-
-                m_StunTimer -= Time.deltaTime;
-                if (m_StunTimer <= 0)
-                {
-                    m_IsStuned = false;
-                    m_StunTimer = m_StunTime;
-
-                    if (m_OnExitStun != null)
-                    {
-                        m_OnExitStun.Invoke();
-                    }
-                    m_StunCooldown = true;
-                    Flee();
-                }
-
-                break;
-
             case EnemyStates.SHOOT:
                 m_ShootCooldown -= Time.deltaTime;
 
                 if (m_ShootCooldown < 0)
                 {
+                    if (m_OnShoot != null)
+                    {
+                        m_OnShoot.Invoke();
+                    }
                     FireAtPlayer();
                     m_ShootCooldown = m_ShootCooldownAmount;
                 }
 
                 break;
 
-            case EnemyStates.FLEE:
-
-                Transform startTransform = transform;
-
-                transform.rotation = Quaternion.LookRotation(transform.position - m_PlayerTarget.transform.position);
-
-                Vector3 FleePosition = transform.position + transform.forward * 20;
-
-                NavMeshHit hit;
-
-                NavMesh.SamplePosition(FleePosition, out hit, 5, 1 << NavMesh.GetAreaFromName("Walkable"));
-
-                transform.position = startTransform.position;
-                transform.rotation = startTransform.rotation;
-
-                m_EnemyAgent.SetDestination(hit.position);
-
-                break;
-
             case EnemyStates.DEATH:
-
+                if (m_OnDeath != null)
+                {
+                    m_OnDeath.Invoke();
+                }
                 gameObject.GetComponent<AIModule>().enabled = false;
                 gameObject.GetComponent<NavMeshAgent>().enabled = false;
                 break;
@@ -252,9 +221,9 @@ public class AIModule : MonoBehaviour
         if (!m_IsStuned && m_IsAlive)
         {
             m_IsStuned = true;
-            if (m_OnEnterStun != null)
+            if (m_OnShoot != null)
             {
-                m_OnEnterStun.Invoke();
+                m_OnShoot.Invoke();
             }
 
             m_EnemyAgent.isStopped = true;
@@ -281,24 +250,13 @@ public class AIModule : MonoBehaviour
             m_EnemyStates = EnemyStates.MOVETOPLAYER;
         }
     }
-
-    private void Flee() //changes the Ai to the flee state & runs from the target.
-    {
-        if (m_EnemyStates != EnemyStates.FLEE && !m_IsStuned)
-        {
-            m_EnemyStates = EnemyStates.FLEE;
-            m_EnemyAgent.isStopped = false;
-
-            m_IsFleeing = true;
-        }
-    }
-
     private void Shoot() // TODO change to the shoot state.
     {
         if (!m_PermissionToFire) return;
 
         if (m_EnemyStates != EnemyStates.SHOOT)
         {
+            
             m_ShootCooldown = m_ShootCooldownAmount;
             m_EnemyStates = EnemyStates.SHOOT;
         }
@@ -408,6 +366,6 @@ public class AIModule : MonoBehaviour
 
     public void SetPosition(Transform _NewPos)
     {
-        gameObject.transform.position = _NewPos.position;
+        m_EnemyAgent.Warp(_NewPos.position);
     }
 }

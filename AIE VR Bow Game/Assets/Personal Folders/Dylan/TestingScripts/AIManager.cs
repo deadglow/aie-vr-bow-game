@@ -104,7 +104,8 @@ public class AIManager : MonoBehaviour
     [SerializeField] Shooting m_Attack;
 
     [SerializeField] Spawns m_AiSpawns;
-    AIModule[] m_AiList = null;
+
+    [SerializeField] AIModule[] m_AiList = null;
 
     //int m_PerviousPermission = 0;
 
@@ -258,7 +259,8 @@ public class AIManager : MonoBehaviour
 
         for (int i = 0; i < m_AiList.Length; i++)
         {
-            m_AiList[i].SetPosition(m_AiSpawns.m_SpawnList[m_AiSpawns.m_CurrentSpawn]);
+            Debug.Log(i);
+            m_AiList[i].SetPosition(m_AiSpawns.m_SpawnList[m_AiSpawns.m_CurrentSpawn].transform);
 
             if (i % m_AiSpawns.m_AmountPerSpawn == 0)
             {
