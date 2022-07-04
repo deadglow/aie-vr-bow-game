@@ -12,26 +12,36 @@ public class PlayerMover : MonoBehaviour
 	public bool allowTeleportation = true;
 
 	[Header("Head Collision")]
+	[Tooltip("The radius of the sphere that represents the players head.")]
 	public float headCollisionRadius = 0.2f;
+	[Tooltip("How close to the safe point you have to be for the player to return to reality.")]
 	public float maxReturnDistanceFromSafePoint = 2.0f;
 	public LayerMask headCollisionLayers;
 	public bool isHeadColliding { get; private set; }
 	private Vector3 lastValidCameraPosition;
 
 	[Header("Falling and Ground Checks")]
+	[Tooltip("Keep this at 0")]
 	public float fallingSpeed = 5;
 	public LayerMask groundCheckCollision;
+	[Tooltip("The radius of the sphere used for ground checking. Basically the radius of the player's capsule.")]
 	public float groundCheckRadius = 0.3f;
-	public float groundCheckDistance = 2.0f;
-	public float maxGroundDistance = 0.05f;
+	[Tooltip("How far the ground check raycast goes")]
+	public float groundCheckDistance = 50.0f;
+	[Tooltip("The distance to the ground that is considered \"grounded\"")]
+	public float groundedDistance = 0.05f;
+	[Tooltip("How far the \"ground\" has to be for the player to be recovered.")]
+	public float invalidGroundDistance = 40.0f;
 	private float distanceToGround = 0;
 
 	[Header("Safe Zone")]
-	public float respawnYValue = -60.0f;
-	public List<Vector3> respawnPoints;
+	[Tooltip("Parent of all the recovery points for the player.")]
+	public Transform respawnPointParent;
+	private List<Transform> respawnPoints = new List<Transform>();
 
 	[Header("Events")]
 	public UnityEvent<Vector3> OnTeleportEvent;
+	public UnityEvent OnTeleportFailEvent;
 	public UnityEvent<Vector3> OnRespawnEvent;
 	public UnityEvent OnHeadConfined;
 	public UnityEvent OnHeadUnconfined;
@@ -39,32 +49,35 @@ public class PlayerMover : MonoBehaviour
 	void Start()
 	{
 		lastValidCameraPosition = xrOrigin.Camera.transform.position;
+
+		respawnPoints.Clear();
+		for (int i = 0; i < respawnPointParent.childCount; ++i)
+		{
+			respawnPoints.Add(respawnPointParent.GetChild(i));
+		}
 	}
 
 	void Update()
 	{
+		DoGroundCheck();
+		VerifyPlayerNotUnderFloor();
 		DoCollision();
 
-		DoGroundCheck();
-
-		DoGravity();
-
-		VerifyPlayerNotUnderFloor();
-
+		//DoGravity();
 	}
 
 	private void DoGroundCheck()
 	{
 		// The head pos but the y value is replaced with the floor's y value
-		Vector3 playerOnFloor = GetPlayerFloorPoint();
-		Vector3 camPos = lastValidCameraPosition;
-		float distanceToFloor = Vector3.Distance(playerOnFloor, camPos);
+		Vector3 camPos = xrOrigin.Camera.transform.position;
+		Vector3 feetPos = GetPlayerFeetPos();
+		float distanceToHead = Vector3.Dot(camPos - feetPos, Vector3.up);
 
 		// Check for collision with the floor
 		RaycastHit hit;
-		if (Physics.SphereCast(camPos, groundCheckRadius, Vector3.down, out hit, groundCheckDistance + distanceToFloor, groundCheckCollision))
+		if (Physics.SphereCast(camPos, groundCheckRadius, Vector3.down, out hit, groundCheckDistance + distanceToHead, groundCheckCollision))
 		{
-			distanceToGround = hit.distance - distanceToFloor;
+			distanceToGround = hit.distance - distanceToHead;
 		}
 		else
 		{
@@ -77,7 +90,7 @@ public class PlayerMover : MonoBehaviour
 		if (!CanTeleport()) return;
 
 		// Move down when the distance to ground is small enough
-		if (distanceToGround > maxGroundDistance)
+		if (distanceToGround > groundedDistance)
 		{
 			// Apply gravity
 			Vector3 targetPos = xrOrigin.transform.position;
@@ -88,8 +101,8 @@ public class PlayerMover : MonoBehaviour
 
 	private void VerifyPlayerNotUnderFloor()
 	{
-		// Respawn the player if they have fallen through the floor
-		if (xrOrigin.CameraFloorOffsetObject.transform.position.y < respawnYValue)
+		// Teleport the player to the closest valid point if they have nothing under them for ages (fallen through floor)
+		if (distanceToGround > invalidGroundDistance)
 		{
 			if (respawnPoints.Count == 0)
 				throw new System.Exception("No respawn points found.");
@@ -98,11 +111,11 @@ public class PlayerMover : MonoBehaviour
 			Vector3 headPos = xrOrigin.Camera.transform.position;
 			for (int i = 0; i < respawnPoints.Count; ++i)
 			{
-				if ((respawnPoints[i] - headPos).sqrMagnitude < closestPoint.sqrMagnitude)
-					closestPoint = respawnPoints[i];
+				if ((respawnPoints[i].position - headPos).sqrMagnitude < closestPoint.sqrMagnitude)
+					closestPoint = respawnPoints[i].position;
 			}
 
-			TeleportTo(closestPoint);
+			TeleportTo(closestPoint, true);
 			OnRespawnEvent.Invoke(closestPoint);
 		}
 	}
@@ -111,7 +124,7 @@ public class PlayerMover : MonoBehaviour
 	{
 		Vector3 camPos = xrOrigin.Camera.transform.position;
 		Collider[] colliders = Physics.OverlapSphere(camPos, headCollisionRadius, headCollisionLayers, QueryTriggerInteraction.Ignore);
-		if (colliders.Length > 0)
+		if (colliders.Length > 0 || distanceToGround > groundedDistance)
 		{
 			if (!isHeadColliding)
 			{
@@ -125,7 +138,7 @@ public class PlayerMover : MonoBehaviour
 			{
 				// Verify if the head move was valid. should allow people to not walk through a wall
 				// Also make sure they're close enough to the last safe point
-				if (Vector3.Distance(lastValidCameraPosition, camPos) < maxReturnDistanceFromSafePoint && !Physics.Linecast(camPos, lastValidCameraPosition, headCollisionLayers))
+				if (Vector3.Distance(lastValidCameraPosition, camPos) < maxReturnDistanceFromSafePoint && !Physics.Linecast(lastValidCameraPosition, camPos, headCollisionLayers))
 				{
 					isHeadColliding = false;
 					lastValidCameraPosition = camPos;
@@ -137,17 +150,17 @@ public class PlayerMover : MonoBehaviour
 		}
 	}
 
+	public Vector3 GetPlayerFeetPos()
+	{
+		Vector3 footPos = xrOrigin.Camera.transform.position;
+		footPos.y = xrOrigin.CameraFloorOffsetObject.transform.position.y;
+
+		return footPos;
+	}
+
 	public Vector3 GetValidPosition()
 	{
 		return lastValidCameraPosition;
-	}
-
-	public Vector3 GetPlayerFloorPoint()
-	{
-		Vector3 playerOnFloor = xrOrigin.Camera.transform.position;
-		playerOnFloor.y = xrOrigin.CameraFloorOffsetObject.transform.position.y;
-
-		return playerOnFloor;
 	}
 
 	public bool CanTeleport()
@@ -161,14 +174,24 @@ public class PlayerMover : MonoBehaviour
 		lastValidCameraPosition = xrOrigin.Camera.transform.position;
 	}
 
-	public bool TeleportTo(Vector3 position)
+	public bool TeleportTo(Vector3 position, bool force = false)
 	{
-		if (!CanTeleport()) return false;
+		if (!force && !CanTeleport()) return false;
 
-		// Get the delta between the current foot pos and the desired foot pos
-		Vector3 currentFloorPos = GetPlayerFloorPoint();
-		Vector3 delta = position - currentFloorPos;
-		// Apply the difference to the origin
+		DoGroundCheck();
+		Vector3 camPos = xrOrigin.Camera.transform.position;
+		Vector3 feetPos = GetPlayerFeetPos();
+		Vector3 delta = position - feetPos;
+		float distanceToHead = Vector3.Dot(camPos - feetPos, Vector3.up);
+
+		// Don't teleport if your head will be in something when you teleport
+		Ray ray = new Ray(position, Vector3.up);
+		if (!force && Physics.Raycast(ray, distanceToHead + groundCheckRadius, headCollisionLayers) || Physics.SphereCast(ray, groundCheckRadius, distanceToHead, headCollisionLayers))
+		{
+			OnTeleportFailEvent.Invoke();
+			return false;
+		}
+
 		xrOrigin.transform.position += delta;
 		ResetValidCameraPosition();
 
