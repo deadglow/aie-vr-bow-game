@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.15328647, g: 0.78387463, b: 2.1300006, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0.99999905, b: 0.99999905, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -17022,7 +17022,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 713599855}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.26, y: 1.22, z: -14.63}
+  m_LocalPosition: {x: 1.26, y: 1.197, z: -14.63}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1661482414}
@@ -17070,10 +17070,7 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
-  m_IsStuned: 0
-  m_StunCooldown: 0
-  m_StunCooldownAmount: 0
-  m_StunCooldownTimer: 0
+  m_ProjectileSpawn: {fileID: 0}
 --- !u!195 &713599859
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -17110,6 +17107,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <health>k__BackingField: 3
   <maxHealth>k__BackingField: 3
+  damageMultiplier: 1
   OnDeathEvent:
     m_PersistentCalls:
       m_Calls:
@@ -17156,6 +17154,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnDamageEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthChange:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamagePointEvent:
     m_PersistentCalls:
       m_Calls: []
 --- !u!43 &724653064
@@ -26438,7 +26442,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 981550716}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.74, y: 1.22, z: -23.6}
+  m_LocalPosition: {x: 5.74, y: 1.219, z: -23.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1038247970}
@@ -26486,10 +26490,7 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
-  m_IsStuned: 0
-  m_StunCooldown: 0
-  m_StunCooldownAmount: 0
-  m_StunCooldownTimer: 0
+  m_ProjectileSpawn: {fileID: 0}
 --- !u!195 &981550720
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -26526,6 +26527,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <health>k__BackingField: 3
   <maxHealth>k__BackingField: 3
+  damageMultiplier: 1
   OnDeathEvent:
     m_PersistentCalls:
       m_Calls:
@@ -26572,6 +26574,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnDamageEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthChange:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamagePointEvent:
     m_PersistentCalls:
       m_Calls: []
 --- !u!43 &982729925
@@ -32932,16 +32940,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PlayerAssignment: 0
   m_Target: {fileID: 1742043016}
-  m_ApplyHeight: 1
+  m_CheckerVersion: 1
   m_AiSpeed: 2
   m_StoppingDistance: 10
   m_AngularSpeed: 60
+  m_Acceleration: 8
+  m_ApplyHeight: 1
   m_PriorityAvoid: 5
   m_AvoidanceRadius: 1.5
   m_AvoidanceHeight: 2
   m_ProtectedAtStart: 0
   m_StunTime: 5
   m_StunCooldown: 3
+  m_ProType: 3
+  m_ShootCooldown: 5
+  m_BulletSpeedScale: 0.5
+  m_SpawnList: []
+  m_CurrentSpawn: 0
+  m_AmountPerSpawn: 0
+  m_Projectile: {fileID: 0}
 --- !u!1 &1241709228
 GameObject:
   m_ObjectHideFlags: 0
@@ -35296,7 +35313,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1324880616}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.74, y: 1.22, z: -20.6}
+  m_LocalPosition: {x: 0.74, y: 1.073, z: -20.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1136843976}
@@ -35344,10 +35361,7 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
-  m_IsStuned: 0
-  m_StunCooldown: 0
-  m_StunCooldownAmount: 0
-  m_StunCooldownTimer: 0
+  m_ProjectileSpawn: {fileID: 0}
 --- !u!195 &1324880620
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -35384,6 +35398,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <health>k__BackingField: 3
   <maxHealth>k__BackingField: 3
+  damageMultiplier: 1
   OnDeathEvent:
     m_PersistentCalls:
       m_Calls:
@@ -35430,6 +35445,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnDamageEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthChange:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamagePointEvent:
     m_PersistentCalls:
       m_Calls: []
 --- !u!43 &1334376770
@@ -45694,6 +45715,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 656705651, guid: cfd0fea43fa62c4478067dbc2423ae50, type: 3}
+      propertyPath: OnDamageEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 656705651, guid: cfd0fea43fa62c4478067dbc2423ae50, type: 3}
+      propertyPath: OnDamageEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 656705651, guid: cfd0fea43fa62c4478067dbc2423ae50, type: 3}
+      propertyPath: OnDamageEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 190218924170704855, guid: cfd0fea43fa62c4478067dbc2423ae50, type: 3}
       propertyPath: onEquipArrowEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
