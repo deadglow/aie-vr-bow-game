@@ -15,7 +15,7 @@ public class ShieldHandler : MonoBehaviour
 	private EntityStatus entStatus;
 
 	public bool deployed { get; private set; } = false;
-	public float deploySpeed = 2.0f;
+	public float deployTime = 2.0f;
 	
 	public ColliderProperties minCollider;
 	public ColliderProperties maxCollider;
@@ -43,7 +43,7 @@ public class ShieldHandler : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		deployState = Mathf.MoveTowards(deployState, deployed? 1.0f : 0.0f, deploySpeed * Time.fixedDeltaTime);
+		deployState = Mathf.MoveTowards(deployState, deployed? 1.0f : 0.0f, (1 / deployTime) * Time.fixedDeltaTime);
 
 		currentColliderProperties = ColliderProperties.Lerp(ref minCollider, ref maxCollider, deployState);
 		transform.position = bow.GetBowHand().TransformPoint(currentColliderProperties.offset);
