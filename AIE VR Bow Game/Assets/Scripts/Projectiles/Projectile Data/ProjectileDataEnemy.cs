@@ -11,5 +11,6 @@ public class ProjectileDataEnemy : ProjectileData
 	public override void OnCollision(Projectile instance, ProjectileCollision collision)
 	{
 		collision.collider.attachedRigidbody?.GetComponent<EntityStatus>()?.DamageAtPoint(damage, collision.collisionPoint);
+		instance.Disable();
 	}
 }

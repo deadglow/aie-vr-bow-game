@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class ShieldVisual : MonoBehaviour
 {
     public ShieldHandler shield;
+	public Transform scaler;
 
 	public UnityEvent<Vector3> OnBulletImpactEvent;
 	public UnityEvent OnDeployEvent;
@@ -22,7 +23,7 @@ public class ShieldVisual : MonoBehaviour
 	{
 		transform.position = shield.bow.GetBowHand().TransformPoint(shield.currentColliderProperties.offset);
 		transform.rotation = shield.bow.GetBowHand().rotation;
-		transform.localScale = shield.currentColliderProperties.size;
+		scaler.localScale = shield.currentColliderProperties.size;
 
 		// do shield animation transition here based on shield.deploystate
 	}

@@ -91,6 +91,9 @@ MonoBehaviour:
   OnDamageEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnHealthChange:
+    m_PersistentCalls:
+      m_Calls: []
   OnDamagePointEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -323,6 +326,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnDamageEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthChange:
     m_PersistentCalls:
       m_Calls: []
   OnDamagePointEvent:
@@ -3578,6 +3584,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shield: {fileID: 1104594846}
+  scaler: {fileID: 0}
   OnBulletImpactEvent:
     m_PersistentCalls:
       m_Calls: []

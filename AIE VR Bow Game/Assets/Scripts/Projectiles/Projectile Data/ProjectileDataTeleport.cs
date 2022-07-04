@@ -6,14 +6,17 @@ using UnityEngine;
 public class ProjectileDataTeleport : ProjectileData
 {
 	[Header("Teleport Data")]
+	public LayerMask teleportableLayers;
     public float maxFloorAngle = 15.0f;
 	public float reboundEnergyConservation = 1.0f;
 	public int maxBounces = 12;
 
 	public override void OnCollision(Projectile instance, ProjectileCollision collision)
 	{
+		int layerTest = teleportableLayers.value & (1 << collision.collider.gameObject.layer);
+
 		// Teleport player if on the floor
-		if (Vector3.Angle(Vector3.up, collision.collisionNormal) < maxFloorAngle)
+		if (layerTest != 0 && Vector3.Angle(Vector3.up, collision.collisionNormal) < maxFloorAngle)
 		{
 			instance.Disable();
 			TeleportPlayer(collision.collisionPoint);

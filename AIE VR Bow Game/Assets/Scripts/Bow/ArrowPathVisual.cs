@@ -60,7 +60,8 @@ public class ArrowPathVisual : MonoBehaviour
 							bounces++;
 							// Bounce
 							translation = collision.direction * collision.travelDistance;
-							if (Vector3.Angle(collision.collisionNormal, Vector3.up) < teleData.maxFloorAngle)
+							int layerTest = teleData.teleportableLayers.value & (1 << collision.collider.gameObject.layer);
+							if (layerTest != 0 && Vector3.Angle(collision.collisionNormal, Vector3.up) < teleData.maxFloorAngle)
 							{
 								simulate = false;
 								foundFloor = true;

@@ -52,6 +52,7 @@ public class ShieldHandler : MonoBehaviour
 		collider.enabled = (deployState >= activeThreshold);
 	}
 
+	[ContextMenu("Deploy")]
 	public void Deploy()
 	{
 		if (deployed) return;
@@ -59,6 +60,7 @@ public class ShieldHandler : MonoBehaviour
 		OnDeployEvent.Invoke();
 	}
 
+	[ContextMenu("UnDeploy")]
 	public void UnDeploy()
 	{
 		if (!deployed) return;
