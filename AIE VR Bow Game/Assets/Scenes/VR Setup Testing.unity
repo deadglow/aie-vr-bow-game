@@ -17156,6 +17156,9 @@ MonoBehaviour:
   OnDamageEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnHealthChange:
+    m_PersistentCalls:
+      m_Calls: []
   OnDamagePointEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -26573,6 +26576,9 @@ MonoBehaviour:
   OnDamageEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnHealthChange:
+    m_PersistentCalls:
+      m_Calls: []
   OnDamagePointEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -35439,6 +35445,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnDamageEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHealthChange:
     m_PersistentCalls:
       m_Calls: []
   OnDamagePointEvent:
@@ -45706,6 +45715,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 656705651, guid: cfd0fea43fa62c4478067dbc2423ae50, type: 3}
+      propertyPath: OnDamageEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 656705651, guid: cfd0fea43fa62c4478067dbc2423ae50, type: 3}
+      propertyPath: OnDamageEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 656705651, guid: cfd0fea43fa62c4478067dbc2423ae50, type: 3}
+      propertyPath: OnDamageEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 190218924170704855, guid: cfd0fea43fa62c4478067dbc2423ae50, type: 3}
       propertyPath: onEquipArrowEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

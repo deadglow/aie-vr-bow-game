@@ -17,15 +17,16 @@ public class EntityStatus : MonoBehaviour
 	public UnityEvent OnReviveEvent;
 	public UnityEvent<int> OnHealEvent;
 	public UnityEvent<int> OnDamageEvent;
+	public UnityEvent<int> OnHealthChange;
 	public UnityEvent<Vector3> OnDamagePointEvent;
 
 	public void Damage(int amount)
 	{
-		health -= Mathf.FloorToInt(amount * damageMultiplier);
+		ChangeHealth(health - Mathf.FloorToInt(amount * damageMultiplier));
 		if (health <= 0)
 			Kill();
 
-		OnDamageEvent.Invoke(amount);		
+		OnDamageEvent.Invoke(amount);
 	}
 
 	public void DamageAtPoint(int amount, Vector3 point)
@@ -35,21 +36,26 @@ public class EntityStatus : MonoBehaviour
 		OnDamagePointEvent.Invoke(point);
 	}
 
-
 	public void Heal(int amount)
 	{
-		health += amount;
+		ChangeHealth(health + amount);
 		if (health > maxHealth)
-			health = maxHealth;
+			ChangeHealth(maxHealth);
 		
 		OnHealEvent.Invoke(amount);
+	}
+
+	public void ChangeHealth(int newAmount)
+	{
+		health = newAmount;
+		OnHealthChange.Invoke(health);
 	}
 
 	public void Kill()
 	{
 		if (isDead) return;
 
-		health = 0;
+		ChangeHealth(0);
 		OnDeathEvent.Invoke();
 	}
 
