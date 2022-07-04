@@ -25,9 +25,11 @@ public class ShieldVisual : MonoBehaviour
 
 	void LateUpdate()
 	{
-		transform.position = shield.bow.GetBowHand().TransformPoint(shield.currentColliderProperties.offset);
+		float t = scaleCurve.Evaluate(shield.deployState);
+
+		transform.position = shield.bow.GetBowHand().TransformPoint(Vector3.LerpUnclamped(shield.minCollider.offset, shield.maxCollider.offset, t));
 		transform.rotation = shield.bow.GetBowHand().rotation;
-		scaler.localScale = Vector3.one * Mathf.Lerp(minScale, maxScale, scaleCurve.Evaluate(shield.deployState));
+		scaler.localScale = Vector3.one * Mathf.LerpUnclamped(minScale, maxScale, t);
 
 		// do shield animation transition here based on shield.deploystate
 	}
