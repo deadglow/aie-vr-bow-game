@@ -7,6 +7,10 @@ public class ShieldVisual : MonoBehaviour
 {
     public ShieldHandler shield;
 	public Transform scaler;
+	public float minScale = 0;
+	public float maxScale = 1;
+
+	public AnimationCurve scaleCurve;
 
 	public UnityEvent<Vector3> OnBulletImpactEvent;
 	public UnityEvent OnDeployEvent;
@@ -23,7 +27,7 @@ public class ShieldVisual : MonoBehaviour
 	{
 		transform.position = shield.bow.GetBowHand().TransformPoint(shield.currentColliderProperties.offset);
 		transform.rotation = shield.bow.GetBowHand().rotation;
-		scaler.localScale = shield.currentColliderProperties.size;
+		scaler.localScale = Vector3.one * Mathf.Lerp(minScale, maxScale, scaleCurve.Evaluate(shield.deployState));
 
 		// do shield animation transition here based on shield.deploystate
 	}

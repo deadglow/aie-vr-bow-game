@@ -3585,6 +3585,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shield: {fileID: 1104594846}
   scaler: {fileID: 0}
+  minScale: 0
+  maxScale: 1
+  scaleCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   OnBulletImpactEvent:
     m_PersistentCalls:
       m_Calls: []
