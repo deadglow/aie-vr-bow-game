@@ -13,7 +13,7 @@ public class ProjectileDataArrow : ProjectileData
 		// deal damage and stuff here
 		collision.collider.attachedRigidbody?.AddForce(collision.direction * impactForce, ForceMode.Impulse);
 
-		collision.collider.attachedRigidbody?.GetComponent<EntityStatus>()?.Damage(damage);
+		collision.collider.attachedRigidbody?.GetComponent<EntityStatus>()?.DamageAtPoint(damage, collision.collisionPoint);
 
 		Transform attachTransform = collision.collider.transform;
 		instance.AttachToTransform(attachTransform);
