@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 263795766522698210}
   - component: {fileID: 9149278285737401961}
   - component: {fileID: 8572415806279780532}
+  - component: {fileID: 796237085247770536}
   m_Layer: 0
   m_Name: PropsRock_M_v3
   m_TagString: Untagged
@@ -81,6 +82,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &796237085247770536
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 206041928599549307}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6910761393352674526, guid: 59b239782c37f5e4b870c990f052c816, type: 3}
 --- !u!1 &2069967063258949915
 GameObject:
   m_ObjectHideFlags: 0
