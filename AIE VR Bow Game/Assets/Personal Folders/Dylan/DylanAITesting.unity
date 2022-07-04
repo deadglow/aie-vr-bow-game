@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0.99999905, b: 0.99999905, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -152,17 +152,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4078e14168c883a4294c24e127bc4bbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PlayerAssignment: 1
-  m_Target: {fileID: 0}
-  m_CheckerVersion: 1
-  m_AiSpeed: 2.18
-  m_StoppingDistance: 19.7
-  m_AngularSpeed: 12.3
-  m_Acceleration: 8
-  m_ApplyHeight: 1
-  m_PriorityAvoid: 1
-  m_AvoidanceRadius: 1.15
-  m_AvoidanceHeight: 2
+  m_PlayerSettings:
+    m_PlayerAssignment: 0
+    m_Target: {fileID: 0}
+  m_AiSettings:
+    m_CheckerVersion: 0
+    m_AiSpeed: 0
+    m_StoppingDistance: 13.4
+    m_AngularSpeed: 19.2
+    m_Acceleration: 13.2
+  m_Avoidance:
+    m_ApplyHeight: 0
+    m_PriorityAvoid: 0
+    m_AvoidanceRadius: 0
+    m_AvoidanceHeight: 0
+  m_Attack:
+    m_ProType: 0
+    m_ShootCooldown: 0
+    m_BulletSpeedScale: 0
+  m_AiSpawns:
+    m_SpawnList: []
+    m_CurrentSpawn: 0
+    m_AmountPerSpawn: 0
+    m_Projectile: {fileID: 0}
   m_ProtectedAtStart: 1
   m_StunTime: 4.27
   m_StunCooldown: 6.06
@@ -610,13 +622,7 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
-  m_StoppingDistance: 10
-  m_FleeDistance: 5
-  m_StunDistance: 2
-  m_IsStuned: 0
-  m_StunCooldown: 0
-  m_StunCooldownAmount: 0
-  m_StunCooldownTimer: 0
+  m_ProjectileSpawn: {fileID: 0}
 --- !u!195 &1684230172
 NavMeshAgent:
   m_ObjectHideFlags: 0

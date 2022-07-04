@@ -3,107 +3,110 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+
+
 public class AIManager : MonoBehaviour
 {
-    enum AIsearchMode
+    public enum AIsearchMode
     {
         MANUALLY = 0,
         TAG,
     }
 
-    enum ApplyHeight
+    public enum ApplyHeight
     {
         NONE = 0,
         ALL,
     }
 
-    enum CheckerEdition
-    {
-        OLD = 0,
-        NEW,
-    }
-
-    enum ProtectStart
+    public enum ProtectStart
     {
         ON = 0,
         OFF,
     }
 
-    [Header("Player Settings")]
+    [System.Serializable]
+    public struct Player
+    {
+        [Tooltip("MANUALLY: Assign the player yourself. | TAG: Search for object with Player tag.")]
+        public AIsearchMode m_PlayerAssignment;
+        public GameObject m_Target;
+    }
 
-    [SerializeField, Tooltip("MANUALLY: Assign the player yourself. | TAG: Search for object with Player tag.")]
-    AIsearchMode m_PlayerAssignment = AIsearchMode.MANUALLY;
-    [SerializeField] GameObject m_Target = null;
+    [System.Serializable]
+    public struct AI
+    {
+        [Tooltip("The speed the AI will move at.")]
+        [Range(0.5f, 5)] public float m_AiSpeed;
 
-    //============================================================
-    [Space()]
-    [Header("AI Settings")] //==================================================  Main
+        [Tooltip("The time it takes before the AI is allowed to attack.")]
+        [Range(0, 10)] public float m_TimeTillAttack;
 
-    [Tooltip("The checker is responsible for calculating the flee & stun distances from stopping distance.")]
-    [SerializeField] CheckerEdition m_CheckerVersion = CheckerEdition.NEW;
+        [Tooltip("How far the AI will stay away from the target.")]
+        [Range(10, 25)] public float m_StoppingDistance;
 
-    [Tooltip("The speed the AI will move at.")]
-    [SerializeField, Range(0.5f, 5)] float m_AiSpeed = 2f;
+        [Tooltip("The max turning speed when following a path.")]
+        [Range(10, 50)] public float m_AngularSpeed;
 
-    [Tooltip("How far the AI will stay away from the target.")]
-    [SerializeField, Range(10, 25)] float m_StoppingDistance = 20;
+        [Tooltip("The max acceleration the AI will follow with.")]
+        [Range(0.5f, 50)] public float m_Acceleration;
+    }
 
-    [Tooltip("The max turning speed when following a path.")]
-    [SerializeField, Range(10, 50)] float m_AngularSpeed = 60f;
+    [System.Serializable]
+    public struct Avoidance
+    {
+        [Tooltip("Apply the height to all Ai or none.")]
+        public ApplyHeight m_ApplyHeight;
 
-    [Tooltip("The max acceleration the AI will follow with.")]
-    [SerializeField, Range(0.5f, 50)] float m_Acceleration = 8f;
+        [Tooltip("Having a lower priority means more importance for avoidance.")]
+        [Range(0, 50)] public int m_PriorityAvoid;
 
-    //============================================================
-    [Header("Avoidance"), Space()] //==================================================  Avoidance
+        [Tooltip("Choose the radius of the avoidance distance between AI & objects.")]
+        [Range(0, 4)] public float m_AvoidanceRadius;
 
-    [Tooltip("Apply the height to all Ai or none.")]
-    [SerializeField] ApplyHeight m_ApplyHeight = ApplyHeight.ALL;
+        [Tooltip("Choose the height of the NavMesh")]
+        [Range(0, 4)] public float m_AvoidanceHeight;
+    }
 
-    [Tooltip("Having a lower priority means more importance for avoidance.")]
-    [SerializeField, Range(0, 50)] int m_PriorityAvoid = 5;
+    [System.Serializable]
+    public struct Shooting
+    {
 
-    [Tooltip("Choose the radius of the avoidance distance between AI & objects.")]
-    [SerializeField, Range(0, 4)] float m_AvoidanceRadius = 1.5f;
+        [Header("Shoot Settings"), Space()] //==================================================  Shooting
 
-    [Tooltip("Choose the height of the NavMesh")]
-    [SerializeField, Range(0, 4)] float m_AvoidanceHeight = 2f;
+        [Tooltip("The type of projectile the enemy will use.")]
+        public ProjectileType m_ProType;
 
-    //============================================================
-    [Header("Stun Settings"), Space()] //==================================================  Stuns
+        [Tooltip("The duration of how long it will take for AI to shoot each shot.")]
+        public float m_ShootCooldown;
 
-    [Tooltip("When enabled the Ai will be protected from getting stunned for a few seconds.")]
-    [SerializeField] ProtectStart m_ProtectedAtStart = ProtectStart.ON;
+        [Tooltip("The speed scale of the projectile shot.")]
+        [SerializeField, Range(0, 1)] public float m_BulletSpeedScale;
+    }
 
-    [Tooltip("How long the stun will last.")]
-    [SerializeField, Range(0, 10)] float m_StunTime = 5;
+    [System.Serializable]
+    public struct Spawns
+    {
+        public Transform[] m_SpawnList;
+        public int m_CurrentSpawn;
+        public int m_AmountPerSpawn;
+        public ProjectileManager m_Projectile;
+    }
 
-    [Tooltip("How long the cooldown for a stun will be.")]
-    [SerializeField, Range(3, 10)] float m_StunCooldown = 3;
+    //=====================================================================
 
-    [Header("Shoot Settings"), Space()] //==================================================  Shooting
+    [SerializeField] Player m_PlayerSettings;
 
-    [Tooltip("The type of projectile the enemy will use.")]
-    [SerializeField] ProjectileType m_ProType = ProjectileType.EnemyProjectile;
+    [SerializeField] AI m_AiSettings;
 
-    [Tooltip("The duration of how long it will take for AI to shoot each shot.")]
-    [SerializeField, Range(3, 10)] float m_ShootCooldown = 5;
+    [SerializeField] Avoidance m_Avoidance;
 
-    [Tooltip("The speed scale of the projectile shot.")]
-    [SerializeField, Range(0, 1)] float m_BulletSpeedScale = 0.5f;
+    [SerializeField] Shooting m_Attack;
 
-    [Header("Spawns")]
-
-    [SerializeField] Transform[] m_SpawnList = null;
-    public int m_CurrentSpawn = 0;
-    public int m_AmountPerSpawn = 0;
-
-    [Header("External")]
-    [Tooltip("Reference to the projectile manager.")]
-    [SerializeField] ProjectileManager m_Projectile = null;
-    //============================================================
-
+    [SerializeField] Spawns m_AiSpawns;
     AIModule[] m_AiList = null;
+
+    //int m_PerviousPermission = 0;
 
     //============================================================
     private void Start()
@@ -119,21 +122,21 @@ public class AIManager : MonoBehaviour
             ParentAI();
         }
 
-        if (m_PlayerAssignment == AIsearchMode.TAG) // Player assignment can be done manually or it can be done by the system at start up time.
+        if (m_PlayerSettings.m_PlayerAssignment == AIsearchMode.TAG) // Player assignment can be done manually or it can be done by the system at start up time.
         {
             GameObject Temp = GameObject.FindGameObjectWithTag("Player");
-            m_Target = Temp;
+            m_PlayerSettings.m_Target = Temp;
 
-            if (m_Target)
+            if (m_PlayerSettings.m_Target)
             {
-                ApplyTargets(m_Target); // Once it has the player object it assigns it as the target to the other AIs.
+                ApplyTargets(m_PlayerSettings.m_Target); // Once it has the player object it assigns it as the target to the other AIs.
             }
         }
         else
         {
-            if (m_Target != null)
+            if (m_PlayerSettings.m_Target != null)
             {
-                ApplyTargets(m_Target);
+                ApplyTargets(m_PlayerSettings.m_Target);
             }
             else
             {
@@ -142,27 +145,8 @@ public class AIManager : MonoBehaviour
             }
         }
 
-        AssignCheckerVersion();// Assign the checker versions for the AIs to use.
         AssignValues(); // begin to assign all values from the manager to other AIs.
         SetSpawns();
-    }
-
-    void AssignCheckerVersion()
-    {
-        if (m_CheckerVersion == CheckerEdition.NEW)
-        {
-            for (int i = 0; i < m_AiList.Length; i++)
-            {
-                m_AiList[i].SetCheckerVersion(true);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < m_AiList.Length; i++)
-            {
-                m_AiList[i].SetCheckerVersion(false);
-            }
-        }
     }
 
     //===========================================
@@ -177,42 +161,33 @@ public class AIManager : MonoBehaviour
 
         for (int i = 0; i < m_AiList.Length; i++)
         {
-            m_AiList[i].SetStopDistance(m_StoppingDistance);
-            m_AiList[i].SetStunTimer(m_StunTime);
-            m_AiList[i].SetAcceleration(m_Acceleration);
+            m_AiList[i].SetAcceleration(m_AiSettings.m_Acceleration);
 
-            m_AiList[i].SetStunCooldown(m_StunCooldown);
-            m_AiList[i].SetShootCooldown(m_ShootCooldown);
+            m_AiList[i].SetMaxCast(m_AiSettings.m_StoppingDistance);
+            m_AiList[i].SetShootCooldown(m_Attack.m_ShootCooldown);
 
-            m_AiList[i].SetProjectileSpeed(m_BulletSpeedScale);
-            m_AiList[i].SetProjectileType(m_ProType);
+            m_AiList[i].SetProjectileSpeed(m_Attack.m_BulletSpeedScale);
+            m_AiList[i].SetProjectileType(m_Attack.m_ProType);
 
-            if (m_ProtectedAtStart == ProtectStart.ON)
-            {
-                m_AiList[i].ProtectedAtStart(true);
-            }
-            else
-            {
-                m_AiList[i].ProtectedAtStart(false);
-            }
+            m_AiList[i].SetAttackTime(m_AiSettings.m_TimeTillAttack);
         }
         for (int i = 0; i < m_AiList.Length; i++)
         {
-            m_AiList[i].SetProjectileManager(m_Projectile);
+            m_AiList[i].SetProjectileManager(m_AiSpawns.m_Projectile);
         }
 
         // Nav mesh agent settings get appiled
         for (int i = 0; i < m_AiList.Length; i++)
         {
 
-            m_AiList[i].SetPriority(m_PriorityAvoid);
-            m_AiList[i].SetAngularDistance(m_AngularSpeed);
-            m_AiList[i].SetAvoidanceRadius(m_AvoidanceRadius);
-            m_AiList[i].SetSpeed(m_AiSpeed);
+            m_AiList[i].SetPriority(m_Avoidance.m_PriorityAvoid);
+            m_AiList[i].SetAngularDistance(m_AiSettings.m_AngularSpeed);
+            m_AiList[i].SetAvoidanceRadius(m_Avoidance.m_AvoidanceRadius);
+            m_AiList[i].SetSpeed(m_AiSettings.m_AiSpeed);
 
-            if (m_ApplyHeight == ApplyHeight.ALL)
+            if (m_Avoidance.m_ApplyHeight == ApplyHeight.ALL)
             {
-                m_AiList[i].AvoidanceHeight(m_AvoidanceHeight);
+                m_AiList[i].AvoidanceHeight(m_Avoidance.m_AvoidanceHeight);
             }
         }
     }
@@ -258,38 +233,39 @@ public class AIManager : MonoBehaviour
     // Brings all of the AI in the scene back to life again, if not already alive.
     public void ReviveAll()
     {
-        m_CurrentSpawn = 0;
+        m_AiSpawns.m_CurrentSpawn = 0;
 
-        m_AmountPerSpawn = m_AiList.Length / m_SpawnList.Length;
+        m_AiSpawns.m_AmountPerSpawn = m_AiList.Length / m_AiSpawns.m_SpawnList.Length;
 
         for (int i = 0; i < m_AiList.Length; i++)
         {
             m_AiList[i].enabled = true;
             m_AiList[i].gameObject.GetComponent<NavMeshAgent>().enabled = true;
-            m_AiList[i].Revive(m_SpawnList[m_CurrentSpawn]);
+            m_AiList[i].Revive(m_AiSpawns.m_SpawnList[m_AiSpawns.m_CurrentSpawn]);
 
-            if (i % m_AmountPerSpawn == 0)
+            if (i % m_AiSpawns.m_AmountPerSpawn == 0)
             {
-                m_CurrentSpawn++;
+                m_AiSpawns.m_CurrentSpawn++;
             }
         }
 
     }
     void SetSpawns()
     {
-        m_AmountPerSpawn = m_AiList.Length / m_SpawnList.Length;
+        m_AiSpawns.m_CurrentSpawn = 0;
+
+        m_AiSpawns.m_AmountPerSpawn = m_AiList.Length / m_AiSpawns.m_SpawnList.Length;
 
         for (int i = 0; i < m_AiList.Length; i++)
         {
-            m_AiList[i].SetPosition(m_SpawnList[m_CurrentSpawn]);
+            m_AiList[i].SetPosition(m_AiSpawns.m_SpawnList[m_AiSpawns.m_CurrentSpawn]);
 
-            if (i % m_AmountPerSpawn == 0)
+            if (i % m_AiSpawns.m_AmountPerSpawn == 0)
             {
-                m_CurrentSpawn++;
+                m_AiSpawns.m_CurrentSpawn++;
             }
         }
     }
-
 
     public bool AreAllDead()
     {
@@ -306,5 +282,22 @@ public class AIManager : MonoBehaviour
     public int EnemyCount()
     {
         return m_AiList.Length;
+    }
+
+    public void PickAI()
+    {
+        int RandomAI = Random.Range(0, m_AiList.Length);
+
+        for (int i  = 0; i < m_AiList.Length;)
+        {
+            if (i != RandomAI)
+            {
+                m_AiList[i].SetPermission(false);
+            }
+            else
+            {
+                m_AiList[i].SetPermission(true);
+            }
+        }
     }
 }
