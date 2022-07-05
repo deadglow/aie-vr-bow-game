@@ -44,6 +44,9 @@ QualitySettings:
     excludedTargetPlatforms:
     - Android
     - Standalone
+    - Windows Store Apps
+    - iPhone
+    - WebGL
   - serializedVersion: 2
     name: Medium
     pixelLightCount: 1
@@ -118,6 +121,9 @@ QualitySettings:
     excludedTargetPlatforms:
     - Android
     - Standalone
+    - Windows Store Apps
+    - iPhone
+    - WebGL
   m_PerPlatformDefaultQuality:
     Android: 1
     Lumin: 2
