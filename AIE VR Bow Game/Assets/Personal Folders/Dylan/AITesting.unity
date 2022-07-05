@@ -199,15 +199,8 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
-  m_ShootCooldownAmount: 5
-  m_ShootCooldown: 0
   m_ProjectileSpawn: {fileID: 1170782886}
-  m_PermissionToFire: 1
-  m_PlayerInSight: 0
-  m_TimeTillAttack: 0
-  m_RayCastTimer: 0
-  m_MaxCastDistance: 10
-  m_FiredArrows: 0
+  m_AIManager: {fileID: 0}
 --- !u!195 &11430820
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -21509,15 +21502,8 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
-  m_ShootCooldownAmount: 5
-  m_ShootCooldown: 0
   m_ProjectileSpawn: {fileID: 189570734}
-  m_PermissionToFire: 1
-  m_PlayerInSight: 0
-  m_TimeTillAttack: 0
-  m_RayCastTimer: 0
-  m_MaxCastDistance: 10
-  m_FiredArrows: 0
+  m_AIManager: {fileID: 0}
 --- !u!195 &777101449
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -27700,15 +27686,8 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
-  m_ShootCooldownAmount: 5
-  m_ShootCooldown: 0
   m_ProjectileSpawn: {fileID: 483318745}
-  m_PermissionToFire: 1
-  m_PlayerInSight: 0
-  m_TimeTillAttack: 0
-  m_RayCastTimer: 0
-  m_MaxCastDistance: 10
-  m_FiredArrows: 0
+  m_AIManager: {fileID: 0}
 --- !u!195 &981550720
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -29021,15 +29000,8 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
-  m_ShootCooldownAmount: 5
-  m_ShootCooldown: 0
   m_ProjectileSpawn: {fileID: 113479140}
-  m_PermissionToFire: 1
-  m_PlayerInSight: 0
-  m_TimeTillAttack: 0
-  m_RayCastTimer: 0
-  m_MaxCastDistance: 10
-  m_FiredArrows: 0
+  m_AIManager: {fileID: 0}
 --- !u!195 &1048313379
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -38027,15 +37999,8 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
-  m_ShootCooldownAmount: 5
-  m_ShootCooldown: 0
   m_ProjectileSpawn: {fileID: 1834580092}
-  m_PermissionToFire: 1
-  m_PlayerInSight: 0
-  m_TimeTillAttack: 0
-  m_RayCastTimer: 0
-  m_MaxCastDistance: 10
-  m_FiredArrows: 0
+  m_AIManager: {fileID: 0}
 --- !u!195 &1434882366
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -40803,15 +40768,8 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
-  m_ShootCooldownAmount: 5
-  m_ShootCooldown: 0
   m_ProjectileSpawn: {fileID: 1010641365}
-  m_PermissionToFire: 1
-  m_PlayerInSight: 0
-  m_TimeTillAttack: 0
-  m_RayCastTimer: 0
-  m_MaxCastDistance: 10
-  m_FiredArrows: 0
+  m_AIManager: {fileID: 0}
 --- !u!195 &1520724582
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -45286,15 +45244,8 @@ MonoBehaviour:
   m_OnDeath:
     m_PersistentCalls:
       m_Calls: []
-  m_ShootCooldownAmount: 5
-  m_ShootCooldown: 0
   m_ProjectileSpawn: {fileID: 738144182}
-  m_PermissionToFire: 1
-  m_PlayerInSight: 0
-  m_TimeTillAttack: 0
-  m_RayCastTimer: 0
-  m_MaxCastDistance: 10
-  m_FiredArrows: 0
+  m_AIManager: {fileID: 0}
 --- !u!195 &1682169994
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -56489,8 +56440,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1849786701}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.67, y: 2.42, z: -12.38}
+  m_LocalRotation: {x: -0.008732532, y: -0.9959088, z: 0.05952262, w: -0.06742862}
+  m_LocalPosition: {x: 14.295666, y: 2.3139234, z: -42.175835}
   m_LocalScale: {x: -0.9879196, y: -0.9879196, z: -0.9879196}
   m_Children: []
   m_Father: {fileID: 0}

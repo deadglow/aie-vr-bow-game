@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-
-
 public class AIManager : MonoBehaviour
 {
     public enum AIsearchMode
@@ -111,7 +109,8 @@ public class AIManager : MonoBehaviour
     int m_PerviousSpawn = 0;
 
     public List<Transform> m_SafeSpawns = null;
-
+    int m_PreviousAi;
+    bool m_AiBusy = false;
     //============================================================
     private void Start()
     {
@@ -125,6 +124,7 @@ public class AIManager : MonoBehaviour
         {
             ParentAI();
         }
+
 
         if (m_PlayerSettings.m_PlayerAssignment == AIsearchMode.TAG) // Player assignment can be done manually or it can be done by the system at start up time.
         {
@@ -150,6 +150,7 @@ public class AIManager : MonoBehaviour
         }
 
         AssignValues(); // begin to assign all values from the manager to other AIs.
+        PickFiringAI();
         AssignSpawnPoints();
     }
 
@@ -194,6 +195,36 @@ public class AIManager : MonoBehaviour
                 m_AiList[i].AvoidanceHeight(m_Avoidance.m_AvoidanceHeight);
             }
         }
+    }
+
+    public void PickFiringAI()
+    {
+        bool GotID = false;
+        int RandomNumber = 0;
+        if (m_AiList.Length > 0)
+        {
+            while (!GotID)
+            {
+                RandomNumber = Random.Range(0, m_AiList.Length);
+                if (RandomNumber != m_PreviousAi && m_AiList.Length > 2 || RandomNumber == m_PreviousAi && m_AiList.Length < 2)
+                {
+                    m_PerviousSpawn = RandomNumber;
+                    GotID = true;
+                }
+            }
+            m_AiList[RandomNumber].GivePermission();
+            GotID = false;
+        }
+    }
+
+    public void SetPermission(bool _state)
+    {
+        m_AiBusy = _state;
+    }
+
+    public bool AskPermission()
+    {
+        return m_AiBusy;
     }
 
     //===========================================
@@ -365,22 +396,5 @@ public class AIManager : MonoBehaviour
     public int EnemyCount()
     {
         return m_AiList.Length;
-    }
-
-    public void PickAI()
-    {
-        int RandomAI = Random.Range(0, m_AiList.Length);
-
-        for (int i = 0; i < m_AiList.Length;)
-        {
-            if (i != RandomAI)
-            {
-                m_AiList[i].SetPermission(false);
-            }
-            else
-            {
-                m_AiList[i].SetPermission(true);
-            }
-        }
     }
 }

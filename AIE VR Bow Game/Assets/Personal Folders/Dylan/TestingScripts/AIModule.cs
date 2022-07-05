@@ -70,6 +70,8 @@ public class AIModule : MonoBehaviour
     float m_RayCastTimer;
     float m_MaxCastDistance = 10;
 
+    public AIManager m_AIManager = null;
+
     //==============================================================
     void Awake()
     {
@@ -82,6 +84,8 @@ public class AIModule : MonoBehaviour
         {
             gameObject.GetComponent<NavMeshAgent>().stoppingDistance = 0;
         }
+
+        m_AIManager = FindObjectOfType<AIManager>();
     }
 
     void Update()
@@ -136,7 +140,6 @@ public class AIModule : MonoBehaviour
 
         if (Physics.Raycast(m_ProjectorBox.position, Direction, out Cast, m_MaxCastDistance))
         {
-            Debug.DrawLine(m_ProjectorBox.position, Cast.point, Color.red);
             if (Cast.collider.tag == "Player")
             {
                 m_PlayerInSight = true;
@@ -159,6 +162,8 @@ public class AIModule : MonoBehaviour
         {
             m_Projectile.FireProjectile(m_ProjectType, m_ProjectileSpawn.position, CalculatePlayerLocation(), m_ProjectSpeed);
         }
+        m_PermissionToFire = false;
+        m_AIManager.PickFiringAI();
     }
 
     void CheckDistanceToPlayer()
@@ -232,7 +237,6 @@ public class AIModule : MonoBehaviour
 
         if (m_EnemyStates != EnemyStates.SHOOT)
         {
-
             m_ShootCooldown = m_ShootCooldownAmount;
             m_EnemyStates = EnemyStates.SHOOT;
         }
@@ -243,6 +247,7 @@ public class AIModule : MonoBehaviour
         Vector3 Direction = m_PlayerTarget.transform.position - transform.position;
         return Direction.normalized;
     }
+
 
     //========================================
     public void Kill() // Kills the AI.
@@ -342,5 +347,10 @@ public class AIModule : MonoBehaviour
     public void SetPosition(Transform _NewPos)
     {
         m_EnemyAgent.Warp(_NewPos.position);
+    }
+
+    public void GivePermission()
+    {
+        m_PermissionToFire = true;
     }
 }
