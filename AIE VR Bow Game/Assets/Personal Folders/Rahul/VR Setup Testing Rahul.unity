@@ -6785,6 +6785,10 @@ PrefabInstance:
       propertyPath: respawnPointParent
       value: 
       objectReference: {fileID: 89774459}
+    - target: {fileID: 190218925679177297, guid: cfd0fea43fa62c4478067dbc2423ae50, type: 3}
+      propertyPath: headCollisionLayers.m_Bits
+      value: 1041
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cfd0fea43fa62c4478067dbc2423ae50, type: 3}
 --- !u!20 &1742043020 stripped
@@ -6846,6 +6850,10 @@ PrefabInstance:
     - target: {fileID: 3321734055512913546, guid: f7989a895bd0e684c8544b43eb9fd8ce, type: 3}
       propertyPath: m_Name
       value: AI Instance (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3321734055512913546, guid: f7989a895bd0e684c8544b43eb9fd8ce, type: 3}
+      propertyPath: m_TagString
+      value: AI
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7989a895bd0e684c8544b43eb9fd8ce, type: 3}
@@ -7937,6 +7945,10 @@ PrefabInstance:
     - target: {fileID: 3321734055512913546, guid: f7989a895bd0e684c8544b43eb9fd8ce, type: 3}
       propertyPath: m_Name
       value: AI Instance
+      objectReference: {fileID: 0}
+    - target: {fileID: 3321734055512913546, guid: f7989a895bd0e684c8544b43eb9fd8ce, type: 3}
+      propertyPath: m_TagString
+      value: AI
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7989a895bd0e684c8544b43eb9fd8ce, type: 3}

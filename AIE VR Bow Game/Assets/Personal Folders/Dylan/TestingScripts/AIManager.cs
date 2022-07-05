@@ -223,7 +223,7 @@ public class AIManager : MonoBehaviour
             while (!GotID)
             {
                 RandomNumber = Random.Range(0, m_AiList.Length);
-                if (RandomNumber != m_PreviousAi && m_AiList.Length > 2 || RandomNumber == m_PreviousAi && m_AiList.Length < 2)
+                if (m_AiList.Length == 1 || RandomNumber != m_PreviousAi)
                 {
                     m_PerviousSpawn = RandomNumber;
                     GotID = true;
