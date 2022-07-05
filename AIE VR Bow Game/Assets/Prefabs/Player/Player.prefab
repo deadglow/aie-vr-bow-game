@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 656705649}
   m_Layer: 8
   m_Name: Player Hitbox
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -147,7 +147,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 747336639}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Teleport Destination
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,7 +162,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 747336638}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 2.68, y: 1.33, z: -11.37}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1637411810}
@@ -631,7 +631,7 @@ GameObject:
   - component: {fileID: 1637411810}
   - component: {fileID: 1637411812}
   - component: {fileID: 1637411811}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -668,9 +668,9 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1637411809}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -679,7 +679,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7deb442902ad1bd4a8fb1220b8d9ca40, type: 2}
+  - {fileID: 2100000, guid: 7a16392c713a6fe418b3049485b8da70, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -891,7 +891,7 @@ MonoBehaviour:
   drawInteractionRadius: 0.2
   <CurrentDrawPercent>k__BackingField: 0
   <IsDrawing>k__BackingField: 0
-  drawLength: 0.5
+  drawLength: 0.45
   arrowFireOffset: {x: 0, y: 0, z: 0.07}
   currentArrowType: 0
   arrowMinDrawPercent: 0.05
@@ -1024,7 +1024,7 @@ MonoBehaviour:
   maxReturnDistanceFromSafePoint: 0.75
   headCollisionLayers:
     serializedVersion: 2
-    m_Bits: 1025
+    m_Bits: 1041
   fallingSpeed: 0
   groundCheckCollision:
     serializedVersion: 2
@@ -1034,6 +1034,7 @@ MonoBehaviour:
   groundedDistance: 0.2
   invalidGroundDistance: 40
   respawnPointParent: {fileID: 0}
+  wallRecoveryDuration: 20
   OnTeleportEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -1542,7 +1543,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 503
+    m_Bits: 4087
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -4043,10 +4044,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 190218925196708322}
     m_Modifications:
-    - target: {fileID: 1072048161, guid: 47203022862ada74c93ce7502710a504, type: 3}
-      propertyPath: m_Parameters.widthMultiplier
-      value: 0.15
-      objectReference: {fileID: 0}
     - target: {fileID: 1072048162, guid: 47203022862ada74c93ce7502710a504, type: 3}
       propertyPath: bow
       value: 
@@ -4055,34 +4052,6 @@ PrefabInstance:
       propertyPath: teleportDestination
       value: 
       objectReference: {fileID: 747336639}
-    - target: {fileID: 3563568672034919662, guid: 47203022862ada74c93ce7502710a504, type: 3}
-      propertyPath: m_DirtyAABB
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3563568672034919662, guid: 47203022862ada74c93ce7502710a504, type: 3}
-      propertyPath: m_AABB.m_Center.z
-      value: 0.38254395
-      objectReference: {fileID: 0}
-    - target: {fileID: 3563568672034919662, guid: 47203022862ada74c93ce7502710a504, type: 3}
-      propertyPath: m_AABB.m_Extent.x
-      value: 0.0333107
-      objectReference: {fileID: 0}
-    - target: {fileID: 3563568672034919662, guid: 47203022862ada74c93ce7502710a504, type: 3}
-      propertyPath: m_AABB.m_Extent.y
-      value: 0.47067335
-      objectReference: {fileID: 0}
-    - target: {fileID: 3563568672034919662, guid: 47203022862ada74c93ce7502710a504, type: 3}
-      propertyPath: m_AABB.m_Extent.z
-      value: 0.6011244
-      objectReference: {fileID: 0}
-    - target: {fileID: 3563568672034919662, guid: 47203022862ada74c93ce7502710a504, type: 3}
-      propertyPath: m_BlendShapeWeights.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3563568672034919662, guid: 47203022862ada74c93ce7502710a504, type: 3}
-      propertyPath: m_BlendShapeWeights.Array.data[0]
-      value: 100
-      objectReference: {fileID: 0}
     - target: {fileID: 8780449230871540281, guid: 47203022862ada74c93ce7502710a504, type: 3}
       propertyPath: m_Name
       value: Bow Visual
@@ -4093,15 +4062,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8780449230871540282, guid: 47203022862ada74c93ce7502710a504, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8780449230871540282, guid: 47203022862ada74c93ce7502710a504, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8780449230871540282, guid: 47203022862ada74c93ce7502710a504, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8780449230871540282, guid: 47203022862ada74c93ce7502710a504, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4135,22 +4104,6 @@ PrefabInstance:
       propertyPath: handler
       value: 
       objectReference: {fileID: 190218924170704858}
-    - target: {fileID: 8780449230871540283, guid: 47203022862ada74c93ce7502710a504, type: 3}
-      propertyPath: blendShapeIndex
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8780449230871540283, guid: 47203022862ada74c93ce7502710a504, type: 3}
-      propertyPath: maxBlendShapeWeight
-      value: 77
-      objectReference: {fileID: 0}
-    - target: {fileID: 8780449230871540283, guid: 47203022862ada74c93ce7502710a504, type: 3}
-      propertyPath: minBlendShapeWeight
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 8780449230871540283, guid: 47203022862ada74c93ce7502710a504, type: 3}
-      propertyPath: visDrawUnheldDamperStrength
-      value: 13
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 47203022862ada74c93ce7502710a504, type: 3}
 --- !u!4 &190218924355179559 stripped

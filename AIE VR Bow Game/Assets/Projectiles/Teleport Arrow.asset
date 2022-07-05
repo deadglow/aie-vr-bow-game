@@ -20,7 +20,7 @@ MonoBehaviour:
   maxDistance: 1000
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 1153
+    m_Bits: 1169
   useContinuousDetection: 1
   teleportableLayers:
     serializedVersion: 2
