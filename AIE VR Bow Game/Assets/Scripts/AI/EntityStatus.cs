@@ -51,6 +51,7 @@ public class EntityStatus : MonoBehaviour
 		OnHealthChange.Invoke(health);
 	}
 
+	[ContextMenu("Force Kill")]
 	public void Kill()
 	{
 		if (isDead) return;
@@ -61,6 +62,7 @@ public class EntityStatus : MonoBehaviour
 
 	public void Revive()
 	{
+		ChangeHealth(maxHealth);
 		isDead = false;
 		OnReviveEvent.Invoke();
 	}

@@ -99,11 +99,11 @@ public class AIManager : MonoBehaviour
 
     [SerializeField] Player m_PlayerSettings;
 
-    [SerializeField] AI m_AiSettings;
+    [SerializeField] public AI m_AiSettings;
 
     [SerializeField] Avoidance m_Avoidance;
 
-    [SerializeField] Shooting m_Attack;
+    [SerializeField] public Shooting m_Attack;
 
     [SerializeField] Spawns m_AiSpawns;
 
@@ -117,7 +117,7 @@ public class AIManager : MonoBehaviour
     int m_PreviousAi;
     bool m_AiBusy = false;
     //============================================================
-    private void Start()
+    private void Awake()
     {
 		m_AiSpawns.m_SpawnList = new List<Transform>();
 		// Populate spawn list from parent
@@ -223,7 +223,7 @@ public class AIManager : MonoBehaviour
             while (!GotID)
             {
                 RandomNumber = Random.Range(0, m_AiList.Length);
-                if (m_AiList.Length == 1 || RandomNumber != m_PreviousAi)
+                if ((m_AiList.Length == 1 || RandomNumber != m_PreviousAi) && !m_AiList[RandomNumber].IsDead())
                 {
                     m_PerviousSpawn = RandomNumber;
                     GotID = true;
@@ -277,69 +277,20 @@ public class AIManager : MonoBehaviour
             if (m_AiList[i].IsDead() == false)
             {
                 m_AiList[i].Kill();
-            }
+			}
         }
-    }
+
+		m_activeAI = 0;
+	}
 
     //===========================================
     // Brings all of the AI in the scene back to life again, if not already alive.
     public void ReviveAll()
     {
-        float Distance;
-        m_AiSpawns.m_CurrentSpawn = 0;
-
-        m_SafeSpawns.Clear();
-
-        for (int i = 0; i < m_AiSpawns.m_SpawnList.Count; i++)
-        {
-            Distance = Vector3.Distance(m_AiSpawns.m_SpawnList[i].position, m_PlayerSettings.m_Target.transform.position);
-
-            if (Distance >= m_AiSpawns.m_SpawnRadius)
-            {
-                if (m_AiSpawns.m_SpawnList[i].gameObject.activeSelf == false)
-                {
-                    m_AiSpawns.m_SpawnList[i].gameObject.SetActive(true);
-                }
-
-                m_SafeSpawns.Add(m_AiSpawns.m_SpawnList[i]);   // ERROR HERE
-
-                m_AiSpawns.m_CurrentSpawn++;
-            }
-            else
-            {
-                if (m_AiSpawns.m_SpawnList[i].gameObject.activeSelf == true)
-                {
-                    m_AiSpawns.m_SpawnList[i].gameObject.SetActive(false);
-                }
-            }
-        }
-
-        //=========================================
-
-        int SpawnPoint = 0;
-        bool GotID = false;
-
-        if (m_SafeSpawns.Count > 0)
-        {
-            for (int i = 0; i < m_AiList.Length; i++)
-            {
-                while (!GotID)
-                {
-                    SpawnPoint = Random.Range(0, m_SafeSpawns.Count);
-                    if (SpawnPoint != m_PerviousSpawn && m_SafeSpawns.Count > 2 || SpawnPoint == m_PerviousSpawn && m_SafeSpawns.Count < 2)
-                    {
-                        m_PerviousSpawn = SpawnPoint;
-                        GotID = true;
-                    }
-                }
-
-                m_AiList[i].enabled = true;
-                m_AiList[i].gameObject.GetComponent<NavMeshAgent>().enabled = true;
-                m_AiList[i].Revive(m_SafeSpawns[SpawnPoint]);
-                GotID = false;
-            }
-        }
-
+		while (m_deadAiQueue.Count > 0)
+		{
+			Spawn();
+		}
     }
 
 	public bool Spawn()
@@ -373,6 +324,7 @@ public class AIManager : MonoBehaviour
 			GotID = false;
 
 			m_activeAI++;
+
 			return true;
         }
 

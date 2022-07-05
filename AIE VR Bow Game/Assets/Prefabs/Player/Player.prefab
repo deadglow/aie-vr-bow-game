@@ -4052,6 +4052,26 @@ PrefabInstance:
       propertyPath: teleportDestination
       value: 
       objectReference: {fileID: 747336639}
+    - target: {fileID: 7527555662800035518, guid: 47203022862ada74c93ce7502710a504, type: 3}
+      propertyPath: m_DirtyAABB
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7527555662800035518, guid: 47203022862ada74c93ce7502710a504, type: 3}
+      propertyPath: m_AABB.m_Center.z
+      value: 0.41788825
+      objectReference: {fileID: 0}
+    - target: {fileID: 7527555662800035518, guid: 47203022862ada74c93ce7502710a504, type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: 0.0333107
+      objectReference: {fileID: 0}
+    - target: {fileID: 7527555662800035518, guid: 47203022862ada74c93ce7502710a504, type: 3}
+      propertyPath: m_AABB.m_Extent.y
+      value: 0.47067335
+      objectReference: {fileID: 0}
+    - target: {fileID: 7527555662800035518, guid: 47203022862ada74c93ce7502710a504, type: 3}
+      propertyPath: m_AABB.m_Extent.z
+      value: 0.63646865
+      objectReference: {fileID: 0}
     - target: {fileID: 8780449230871540281, guid: 47203022862ada74c93ce7502710a504, type: 3}
       propertyPath: m_Name
       value: Bow Visual

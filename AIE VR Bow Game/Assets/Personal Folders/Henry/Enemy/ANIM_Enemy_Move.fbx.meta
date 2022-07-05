@@ -59,14 +59,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.45238096
-        functionName: EnemyStep
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.5089286
+      - time: 0.54589355
         functionName: EnemyStep
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -74,6 +67,13 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 0.62946427
+        functionName: EnemyStep
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.7014082
         functionName: EnemyStep
         data: 
         objectReferenceParameter: {instanceID: 0}
