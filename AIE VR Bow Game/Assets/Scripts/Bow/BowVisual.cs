@@ -15,7 +15,7 @@ public class BowVisual : MonoBehaviour
 	public float visDrawHeldDamperStrength = 0.5f;
 	public float visDrawUnheldDamperStrength = 0.5f;
 	private float visDrawVelocity = 0.0f;
-	private float currentVisDrawPercent = 0.0f;
+	public float currentVisDrawPercent { get; private set; } = 0.0f;
 
 	public float minBlendShapeWeight = 0.0f;
 	public float maxBlendShapeWeight = 100.0f;
