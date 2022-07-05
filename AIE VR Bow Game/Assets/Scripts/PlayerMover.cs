@@ -38,6 +38,8 @@ public class PlayerMover : MonoBehaviour
 	[Tooltip("Parent of all the recovery points for the player.")]
 	public Transform respawnPointParent;
 	private List<Transform> respawnPoints = new List<Transform>();
+	public float wallRecoveryDuration = 20.0f;
+	private float wallRecoveryTimer = 0;
 
 	[Header("Events")]
 	public UnityEvent<Vector3> OnTeleportEvent;
@@ -99,24 +101,29 @@ public class PlayerMover : MonoBehaviour
 		}
 	}
 
+	public void TeleportPlayerToSafePoint()
+	{
+		if (respawnPoints.Count == 0)
+			throw new System.Exception("No respawn points found.");
+		
+		Vector3 closestPoint = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+		Vector3 headPos = xrOrigin.Camera.transform.position;
+		for (int i = 0; i < respawnPoints.Count; ++i)
+		{
+			if ((respawnPoints[i].position - headPos).sqrMagnitude < closestPoint.sqrMagnitude)
+				closestPoint = respawnPoints[i].position;
+		}
+
+		TeleportTo(closestPoint, true);
+		OnRespawnEvent.Invoke(closestPoint);
+	}
+
 	private void VerifyPlayerNotUnderFloor()
 	{
 		// Teleport the player to the closest valid point if they have nothing under them for ages (fallen through floor)
 		if (distanceToGround > invalidGroundDistance)
 		{
-			if (respawnPoints.Count == 0)
-				throw new System.Exception("No respawn points found.");
-			
-			Vector3 closestPoint = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-			Vector3 headPos = xrOrigin.Camera.transform.position;
-			for (int i = 0; i < respawnPoints.Count; ++i)
-			{
-				if ((respawnPoints[i].position - headPos).sqrMagnitude < closestPoint.sqrMagnitude)
-					closestPoint = respawnPoints[i].position;
-			}
-
-			TeleportTo(closestPoint, true);
-			OnRespawnEvent.Invoke(closestPoint);
+			TeleportPlayerToSafePoint();
 		}
 	}
 
@@ -148,6 +155,16 @@ public class PlayerMover : MonoBehaviour
 			else
 				lastValidCameraPosition = camPos;
 		}
+
+		if (isHeadColliding)
+		{
+			wallRecoveryTimer += Time.deltaTime;
+
+			if (wallRecoveryTimer > wallRecoveryDuration)
+				TeleportPlayerToSafePoint();
+		}
+		else
+			wallRecoveryTimer = 0;
 	}
 
 	public Vector3 GetPlayerFeetPos()

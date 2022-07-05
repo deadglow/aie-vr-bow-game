@@ -5,9 +5,10 @@ using UnityEngine;
 public class WaveController : MonoBehaviour
 {
 	public AIManager aiManager;
-    public List<WaveSet> waveSets;
+	public AISpawnManager spawnManager;
 	public bool automaticallySwitchWave = true;
 	public float timeBetweenWaves = 120.0f;
+	public List<WaveSet> waveSets;
 
 	public int currentWave { get; private set; } = 0;
 	private float waveBreakTimer = 0;
@@ -30,6 +31,7 @@ public class WaveController : MonoBehaviour
 		waveActive = true;
 		SetWavePropertiesByIndex(currentWave);
 		// unpause spawn manager
+		spawnManager.enabled = true;
 	}
 
 	public void StartWaveIndex(int index)
@@ -44,6 +46,8 @@ public class WaveController : MonoBehaviour
 		waveActive = false;
 		waveBreakTimer = timeBetweenWaves;
 		// reset and pause spawn manager
+		spawnManager.Restart();
+		spawnManager.enabled = false;
 	}
 
 	public void NextWave()
@@ -67,12 +71,12 @@ public class WaveController : MonoBehaviour
 		// set the ai manager properties here
 	}
 
+	[System.Serializable]
 	public struct WaveSet
 	{
-		// Spawn manager properties
+		public AISpawnManager.SpawnData spawnData;
 
-		// Individual AI properties
-
-		// AI Manager properties
+		public AIManager.AI aiProperties;
+		public AIManager.Shooting shootingProperties;
 	}
 }
