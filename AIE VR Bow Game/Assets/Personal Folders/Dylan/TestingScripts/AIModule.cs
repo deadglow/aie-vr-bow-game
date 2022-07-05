@@ -14,7 +14,7 @@ public class AIModule : MonoBehaviour
         TAG,
     }
 
-    enum EnemyStates
+    public enum EnemyStates
     {
         MOVETOPLAYER = 0,
         SHOOT,
@@ -32,7 +32,7 @@ public class AIModule : MonoBehaviour
 	public LayerMask m_ProjectorLayers;
 
     [Header("AI Events")]
-    [SerializeField, Tooltip("Is called when the stun state starts.")] UnityEvent m_OnShoot;
+    [SerializeField, Tooltip("Is called when the stun state starts.")] public UnityEvent m_OnShoot;
 
     [Space()]
 
@@ -46,9 +46,9 @@ public class AIModule : MonoBehaviour
     float m_StunTime = 5;
 
     float m_StunTimer = 0;
-    bool m_IsStuned = false;
+    public bool m_IsStuned = false;
 
-    EnemyStates m_EnemyStates;
+    public EnemyStates m_EnemyStates;
     Rigidbody m_Rigidbody = null;
     NavMeshAgent m_EnemyAgent = null;
 

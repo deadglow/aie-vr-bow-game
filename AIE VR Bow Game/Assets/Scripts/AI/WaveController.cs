@@ -5,7 +5,8 @@ using UnityEngine;
 public class WaveController : MonoBehaviour
 {
 	public AIManager aiManager;
-    public List<WaveSet> waveSets;
+	public AISpawnManager spawnManager;
+	public List<WaveSet> waveSets;
 	public bool automaticallySwitchWave = true;
 	public float timeBetweenWaves = 120.0f;
 
@@ -69,10 +70,9 @@ public class WaveController : MonoBehaviour
 
 	public struct WaveSet
 	{
-		// Spawn manager properties
+		public AISpawnManager.SpawnData spawnData;
 
-		// Individual AI properties
-
-		// AI Manager properties
+		public AIManager.AI aiProperties;
+		public AIManager.Shooting shootingProperties;
 	}
 }
