@@ -14,6 +14,7 @@ public class AISpawnManager : MonoBehaviour
 		public float spawnDelayDuration;
 	}
 
+	[HideInInspector]
     public AIManager manager = null;
 	public SpawnData data = new SpawnData();
 
@@ -24,7 +25,7 @@ public class AISpawnManager : MonoBehaviour
 	void Start()
 	{
 		manager = FindObjectOfType<AIManager>();
-		manager.KillAll();
+		Restart();
 	}
 
 	public void Restart()

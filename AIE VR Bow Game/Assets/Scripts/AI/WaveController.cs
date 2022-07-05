@@ -14,6 +14,11 @@ public class WaveController : MonoBehaviour
 	private float waveBreakTimer = 0;
 	private bool waveActive = false;
 
+	void Start()
+	{
+		EndWave();
+	}
+
 	void FixedUpdate()
 	{
 		// Automatically progress to the next wave
@@ -25,6 +30,7 @@ public class WaveController : MonoBehaviour
 		}
 	}
 
+	[ContextMenu("Start Current Wave")]
 	public void StartWave()
 	{
 		EndWave();
@@ -40,9 +46,9 @@ public class WaveController : MonoBehaviour
 		StartWave();
 	}
 
+	[ContextMenu("End Wave")]
 	public void EndWave()
 	{
-		if (!waveActive) return;
 		waveActive = false;
 		waveBreakTimer = timeBetweenWaves;
 		// reset and pause spawn manager
@@ -50,10 +56,21 @@ public class WaveController : MonoBehaviour
 		spawnManager.enabled = false;
 	}
 
+	[ContextMenu("Next Wave")]
 	public void NextWave()
 	{
 		EndWave();
 		currentWave++;
+		StartWave();
+	}
+
+	[ContextMenu("Next Wave")]
+	public void PreviousWave()
+	{
+		EndWave();
+		currentWave--;
+		if (currentWave < 0)
+			currentWave = 0;
 		StartWave();
 	}
 
@@ -69,6 +86,9 @@ public class WaveController : MonoBehaviour
 	private void SetWaveProperties(WaveSet set)
 	{
 		// set the ai manager properties here
+		spawnManager.data = set.spawnData;
+		aiManager.m_AiSettings = set.aiProperties;
+		aiManager.m_Attack = set.shootingProperties;
 	}
 
 	[System.Serializable]

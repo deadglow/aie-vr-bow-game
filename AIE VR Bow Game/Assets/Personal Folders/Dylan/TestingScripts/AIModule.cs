@@ -71,7 +71,7 @@ public class AIModule : MonoBehaviour
     bool m_PlayerInSight = false;
     float m_TimeTillAttack;
     float m_RayCastTimer;
-    float m_MaxCastDistance = 10;
+    float m_MaxCastDistance = 50;
 
     public AIManager m_AIManager = null;
 
@@ -115,13 +115,9 @@ public class AIModule : MonoBehaviour
                 break;
 
             case EnemyStates.DEATH:
-                if (m_OnDeath != null)
-                {
-                    m_OnDeath.Invoke();
-                }
-                gameObject.GetComponent<AIModule>().enabled = false;
-                gameObject.GetComponent<NavMeshAgent>().enabled = false;
-                break;
+				Kill();
+
+				break;
         }
     }
 
@@ -139,9 +135,9 @@ public class AIModule : MonoBehaviour
     {
         RaycastHit Cast;
 
-        Vector3 Direction = m_PlayerTarget.transform.position - m_ProjectorBox.transform.position;
+        Vector3 Direction = m_PlayerTarget.transform.position - m_ProjectileSpawn.position;
 
-		if (Physics.SphereCast(m_ProjectorBox.position, m_Projectile.typeLookup.GetData(m_ProjectType).radius, Direction.normalized, out Cast, m_MaxCastDistance, m_ProjectorLayers))
+		if (Physics.Raycast(m_ProjectorBox.position, Direction.normalized, out Cast, m_MaxCastDistance, m_ProjectorLayers))
         {
             if (Cast.collider.tag == m_PlayerTag)
             {
@@ -259,12 +255,15 @@ public class AIModule : MonoBehaviour
         m_EnemyStates = EnemyStates.DEATH;
 		m_AIManager.OnAIKill(this);
         m_OnDeath.Invoke();
+
+		enabled = false;
+		m_EnemyAgent.enabled = false;
     }
 
     //========================================
     public bool IsDead() // return whether the Ai is dead or alive.
     {
-        return m_IsAlive;
+        return !m_IsAlive;
     }
 
     public void SetStopDistance(float _amount) // the distance the Ai will stay from the target.
@@ -298,8 +297,12 @@ public class AIModule : MonoBehaviour
 
     public void Revive(Transform _positon) //revive the AI.
     {
-        m_IsAlive = true;
-        SetPosition(_positon);
+		enabled = true;
+		m_EnemyAgent.enabled = true;
+        
+		m_IsAlive = true;
+		m_EnemyStates = EnemyStates.MOVETOPLAYER;
+		SetPosition(_positon);
 		m_OnRevive.Invoke();
     }
 
