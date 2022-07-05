@@ -27,7 +27,7 @@ public class AISpawnManager : MonoBehaviour
 		manager.KillAll();
 	}
 
-	void ClearAll()
+	public void Restart()
 	{
 		currentSpawnCount = 0;
 		spawnDelayTimer = data.spawnDelayDuration;
