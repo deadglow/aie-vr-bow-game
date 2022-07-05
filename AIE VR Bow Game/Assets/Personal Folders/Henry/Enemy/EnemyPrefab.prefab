@@ -828,6 +828,9 @@ MonoBehaviour:
   - name: Enemy Stun
     clip: {fileID: 8300000, guid: 1c5a5546562f5574c903f83b4117ea74, type: 3}
     volume: 0.4
+  - name: Enemy Step
+    clip: {fileID: 8300000, guid: 24b7bc6c550e4a94d861b3e1dce7335c, type: 3}
+    volume: 0.4
   source: {fileID: 5640532208427312740}
 --- !u!82 &5640532208427312740
 AudioSource:
