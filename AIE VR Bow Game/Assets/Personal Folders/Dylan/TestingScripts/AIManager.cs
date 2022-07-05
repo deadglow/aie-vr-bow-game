@@ -88,6 +88,7 @@ public class AIManager : MonoBehaviour
     public struct Spawns
     {
         public Transform[] m_SpawnList;
+        [Range(5, 50)] public float m_SpawnRadius;
         public int m_CurrentSpawn;
         public int m_AmountPerSpawn;
         public ProjectileManager m_Projectile;
@@ -107,7 +108,9 @@ public class AIManager : MonoBehaviour
 
     [SerializeField] AIModule[] m_AiList = null;
 
-    //int m_PerviousPermission = 0;
+    int m_PerviousSpawn = 0;
+
+    public List<Transform> m_SafeSpawns = null;
 
     //============================================================
     private void Start()
@@ -147,7 +150,7 @@ public class AIManager : MonoBehaviour
         }
 
         AssignValues(); // begin to assign all values from the manager to other AIs.
-        SetSpawns();
+        AssignSpawnPoints();
     }
 
     //===========================================
@@ -234,37 +237,115 @@ public class AIManager : MonoBehaviour
     // Brings all of the AI in the scene back to life again, if not already alive.
     public void ReviveAll()
     {
+        float Distance;
         m_AiSpawns.m_CurrentSpawn = 0;
 
-        m_AiSpawns.m_AmountPerSpawn = m_AiList.Length / m_AiSpawns.m_SpawnList.Length;
+        m_SafeSpawns.Clear();
 
-        for (int i = 0; i < m_AiList.Length; i++)
+        for (int i = 0; i < m_AiSpawns.m_SpawnList.Length; i++)
         {
-            m_AiList[i].enabled = true;
-            m_AiList[i].gameObject.GetComponent<NavMeshAgent>().enabled = true;
-            m_AiList[i].Revive(m_AiSpawns.m_SpawnList[m_AiSpawns.m_CurrentSpawn]);
+            Distance = Vector3.Distance(m_AiSpawns.m_SpawnList[i].position, m_PlayerSettings.m_Target.transform.position);
 
-            if (i % m_AiSpawns.m_AmountPerSpawn == 0)
+            if (Distance >= m_AiSpawns.m_SpawnRadius)
             {
+                if (m_AiSpawns.m_SpawnList[i].gameObject.activeSelf == false)
+                {
+                    m_AiSpawns.m_SpawnList[i].gameObject.SetActive(true);
+                }
+
+                m_SafeSpawns.Add(m_AiSpawns.m_SpawnList[i]);   // ERROR HERE
+
                 m_AiSpawns.m_CurrentSpawn++;
+            }
+            else
+            {
+                if (m_AiSpawns.m_SpawnList[i].gameObject.activeSelf == true)
+                {
+                    m_AiSpawns.m_SpawnList[i].gameObject.SetActive(false);
+                }
+            }
+        }
+
+        //=========================================
+
+        int SpawnPoint = 0;
+        bool GotID = false;
+
+        if (m_SafeSpawns.Count > 0)
+        {
+            for (int i = 0; i < m_AiList.Length; i++)
+            {
+                while (!GotID)
+                {
+                    SpawnPoint = Random.Range(0, m_SafeSpawns.Count);
+                    if (SpawnPoint != m_PerviousSpawn && m_SafeSpawns.Count > 2 || SpawnPoint == m_PerviousSpawn && m_SafeSpawns.Count < 2)
+                    {
+                        m_PerviousSpawn = SpawnPoint;
+                        GotID = true;
+                    }
+                }
+
+                m_AiList[i].enabled = true;
+                m_AiList[i].gameObject.GetComponent<NavMeshAgent>().enabled = true;
+                m_AiList[i].Revive(m_SafeSpawns[SpawnPoint]);
+                GotID = false;
             }
         }
 
     }
-    void SetSpawns()
+
+    void AssignSpawnPoints()  //TODO assign all AIs to Random Spawns.
     {
+        float Distance;
         m_AiSpawns.m_CurrentSpawn = 0;
 
-        m_AiSpawns.m_AmountPerSpawn = m_AiList.Length / m_AiSpawns.m_SpawnList.Length;
+        m_SafeSpawns.Clear();
 
-        for (int i = 0; i < m_AiList.Length; i++)
+        for (int i = 0; i < m_AiSpawns.m_SpawnList.Length; i++)
         {
-            Debug.Log(i);
-            m_AiList[i].SetPosition(m_AiSpawns.m_SpawnList[m_AiSpawns.m_CurrentSpawn].transform);
+            Distance = Vector3.Distance(m_AiSpawns.m_SpawnList[i].position, m_PlayerSettings.m_Target.transform.position);
 
-            if (i % m_AiSpawns.m_AmountPerSpawn == 0)
+            if (Distance >= m_AiSpawns.m_SpawnRadius)
             {
+                if (m_AiSpawns.m_SpawnList[i].gameObject.activeSelf == false)
+                {
+                    m_AiSpawns.m_SpawnList[i].gameObject.SetActive(true);
+                }
+
+                m_SafeSpawns.Add(m_AiSpawns.m_SpawnList[i]);   // ERROR HERE
+
                 m_AiSpawns.m_CurrentSpawn++;
+            }
+            else
+            {
+                if (m_AiSpawns.m_SpawnList[i].gameObject.activeSelf == true)
+                {
+                    m_AiSpawns.m_SpawnList[i].gameObject.SetActive(false);
+                }
+            }
+        }
+
+        //=========================================
+
+        int SpawnPoint = 0;
+        bool GotID = false;
+
+        if (m_SafeSpawns.Count > 0)
+        {
+            for (int i = 0; i < m_AiList.Length; i++)
+            {
+                while (!GotID)
+                {
+                    SpawnPoint = Random.Range(0, m_SafeSpawns.Count);
+                    if (SpawnPoint != m_PerviousSpawn && m_SafeSpawns.Count > 2 || SpawnPoint == m_PerviousSpawn && m_SafeSpawns.Count < 2)
+                    {
+                        m_PerviousSpawn = SpawnPoint;
+                        GotID = true;
+                    }
+                }
+
+                m_AiList[i].SetPosition(m_SafeSpawns[SpawnPoint]);
+                GotID = false;
             }
         }
     }
@@ -290,7 +371,7 @@ public class AIManager : MonoBehaviour
     {
         int RandomAI = Random.Range(0, m_AiList.Length);
 
-        for (int i  = 0; i < m_AiList.Length;)
+        for (int i = 0; i < m_AiList.Length;)
         {
             if (i != RandomAI)
             {

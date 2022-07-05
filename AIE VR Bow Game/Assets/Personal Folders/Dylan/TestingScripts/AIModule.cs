@@ -54,26 +54,21 @@ public class AIModule : MonoBehaviour
     bool m_StunCooldown = false;
 
     float m_StunCooldownAmount;
-    float m_StunCooldownTimer;
-    bool m_CheckerVersion = true;
 
-    public float m_ShootCooldownAmount = 5f;
-    public float m_ShootCooldown = 0f;
-    bool m_IsShooting = false;
+    float m_ShootCooldownAmount = 5f;
+    float m_ShootCooldown = 0f;
 
     ProjectileManager m_Projectile;
     public Transform m_ProjectileSpawn = null;
     ProjectileType m_ProjectType;
     float m_ProjectSpeed = 0.5f;
 
-    public bool m_PermissionToFire = false;
+    bool m_PermissionToFire = false;
 
-    public bool m_PlayerInSight = false;
-    public float m_TimeTillAttack;
-    public float m_RayCastTimer;
-    public float m_MaxCastDistance = 10;
-
-    public int m_FiredArrows = 0;
+    bool m_PlayerInSight = false;
+    float m_TimeTillAttack;
+    float m_RayCastTimer;
+    float m_MaxCastDistance = 10;
 
     //==============================================================
     void Awake()
@@ -160,28 +155,9 @@ public class AIModule : MonoBehaviour
 
     void FireAtPlayer()
     {
-        m_FiredArrows++;
-
         if (m_Projectile)
         {
-            //m_Projectile.FireProjectile(m_ProjectType, m_ProjectileSpawn.position, CalculatePlayerLocation(), m_ProjectSpeed);
-        }
-    }
-
-    void UpdateStunTimer()
-    {
-        if (m_StunCooldown)
-        {
-            m_StunCooldownTimer -= Time.deltaTime;
-            if (m_StunCooldownTimer <= 0)
-            {
-                m_StunCooldown = false;
-                m_StunCooldownTimer = m_StunCooldownAmount;
-            }
-        }
-        else
-        {
-            return;
+            m_Projectile.FireProjectile(m_ProjectType, m_ProjectileSpawn.position, CalculatePlayerLocation(), m_ProjectSpeed);
         }
     }
 
@@ -256,7 +232,7 @@ public class AIModule : MonoBehaviour
 
         if (m_EnemyStates != EnemyStates.SHOOT)
         {
-            
+
             m_ShootCooldown = m_ShootCooldownAmount;
             m_EnemyStates = EnemyStates.SHOOT;
         }
@@ -315,13 +291,12 @@ public class AIModule : MonoBehaviour
     public void Revive(Transform _positon) //revive the AI.
     {
         m_IsAlive = true;
-        transform.position = _positon.position;
+        SetPosition(_positon);
     }
 
     public void SetStunCooldown(float _amount)
     {
         m_StunCooldownAmount = _amount;
-        m_StunCooldownTimer = m_StunCooldownAmount;
     }
 
     public void SetAngularDistance(float _amount)
