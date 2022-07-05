@@ -17,9 +17,9 @@ TagManager:
   - UtilityBelt
   - Enemy
   - Player
-  - 
-  - 
-  - 
+  - Shield
+  - NonTeleportable
+  - TeleDestination
   - 
   - 
   - 
