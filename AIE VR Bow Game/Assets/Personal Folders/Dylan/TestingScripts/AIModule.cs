@@ -26,8 +26,10 @@ public class AIModule : MonoBehaviour
     //==============================================================
     [Header("General")]
     GameObject m_PlayerTarget = null; // The player in the scene.
+	public string m_PlayerTag = "Player";
     [Tooltip("The location of where the Raycast will start.")]
     [SerializeField] Transform m_ProjectorBox = null;
+	public LayerMask m_ProjectorLayers;
 
     [Header("AI Events")]
     [SerializeField, Tooltip("Is called when the stun state starts.")] UnityEvent m_OnShoot;
@@ -36,6 +38,7 @@ public class AIModule : MonoBehaviour
 
     [SerializeField, Tooltip("Is called when the move state starts.")] UnityEvent m_OnMove;
     [SerializeField, Tooltip("Is called when the AI dies.")] UnityEvent m_OnDeath;
+    [SerializeField, Tooltip("Is called when the AI revives.")] UnityEvent m_OnRevive;
 
     //===================================================== Dont touch
     float m_StoppingDistance = 0;
@@ -138,9 +141,9 @@ public class AIModule : MonoBehaviour
 
         Vector3 Direction = m_PlayerTarget.transform.position - m_ProjectorBox.transform.position;
 
-        if (Physics.Raycast(m_ProjectorBox.position, Direction, out Cast, m_MaxCastDistance))
+		if (Physics.SphereCast(m_ProjectorBox.position, m_Projectile.typeLookup.GetData(m_ProjectType).radius, Direction.normalized, out Cast, m_MaxCastDistance, m_ProjectorLayers))
         {
-            if (Cast.collider.tag == "Player")
+            if (Cast.collider.tag == m_PlayerTag)
             {
                 m_PlayerInSight = true;
             }
@@ -244,7 +247,7 @@ public class AIModule : MonoBehaviour
 
     Vector3 CalculatePlayerLocation()
     {
-        Vector3 Direction = m_PlayerTarget.transform.position - transform.position;
+        Vector3 Direction = m_PlayerTarget.transform.position - m_ProjectileSpawn.position;
         return Direction.normalized;
     }
 
@@ -252,10 +255,10 @@ public class AIModule : MonoBehaviour
     //========================================
     public void Kill() // Kills the AI.
     {
-        m_OnDeath.Invoke();
         m_IsAlive = false;
         m_EnemyStates = EnemyStates.DEATH;
-
+		m_AIManager.OnAIKill(this);
+        m_OnDeath.Invoke();
     }
 
     //========================================
@@ -297,6 +300,7 @@ public class AIModule : MonoBehaviour
     {
         m_IsAlive = true;
         SetPosition(_positon);
+		m_OnRevive.Invoke();
     }
 
     public void SetStunCooldown(float _amount)

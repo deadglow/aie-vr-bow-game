@@ -28,6 +28,7 @@ public class AIManager : MonoBehaviour
     {
         [Tooltip("MANUALLY: Assign the player yourself. | TAG: Search for object with Player tag.")]
         public AIsearchMode m_PlayerAssignment;
+		public string m_tagName;
         public GameObject m_Target;
     }
 
@@ -41,7 +42,7 @@ public class AIManager : MonoBehaviour
         [Range(0, 10)] public float m_TimeTillAttack;
 
         [Tooltip("How far the AI will stay away from the target.")]
-        [Range(10, 25)] public float m_StoppingDistance;
+        [Range(0, 25)] public float m_StoppingDistance;
 
         [Tooltip("The max turning speed when following a path.")]
         [Range(10, 50)] public float m_AngularSpeed;
@@ -85,7 +86,9 @@ public class AIManager : MonoBehaviour
     [System.Serializable]
     public struct Spawns
     {
-        public Transform[] m_SpawnList;
+		public Transform m_SpawnListParent;
+		[HideInInspector]
+        public List<Transform> m_SpawnList;
         [Range(5, 50)] public float m_SpawnRadius;
         public int m_CurrentSpawn;
         public int m_AmountPerSpawn;
@@ -105,6 +108,8 @@ public class AIManager : MonoBehaviour
     [SerializeField] Spawns m_AiSpawns;
 
     [SerializeField] AIModule[] m_AiList = null;
+	[SerializeField] Queue<AIModule> m_deadAiQueue = new Queue<AIModule>();
+	public int m_activeAI { get; private set; }
 
     int m_PerviousSpawn = 0;
 
@@ -114,6 +119,13 @@ public class AIManager : MonoBehaviour
     //============================================================
     private void Start()
     {
+		m_AiSpawns.m_SpawnList = new List<Transform>();
+		// Populate spawn list from parent
+		for (int i = 0; i < m_AiSpawns.m_SpawnListParent.childCount; ++i)
+		{
+			m_AiSpawns.m_SpawnList.Add(m_AiSpawns.m_SpawnListParent.GetChild(i));
+		}
+
         m_AiList = FindObjectsOfType<AIModule>(); // find & assign the AIs.
         if (m_AiList == null)
         {
@@ -128,7 +140,7 @@ public class AIManager : MonoBehaviour
 
         if (m_PlayerSettings.m_PlayerAssignment == AIsearchMode.TAG) // Player assignment can be done manually or it can be done by the system at start up time.
         {
-            GameObject Temp = GameObject.FindGameObjectWithTag("Player");
+            GameObject Temp = GameObject.FindGameObjectWithTag(m_PlayerSettings.m_tagName);
             m_PlayerSettings.m_Target = Temp;
 
             if (m_PlayerSettings.m_Target)
@@ -153,6 +165,11 @@ public class AIManager : MonoBehaviour
         PickFiringAI();
         AssignSpawnPoints();
     }
+
+	void FixedUpdate()
+	{
+		AssignSpawnPoints();
+	}
 
     //===========================================
     // All Ai modules get their values assigned.
@@ -273,7 +290,7 @@ public class AIManager : MonoBehaviour
 
         m_SafeSpawns.Clear();
 
-        for (int i = 0; i < m_AiSpawns.m_SpawnList.Length; i++)
+        for (int i = 0; i < m_AiSpawns.m_SpawnList.Count; i++)
         {
             Distance = Vector3.Distance(m_AiSpawns.m_SpawnList[i].position, m_PlayerSettings.m_Target.transform.position);
 
@@ -325,6 +342,49 @@ public class AIManager : MonoBehaviour
 
     }
 
+	public bool Spawn()
+	{
+		if (m_deadAiQueue.Count == 0)
+		{
+			print("No available AI.");
+			return false;
+		}
+		//=========================================
+
+        int SpawnPoint = 0;
+        bool GotID = false;
+
+		// Get an AI that is dead.
+
+        if (m_SafeSpawns.Count > 0)
+        {
+			while (!GotID)
+			{
+				SpawnPoint = Random.Range(0, m_SafeSpawns.Count);
+				if (SpawnPoint != m_PerviousSpawn && m_SafeSpawns.Count > 2 || SpawnPoint == m_PerviousSpawn && m_SafeSpawns.Count < 2)
+				{
+					m_PerviousSpawn = SpawnPoint;
+					GotID = true;
+				}
+			}
+
+			AIModule ai = m_deadAiQueue.Dequeue();
+			ai.Revive(m_SafeSpawns[SpawnPoint]);
+			GotID = false;
+
+			m_activeAI++;
+			return true;
+        }
+
+		return false;
+	}
+
+	public void OnAIKill(AIModule ai)
+	{
+		m_deadAiQueue.Enqueue(ai);
+		m_activeAI--;
+	}
+
     void AssignSpawnPoints()  //TODO assign all AIs to Random Spawns.
     {
         float Distance;
@@ -332,7 +392,7 @@ public class AIManager : MonoBehaviour
 
         m_SafeSpawns.Clear();
 
-        for (int i = 0; i < m_AiSpawns.m_SpawnList.Length; i++)
+        for (int i = 0; i < m_AiSpawns.m_SpawnList.Count; i++)
         {
             Distance = Vector3.Distance(m_AiSpawns.m_SpawnList[i].position, m_PlayerSettings.m_Target.transform.position);
 
@@ -355,31 +415,7 @@ public class AIManager : MonoBehaviour
                 }
             }
         }
-
-        //=========================================
-
-        int SpawnPoint = 0;
-        bool GotID = false;
-
-        if (m_SafeSpawns.Count > 0)
-        {
-            for (int i = 0; i < m_AiList.Length; i++)
-            {
-                while (!GotID)
-                {
-                    SpawnPoint = Random.Range(0, m_SafeSpawns.Count);
-                    if (SpawnPoint != m_PerviousSpawn && m_SafeSpawns.Count > 2 || SpawnPoint == m_PerviousSpawn && m_SafeSpawns.Count < 2)
-                    {
-                        m_PerviousSpawn = SpawnPoint;
-                        GotID = true;
-                    }
-                }
-
-                m_AiList[i].SetPosition(m_SafeSpawns[SpawnPoint]);
-                GotID = false;
-            }
-        }
-    }
+	}
 
     public bool AreAllDead()
     {
