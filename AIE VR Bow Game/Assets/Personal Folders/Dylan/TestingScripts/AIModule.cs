@@ -41,8 +41,6 @@ public class AIModule : MonoBehaviour
     [SerializeField, Tooltip("Is called when the AI revives.")] UnityEvent m_OnRevive;
 
     //===================================================== Dont touch
-    float m_StoppingDistance = 0;
-    float m_FleeDistance = 0;
     float m_StunTime = 5;
 
     float m_StunTimer = 0;
@@ -141,8 +139,9 @@ public class AIModule : MonoBehaviour
 
         Vector3 Direction = m_PlayerTarget.transform.position - m_ProjectorBox.transform.position;
 
-		if (Physics.SphereCast(m_ProjectorBox.position, m_Projectile.typeLookup.GetData(m_ProjectType).radius, Direction.normalized, out Cast, m_MaxCastDistance, m_ProjectorLayers))
+		if (Physics.Raycast(m_ProjectorBox.position, Direction, out Cast, m_MaxCastDistance, m_ProjectorLayers))
         {
+            Debug.DrawLine(m_ProjectorBox.position, Cast.point, Color.red);
             if (Cast.collider.tag == m_PlayerTag)
             {
                 m_PlayerInSight = true;
@@ -265,11 +264,6 @@ public class AIModule : MonoBehaviour
     public bool IsDead() // return whether the Ai is dead or alive.
     {
         return m_IsAlive;
-    }
-
-    public void SetStopDistance(float _amount) // the distance the Ai will stay from the target.
-    {
-        m_StoppingDistance = _amount;
     }
     public void SetPlayerTarget(GameObject _player) // Set what the Ai should attack/ follow.
     {

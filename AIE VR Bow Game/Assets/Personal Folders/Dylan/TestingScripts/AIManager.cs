@@ -42,7 +42,7 @@ public class AIManager : MonoBehaviour
         [Range(0, 10)] public float m_TimeTillAttack;
 
         [Tooltip("How far the AI will stay away from the target.")]
-        [Range(0, 25)] public float m_StoppingDistance;
+        [Range(0, 25)] public float m_RaycastDistance;
 
         [Tooltip("The max turning speed when following a path.")]
         [Range(10, 50)] public float m_AngularSpeed;
@@ -185,7 +185,7 @@ public class AIManager : MonoBehaviour
         {
             m_AiList[i].SetAcceleration(m_AiSettings.m_Acceleration);
 
-            m_AiList[i].SetMaxCast(m_AiSettings.m_StoppingDistance);
+            m_AiList[i].SetMaxCast(m_AiSettings.m_RaycastDistance);
             m_AiList[i].SetShootCooldown(m_Attack.m_ShootCooldown);
 
             m_AiList[i].SetProjectileSpeed(m_Attack.m_BulletSpeedScale);
