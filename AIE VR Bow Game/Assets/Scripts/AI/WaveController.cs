@@ -12,11 +12,12 @@ public class WaveController : MonoBehaviour
 	public List<WaveSet> waveSets;
 
 	public int currentWave { get; private set; } = 0;
-	private float waveBreakTimer = 0;
+	public float waveBreakTimer { get; private set; } = 0;
 	private bool waveActive = false;
 
 	public UnityEvent OnWaveStart;
 	public UnityEvent OnWaveEnd;
+	public UnityEvent OnWaveComplete;
 
 	void Start()
 	{
@@ -38,6 +39,7 @@ public class WaveController : MonoBehaviour
 			if (spawnManager.HitSpawnCap() && aiManager.m_activeAI == 0)
 			{
 				EndWave();
+				OnWaveComplete.Invoke();
 			}
 		}
 	}
@@ -45,11 +47,13 @@ public class WaveController : MonoBehaviour
 	[ContextMenu("Start Current Wave")]
 	public void StartWave()
 	{
-		EndWave();
+		if (waveActive)
+			EndWave();
 		waveActive = true;
 		SetWavePropertiesByIndex(currentWave);
 		// unpause spawn manager
 		spawnManager.enabled = true;
+		OnWaveStart.Invoke();
 	}
 
 	public void StartWaveIndex(int index)
@@ -66,12 +70,12 @@ public class WaveController : MonoBehaviour
 		// reset and pause spawn manager
 		spawnManager.Restart();
 		spawnManager.enabled = false;
+		OnWaveEnd.Invoke();
 	}
 
 	[ContextMenu("Next Wave")]
 	public void NextWave()
 	{
-		EndWave();
 		currentWave++;
 		StartWave();
 	}
@@ -79,7 +83,6 @@ public class WaveController : MonoBehaviour
 	[ContextMenu("Next Wave")]
 	public void PreviousWave()
 	{
-		EndWave();
 		currentWave--;
 		if (currentWave < 0)
 			currentWave = 0;

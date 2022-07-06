@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class BowHandler : MonoBehaviour
@@ -38,6 +39,8 @@ public class BowHandler : MonoBehaviour
 	public ProjectileType currentArrowType = ProjectileType.None;
 	[Tooltip("Any lower than this and the bow will simply cancel the arrow.")]
 	public float arrowMinDrawPercent = 0.05f;
+
+	public UnityEvent<ProjectileType> OnFireBow;
 
 	void Start()
 	{
@@ -150,6 +153,7 @@ public class BowHandler : MonoBehaviour
 		{
 			Vector3 firePoint = GetBowHand().TransformPoint(arrowFireOffset);
 			projectileManager.FireProjectile(currentArrowType, firePoint, BowForward, CurrentDrawPercent);
+			OnFireBow.Invoke(currentArrowType);
 			currentArrowType = ProjectileType.None;
 		}
 	}

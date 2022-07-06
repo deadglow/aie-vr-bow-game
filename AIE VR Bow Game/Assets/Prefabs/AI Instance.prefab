@@ -107,7 +107,19 @@ MonoBehaviour:
     m_Bits: 1425
   m_OnShoot:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnMove:
     m_PersistentCalls:
       m_Calls: []
@@ -124,6 +136,18 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1414569662762979211}
+        m_TargetAssemblyTypeName: AudioModule, Assembly-CSharp
+        m_MethodName: PlaySFX
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Enemy Death
           m_BoolArgument: 0
         m_CallState: 2
   m_OnRevive:
@@ -299,6 +323,17 @@ Transform:
 --- !u!114 &465992909975354469 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8433800879113310101, guid: 011ea55c2e8b80c40893a43250562280, type: 3}
+  m_PrefabInstance: {fileID: 8321925480408380400}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1649b1cc5d0e438438b839f85254edfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1414569662762979211 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6979705031910718587, guid: 011ea55c2e8b80c40893a43250562280, type: 3}
   m_PrefabInstance: {fileID: 8321925480408380400}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

@@ -117,6 +117,9 @@ MonoBehaviour:
   - name: Enemy Step
     clip: {fileID: 8300000, guid: 24b7bc6c550e4a94d861b3e1dce7335c, type: 3}
     volume: 0.4
+  - name: Enemy Shoot
+    clip: {fileID: 8300000, guid: c42902a52cab26e46975ec91e5d81348, type: 3}
+    volume: 1
   source: {fileID: 6387137171993997847}
 --- !u!82 &6387137171993997847
 AudioSource:
