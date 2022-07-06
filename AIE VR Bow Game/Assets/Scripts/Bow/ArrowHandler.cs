@@ -12,6 +12,7 @@ public class ArrowHandler : MonoBehaviour
 	public LayerMask arrowGrabLayer;
 
 	public UnityEvent<ProjectileType> onEquipArrowEvent;
+	public UnityEvent<ProjectileType> onSuccessfulEquipArrowEvent;
 	public UnityEvent onFailEquipEvent;
 
 	void Update()
@@ -38,6 +39,8 @@ public class ArrowHandler : MonoBehaviour
 	{
 		currentArrowType = type;
 		onEquipArrowEvent.Invoke(type);
+		if (type != ProjectileType.None)
+			onSuccessfulEquipArrowEvent.Invoke(type);
 	}
 
 	public bool TryGrabArrow()

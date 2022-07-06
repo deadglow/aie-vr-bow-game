@@ -159,7 +159,7 @@ public class BowHandler : MonoBehaviour
 	}
 
 	[ContextMenu("Debug Fire Arrow")]
-	void DebugFireArrow()
+	public void DebugFireArrow()
 	{
 		currentArrowType = ProjectileType.Arrow;
 		FireArrow();

@@ -22,12 +22,18 @@ public class GameManager : MonoBehaviour
 		playerMover = FindObjectOfType<PlayerMover>();
 	}
 
+	void Start()
+	{
+		playerMover.TeleportPlayerToStartPoint();
+	}
+
 	[ContextMenu("Start Game")]
 	public void StartGame()
 	{
 		waveController.StartWaveIndex(0);
 		waveController.automaticallySwitchWave = true;
 		playerMover.TeleportPlayerToStartPoint();
+		OnGameStart.Invoke();
 	}
 
 	[ContextMenu("End Game")]
@@ -36,5 +42,6 @@ public class GameManager : MonoBehaviour
 		waveController.automaticallySwitchWave = false;
 		waveController.EndWave();
 		playerMover.TeleportPlayerToStartPoint();
+		OnGameOver.Invoke();
 	}
 }

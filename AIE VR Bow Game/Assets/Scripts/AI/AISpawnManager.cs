@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AISpawnManager : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class AISpawnManager : MonoBehaviour
 	private float spawnDelayTimer = 0.0f;
 
 	private int currentSpawnCount = 0;
+
+	public UnityEvent OnSpawn;
 
 	void Start()
 	{
@@ -52,7 +55,10 @@ public class AISpawnManager : MonoBehaviour
 				if (manager.m_activeAI >= data.maxActiveSpawns) break;
 				
 				if (manager.Spawn())
+				{
+					OnSpawn.Invoke();
 					currentSpawnCount++;
+				}
 			}
 			spawnDelayTimer = data.spawnDelayDuration;
 		}

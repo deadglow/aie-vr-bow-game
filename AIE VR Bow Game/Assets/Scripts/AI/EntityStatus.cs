@@ -57,13 +57,14 @@ public class EntityStatus : MonoBehaviour
 		if (isDead) return;
 
 		ChangeHealth(0);
+		isDead = true;
 		OnDeathEvent.Invoke();
 	}
 
 	public void Revive()
 	{
-		ChangeHealth(maxHealth);
 		isDead = false;
+		ChangeHealth(maxHealth);
 		OnReviveEvent.Invoke();
 	}
 }

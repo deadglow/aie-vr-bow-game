@@ -162,9 +162,10 @@ public class AIManager : MonoBehaviour
             }
         }
 
-        AssignValues(); // begin to assign all values from the manager to other AIs.
-        PickFiringAI();
-        AssignSpawnPoints();
+		// THIS BROKEY EVERYTHING LMAO
+        //AssignValues(); // begin to assign all values from the manager to other AIs.
+        //PickFiringAI();
+        //AssignSpawnPoints();
 
 		m_ShootTimer = m_Attack.m_ShootCooldown;
 	}
