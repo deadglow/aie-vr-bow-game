@@ -4352,6 +4352,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 190218925196708322}
     m_Modifications:
+    - target: {fileID: 214370444, guid: 47203022862ada74c93ce7502710a504, type: 3}
+      propertyPath: maxVolume
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 214370444, guid: 47203022862ada74c93ce7502710a504, type: 3}
+      propertyPath: minVolume
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 1072048162, guid: 47203022862ada74c93ce7502710a504, type: 3}
       propertyPath: bow
       value: 
