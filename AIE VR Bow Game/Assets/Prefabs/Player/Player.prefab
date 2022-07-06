@@ -3528,6 +3528,9 @@ MonoBehaviour:
   - name: Player Hit
     clip: {fileID: 8300000, guid: 8ddf2382700318546ac28a5e75e753bb, type: 3}
     volume: 1
+  - name: Game Over
+    clip: {fileID: 8300000, guid: 53da0da4d3437284383460ccfd93623a, type: 3}
+    volume: 1
   source: {fileID: 439658503171375539}
 --- !u!82 &439658503171375539
 AudioSource:
