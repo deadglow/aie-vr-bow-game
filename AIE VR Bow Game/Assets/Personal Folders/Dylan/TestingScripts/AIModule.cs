@@ -96,21 +96,13 @@ public class AIModule : MonoBehaviour
         switch (m_EnemyStates)
         {
             case EnemyStates.MOVETOPLAYER:
+			{
                 m_EnemyAgent.SetDestination(m_PlayerTarget.transform.position);
+			}
                 break;
 
             case EnemyStates.SHOOT:
-                m_ShootCooldown -= Time.deltaTime;
 
-                if (m_ShootCooldown < 0)
-                {
-                    if (m_OnShoot != null)
-                    {
-                        m_OnShoot.Invoke();
-                    }
-                    FireAtPlayer();
-                    m_ShootCooldown = m_ShootCooldownAmount;
-                }
 
                 break;
 
@@ -155,14 +147,13 @@ public class AIModule : MonoBehaviour
         CheckDistanceToPlayer();
     }
 
-    void FireAtPlayer()
+    public void FireAtPlayer()
     {
         if (m_Projectile)
         {
             m_Projectile.FireProjectile(m_ProjectType, m_ProjectileSpawn.position, CalculatePlayerLocation(), m_ProjectSpeed);
         }
-        m_PermissionToFire = false;
-        m_AIManager.PickFiringAI();
+		m_OnShoot.Invoke();
     }
 
     void CheckDistanceToPlayer()
@@ -184,11 +175,7 @@ public class AIModule : MonoBehaviour
 
             m_EnemyAgent.transform.rotation = Quaternion.LookRotation(Direction, Vector2.up);
 
-            if (!m_EnemyAgent.isStopped)
-            {
-                Shoot();
-                m_EnemyAgent.isStopped = true;
-            }
+			Shoot();
         }
     }
 
@@ -232,13 +219,13 @@ public class AIModule : MonoBehaviour
     }
     private void Shoot() // TODO change to the shoot state.
     {
-        if (!m_PermissionToFire) return;
 
         if (m_EnemyStates != EnemyStates.SHOOT)
         {
+			m_EnemyAgent.isStopped = true;
             m_ShootCooldown = m_ShootCooldownAmount;
             m_EnemyStates = EnemyStates.SHOOT;
-        }
+		}
     }
 
     Vector3 CalculatePlayerLocation()

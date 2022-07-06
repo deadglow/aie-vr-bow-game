@@ -45,7 +45,7 @@ public class AIManager : MonoBehaviour
         [Range(0, 25)] public float m_RaycastDistance;
 
         [Tooltip("The max turning speed when following a path.")]
-        [Range(10, 50)] public float m_AngularSpeed;
+        [Range(10, 250)] public float m_AngularSpeed;
 
         [Tooltip("The max acceleration the AI will follow with.")]
         [Range(0.5f, 50)] public float m_Acceleration;
@@ -112,12 +112,14 @@ public class AIManager : MonoBehaviour
 	public int m_activeAI { get; private set; }
 
     int m_PerviousSpawn = 0;
+	AIModule m_lastShootAI = null;
 
-    public List<Transform> m_SafeSpawns = null;
+	public List<Transform> m_SafeSpawns = null;
     int m_PreviousAi;
     bool m_AiBusy = false;
-    //============================================================
-    private void Awake()
+	private float m_ShootTimer = 0;
+	//============================================================
+	private void Awake()
     {
 		m_AiSpawns.m_SpawnList = new List<Transform>();
 		// Populate spawn list from parent
@@ -136,7 +138,6 @@ public class AIManager : MonoBehaviour
         {
             ParentAI();
         }
-
 
         if (m_PlayerSettings.m_PlayerAssignment == AIsearchMode.TAG) // Player assignment can be done manually or it can be done by the system at start up time.
         {
@@ -164,16 +165,48 @@ public class AIManager : MonoBehaviour
         AssignValues(); // begin to assign all values from the manager to other AIs.
         PickFiringAI();
         AssignSpawnPoints();
-    }
+
+		m_ShootTimer = m_Attack.m_ShootCooldown;
+	}
 
 	void FixedUpdate()
 	{
 		AssignSpawnPoints();
+
+		List<AIModule> shootingAi = new List<AIModule>();
+
+		foreach (AIModule ai in m_AiList)
+		{
+			if (!ai.IsDead() && ai.m_EnemyStates == AIModule.EnemyStates.SHOOT)
+			{
+				shootingAi.Add(ai);
+			}
+		}
+
+		if (shootingAi.Count > 0)
+		{
+			m_ShootTimer -= Time.fixedDeltaTime;
+			if (m_ShootTimer <= 0)
+			{
+				AIModule ai = null;
+				while (!ai)
+				{
+					int randomIndex = Random.Range(0, shootingAi.Count);
+					
+					if (shootingAi.Count == 1 || shootingAi[randomIndex] != m_lastShootAI)
+						ai = shootingAi[randomIndex];
+				}
+
+				m_lastShootAI = ai;
+				ai.FireAtPlayer();
+				m_ShootTimer = m_Attack.m_ShootCooldown;
+			}
+		}
 	}
 
     //===========================================
     // All Ai modules get their values assigned.
-    void AssignValues()
+    public void AssignValues()
     {
         if (m_AiList == null)
         {

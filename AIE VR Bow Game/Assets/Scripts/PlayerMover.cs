@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Events;
 using Unity.XR.CoreUtils;
-
 
 public class PlayerMover : MonoBehaviour
 {
@@ -37,6 +37,7 @@ public class PlayerMover : MonoBehaviour
 	[Header("Safe Zone")]
 	[Tooltip("Parent of all the recovery points for the player.")]
 	public Transform respawnPointParent;
+	public Transform gameStartPoint;
 	private List<Transform> respawnPoints = new List<Transform>();
 	public float wallRecoveryDuration = 20.0f;
 	private float wallRecoveryTimer = 0;
@@ -47,6 +48,9 @@ public class PlayerMover : MonoBehaviour
 	public UnityEvent<Vector3> OnRespawnEvent;
 	public UnityEvent OnHeadConfined;
 	public UnityEvent OnHeadUnconfined;
+
+	public AudioMixer mixer;
+	public float lowpassValue = 1000.0f;
 
 	void Start()
 	{
@@ -162,9 +166,14 @@ public class PlayerMover : MonoBehaviour
 
 			if (wallRecoveryTimer > wallRecoveryDuration)
 				TeleportPlayerToSafePoint();
+
+			mixer.SetFloat("LowpassFreq", lowpassValue);
 		}
 		else
+		{
 			wallRecoveryTimer = 0;
+			mixer.SetFloat("LowpassFreq", 22000.0f);
+		}
 	}
 
 	public Vector3 GetPlayerFeetPos()
@@ -225,6 +234,11 @@ public class PlayerMover : MonoBehaviour
 	public Vector3 GetVectorToSafePoint()
 	{
 		return lastValidCameraPosition - xrOrigin.Camera.transform.position;
+	}
+
+	public void TeleportPlayerToStartPoint()
+	{
+		TeleportTo(gameStartPoint.position, true);
 	}
 
 	void OnDrawGizmos()

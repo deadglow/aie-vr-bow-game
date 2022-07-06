@@ -41,7 +41,7 @@ AudioSource:
   m_GameObject: {fileID: 214370441}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -3399484122712488664, guid: b4301b7a2d9f99c4da43666c492c651f, type: 2}
   m_audioClip: {fileID: 8300000, guid: d2d86ec6a58e2dd46ac56bf66139f979, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -496,6 +496,26 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 97cca0d8f5bb27947a5e0c3b419142d3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -3887185075125053422, guid: 97cca0d8f5bb27947a5e0c3b419142d3, type: 3}
+      propertyPath: m_DirtyAABB
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -3887185075125053422, guid: 97cca0d8f5bb27947a5e0c3b419142d3, type: 3}
+      propertyPath: m_AABB.m_Center.z
+      value: 0.41788825
+      objectReference: {fileID: 0}
+    - target: {fileID: -3887185075125053422, guid: 97cca0d8f5bb27947a5e0c3b419142d3, type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: 0.0333107
+      objectReference: {fileID: 0}
+    - target: {fileID: -3887185075125053422, guid: 97cca0d8f5bb27947a5e0c3b419142d3, type: 3}
+      propertyPath: m_AABB.m_Extent.y
+      value: 0.47067335
+      objectReference: {fileID: 0}
+    - target: {fileID: -3887185075125053422, guid: 97cca0d8f5bb27947a5e0c3b419142d3, type: 3}
+      propertyPath: m_AABB.m_Extent.z
+      value: 0.63646865
       objectReference: {fileID: 0}
     - target: {fileID: -3887185075125053422, guid: 97cca0d8f5bb27947a5e0c3b419142d3, type: 3}
       propertyPath: m_Materials.Array.data[0]

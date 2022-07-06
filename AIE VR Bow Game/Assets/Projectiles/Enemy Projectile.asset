@@ -15,7 +15,7 @@ MonoBehaviour:
   gravity: 0
   minFireSpeed: 1
   fireSpeed: 20
-  radius: 0.1
+  radius: 0.08
   forwardMatchVelocity: 1
   maxDistance: 500
   collisionLayers:

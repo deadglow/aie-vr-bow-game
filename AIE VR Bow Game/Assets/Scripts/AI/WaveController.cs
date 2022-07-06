@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class WaveController : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class WaveController : MonoBehaviour
 	public int currentWave { get; private set; } = 0;
 	private float waveBreakTimer = 0;
 	private bool waveActive = false;
+
+	public UnityEvent OnWaveStart;
+	public UnityEvent OnWaveEnd;
 
 	void Start()
 	{
@@ -27,6 +31,14 @@ public class WaveController : MonoBehaviour
 			waveBreakTimer -= Time.fixedDeltaTime;
 			if (waveBreakTimer < 0)
 				NextWave();
+		}
+
+		if (waveActive)
+		{
+			if (spawnManager.HitSpawnCap() && aiManager.m_activeAI == 0)
+			{
+				EndWave();
+			}
 		}
 	}
 
@@ -89,6 +101,7 @@ public class WaveController : MonoBehaviour
 		spawnManager.data = set.spawnData;
 		aiManager.m_AiSettings = set.aiProperties;
 		aiManager.m_Attack = set.shootingProperties;
+		aiManager.AssignValues();
 	}
 
 	[System.Serializable]

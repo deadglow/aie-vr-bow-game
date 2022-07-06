@@ -1034,6 +1034,7 @@ MonoBehaviour:
   groundedDistance: 0.2
   invalidGroundDistance: 40
   respawnPointParent: {fileID: 0}
+  gameStartPoint: {fileID: 0}
   wallRecoveryDuration: 20
   OnTeleportEvent:
     m_PersistentCalls:
@@ -1050,6 +1051,8 @@ MonoBehaviour:
   OnHeadUnconfined:
     m_PersistentCalls:
       m_Calls: []
+  mixer: {fileID: 0}
+  lowpassValue: 1000
 --- !u!114 &190218925679177299
 MonoBehaviour:
   m_ObjectHideFlags: 0

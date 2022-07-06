@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1220814778185463022}
   - component: {fileID: 1220814778185463023}
-  - component: {fileID: 3780153004548666638}
   m_Layer: 0
   m_Name: Enemy Projectile
   m_TagString: Untagged
@@ -70,19 +69,6 @@ MonoBehaviour:
   onProjectileCollideEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!135 &3780153004548666638
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1220814778185463020}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &4521724968789996658
 PrefabInstance:
   m_ObjectHideFlags: 0

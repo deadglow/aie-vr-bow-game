@@ -35,6 +35,11 @@ public class AISpawnManager : MonoBehaviour
 		manager.KillAll();
 	}
 
+	public bool HitSpawnCap()
+	{
+		return currentSpawnCount >= data.maxSpawnsTotal;
+	}
+
 	void FixedUpdate()
 	{
 		spawnDelayTimer -= Time.fixedDeltaTime;
